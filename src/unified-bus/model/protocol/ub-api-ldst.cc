@@ -126,7 +126,7 @@ void UbApiLdst::SetClientCallback(Callback<void, uint32_t> cb)
  */
 void UbApiLdst::RecvDataPacket(Ptr<Packet> packet, uint8_t vlIndex, uint8_t vl, uint8_t type)
 {
-    // Store/load request: DLH cNTH (c)TAH(0x03/0x06) [cMAETAH] Payload
+    // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
     // Store/load response: DLH cNTH cATAH(0x11/0x12) Payload
     NS_LOG_DEBUG("RecvDataPacket");
     if (packet == nullptr) {
@@ -151,9 +151,9 @@ void UbApiLdst::RecvDataPacket(Ptr<Packet> packet, uint8_t vlIndex, uint8_t vl, 
         ackp = Create<Packet>(m_loadRspSize);
     }
 
-    UbTransactionHeader taHeader;
-    packet->PeekHeader(taHeader);
-    uint16_t taskId = taHeader.GetIniTaSsn();
+    UbCompactTransactionHeader cTaHeader;
+    packet->PeekHeader(cTaHeader);
+    uint16_t taskId = cTaHeader.GetIniTaSsn();
     caTaHeader.SetIniTaSsn(taskId);
     // 根据taskid去查map，若没有记录，则是第一个要回的response
     if (m_taskReplyRsp.find(taskId) == m_taskReplyRsp.end()) {

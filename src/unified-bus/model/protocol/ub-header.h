@@ -635,14 +635,14 @@ private:
     bool m_noTaAck = false;      // 1 bit: 是否返回TaACK，仅传输层使用CTP有效
     uint8_t m_order = static_cast<uint8_t>(OrderType::ORDER_NO);  // 3 bits: Order type
     bool m_mtEn = false;     // 1 bit: 是否包含MTETAH扩展头
-    bool m_fce = false;           // 1 bit: 用于Responder的CQE判断是否产生CE（暂时不管）
-    bool m_retry = false;        // 1 bit: 为0时表示请求为首次发送，否则为重传报文（暂时不管）
-    bool m_alloc = false;        // 1 bit: （暂时不管）
+    bool m_fce = false;           // 1 bit: 用于Responder的CQE判断是否产生CE (not used currently)
+    bool m_retry = false;        // 1 bit: 为0时表示请求为首次发送，否则为重传报文 (not used currently)
+    bool m_alloc = false;        // 1 bit: (not used currently)
 
     // 字节5: [Reserved:1][Exclusive:1][Src Jetty type:2][Src Jetty高4位:4]
     uint8_t m_reserveByte5 = 0;  // 1 bit: 字节5中的Reserve字段
-    bool m_exclusive = false;    // 1 bit: H2H场景时固定为0，H2D或D2H场景时固定为1（暂时不管）
-    uint8_t m_iniRcIdType = static_cast<uint8_t>(IniRcType::REQUESTER_CONTEXT);  // 2 bits: Source Jetty Type（暂时不管）
+    bool m_exclusive = false;    // 1 bit: H2H场景时固定为0，H2D或D2H场景时固定为1 (not used currently)
+    uint8_t m_iniRcIdType = static_cast<uint8_t>(IniRcType::REQUESTER_CONTEXT);  // 2 bits: Source Jetty Type (not used currently)
 
     // 字节6-7: [Src Jetty低16位:16] + 字节5的高4位组成完整的20位Jetty
     uint32_t m_iniRcIdId = 0xFFFFF;  // 20 bits: 对应发起端的 JettyNum

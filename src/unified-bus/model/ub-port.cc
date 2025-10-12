@@ -282,7 +282,7 @@ void UbPort::DequeuePacket(void)
         NS_LOG_DEBUG("PAUSE prohibits send at node " << m_node->GetId());
         NS_LOG_DEBUG("[UbPort send] limit");
         m_ubSendState = SendState::READY;
-        m_ubEQ->DoDequeue(); // 避免数据包阻塞后续控制帧的发送
+        m_ubEQ->DoDequeue(); // Prevent data packets from blocking subsequent control frames
         return;
     }
 

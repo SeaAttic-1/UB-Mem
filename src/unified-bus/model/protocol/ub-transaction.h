@@ -54,19 +54,19 @@ namespace ns3 {
         // IsOrderedByInitiator() 需要unordered_map jettyNum->vector/queue<顺序存储WQE的ORDER信息> 每个jetty未确认的WQE的ORDER信息存储下来
         // RO *SO -> 不能发
         // *SO -> 可以发
-        // 如果是NO No Order，则不往里存因为没啥用。
+        // 如果是NO No Order，则无需存储。
         // 如果是RO，往里存但是总是可以继续发（返回True）；
         // 如果是SO，则在前面的RO被ACK删除这些ORDER记录之后，才能继续发，如果前面还有RO记号，则返回false不让发。
         // 此时这个jetty可以使用多路径/单路径，可以使用packet spray
 
         // 2. 只有m_serviceMode == TransactionServiceMode::ROT，才启用IsOrderedByTarget()
-        // ROT暂时不做
+        // ROT (not implemented yet)
         // 此时这个jetty可以使用多路径/单路径，可以使用packet spray
 
         // 3. ROL时，需要保序的事务指定相同的TP channel。
         // jetty应该使用单路径，可以使用packet spray usePacketSpray 可以= 1
 
-        // 4. UNO暂时不做
+        // 4. UNO (not implemented yet)
         // 如果jetty使用单路径，则直接不需要操作。
 
         // 5. IsReliable和IsUnreliable目前的行为都是通知性质的，在每一个WQE发送完成后，都打印一个trace

@@ -43,8 +43,8 @@ void RunCase(const string& configPath)
 {
     RngSeedManager::SetSeed(10);
     string LoadConfigFilePath = configPath + "/network_attribute.txt";
-    SetComponetsAttribute(LoadConfigFilePath);
-    CeateTraceDir();
+    SetComponentsAttribute(LoadConfigFilePath);
+    CreateTraceDir();
     string NodeConfigFile = configPath + "/node.csv";
     CreateNode(NodeConfigFile);
     string TopoConfigFile = configPath + "/topology.csv";
@@ -87,22 +87,7 @@ void RunCase(const string& configPath)
     CheckExampleProcess(client_map);
 }
 
-void PrintHelp()
-{
-    std::cout << "\n使用方法: ./ns3 run 'scratch/ub-quick-example [选项]'\n\n";
-    std::cout << "选项:\n";
-    std::cout << "  --case-dir <路径>      指定用例文件夹路径 (默认: scratch/test_CLOS)\n";
-    std::cout << "  --trace-dir <路径>     指定ParseTrace使用的输出文件夹 (默认: 与用例文件夹相同)\n";
-    std::cout << "  --help                 显示此帮助信息\n";
-    std::cout << "  --ClassName <类名>     查询指定类的属性信息\n";
-    std::cout << "  --AttributeName <属性> 查询指定属性的详细信息 (需配合--ClassName使用)\n";
-    std::cout << "\n示例:\n";
-    std::cout << "  ./ns3 run 'scratch/ub-quick-example --case-dir scratch/test_CLOS'\n";
-    std::cout << "  ./ns3 run 'scratch/ub-quick-example --case-dir scratch/test_CLOS --trace-dir /tmp/trace'\n";
-    std::cout << "  ./ns3 run 'scratch/ub-quick-example --help'\n";
-    std::cout << std::endl;
-}
-
+// 根据配置文件路径执行用例
 int main(int argc, char* argv[])
 {
     // 开始计时
@@ -117,20 +102,16 @@ int main(int argc, char* argv[])
     
     // 使用 CommandLine 解析参数
     CommandLine cmd;
-    cmd.AddValue("case-dir", "指定用例文件夹路径", configPath);
-    cmd.AddValue("trace-dir", "指定ParseTrace使用的输出文件夹", customTraceDir);
+    cmd.Usage("\nns-3 Unified Bus 仿真程序\n\n"
+              "示例:\n"
+              "  ./ns3 run 'scratch/ub-quick-example --CaseDir=scratch/test_CLOS'\n"
+              "  ./ns3 run 'scratch/ub-quick-example --CaseDir=scratch/test_CLOS --TraceDir=/tmp/trace'\n"
+              "  ./ns3 run 'scratch/ub-quick-example --ClassName=ns3::UbPort'\n");
+    cmd.AddValue("CaseDir", "指定用例文件夹路径", configPath);
+    cmd.AddValue("TraceDir", "指定ParseTrace使用的输出文件夹", customTraceDir);
     cmd.AddValue("ClassName", "查询指定类的属性信息", className);
     cmd.AddValue("AttributeName", "查询指定属性的详细信息", attributeName);
     cmd.Parse(argc, argv);
-    
-    // 处理帮助信息
-    for (int i = 1; i < argc; i++) {
-        string arg = argv[i];
-        if (arg == "--help" || arg == "-h") {
-            PrintHelp();
-            return 0;
-        }
-    }
     
     // 处理属性查询
     if (!className.empty()) {
@@ -166,7 +147,7 @@ int main(int argc, char* argv[])
     }
     
     // 日志中添加时间前缀
-    // ns3::LogComponentEnableAll(ns3::LOG_PREFIX_TIME);
+    ns3::LogComponentEnableAll(LogLevel(LOG_PREFIX_TIME | LOG_PREFIX_FUNC | LOG_PREFIX_NODE));
 
     // 示例：设置指定组件日志级别，设置指定组件打印时间前缀
     // LogComponentEnable("UbApiUrma", LOG_LEVEL_INFO);
@@ -183,7 +164,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLink", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiLdstThread", LOG_LEVEL_ALL);
+    LogComponentEnable("UbApiLdstThread", LOG_LEVEL_ALL);
     // LogComponentEnable("UbApiLdst", LOG_LEVEL_ALL);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
     // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);

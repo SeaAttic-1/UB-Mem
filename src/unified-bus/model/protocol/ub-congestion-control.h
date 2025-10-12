@@ -10,7 +10,7 @@ namespace ns3 {
 
 class UbTransportChannel;
 
-// 目前拥塞控制算法仅有caqm一种，后续添加
+// Currently only CAQM is implemented, other algorithms to be added
 enum CongestionCtrlAlgo {
     CAQM,
     LDCP,

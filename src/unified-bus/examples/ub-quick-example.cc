@@ -23,8 +23,8 @@ void RunCase(const string& configPath)
 {
     RngSeedManager::SetSeed(10);
     string LoadConfigFilePath = configPath + "/network_attribute.txt";
-    SetComponetsAttribute(LoadConfigFilePath);
-    CeateTraceDir();
+    SetComponentsAttribute(LoadConfigFilePath);
+    CreateTraceDir();
     string NodeConfigFile = configPath + "/node.csv";
     CreateNode(NodeConfigFile);
     string TopoConfigFile = configPath + "/topology.csv";

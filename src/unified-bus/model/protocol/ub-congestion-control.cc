@@ -57,7 +57,7 @@ Ptr<UbCongestionControl> UbCongestionControl::Create(UbNodeType_t nodeType)
     } else if (algo == CAQM && nodeType == UB_SWITCH) {
         return CreateObject<UbSwitchCaqm>();
     } else {
-        // 未来待拓展的其他拥塞控制算法
+        // Other congestion control algorithms to be extended
         return nullptr;
     }
 }

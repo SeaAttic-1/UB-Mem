@@ -294,7 +294,7 @@ bool UbSwitch::SinkTpDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
  */
 bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
 {
-    // Store/load request: DLH cNTH (c)TAH(0x03/0x06) [cMAETAH] Payload
+    // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
     // Store/load response: DLH cNTH cATAH(0x11/0x12) Payload
     NS_LOG_DEBUG("[UbPort recv] ub mem frame");
     uint16_t dCna = m_memHeader.GetDcna();

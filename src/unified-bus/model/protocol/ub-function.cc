@@ -339,7 +339,7 @@ Ptr<UbWqeSegment> UbJetty::GenWqeSegment(Ptr<UbWqe> wqe, uint32_t segmentSize)
     segment->SetTaMsn(wqe->GetTaMsn());
     segment->SetTaSsn(m_taSsnSndNxt); // 使用当前的分段序号
 
-    // TP层信息需要在后续TP层调度时设置
+    // TP layer information will be set during subsequent TP layer scheduling
 
     NS_LOG_DEBUG("Generated WQE segment: MSN=" << std::to_string(wqe->GetTaMsn())
                                               << ", SSN=" << std::to_string(m_taSsnSndNxt)

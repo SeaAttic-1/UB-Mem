@@ -108,7 +108,7 @@ void Destroy(ApplicationContainer apps)
     files.clear();
 }
 
-inline void CeateTraceDir()
+inline void CreateTraceDir()
 {
     size_t last_slash_pos = g_config_path.find_last_of('/');
     string dir_path;
@@ -788,7 +788,7 @@ vector<TrafficRecord> ReadTrafficCSV(const string &filename)
 }
 
 // 从TXT文件加载配置
-void SetComponetsAttribute(const string &filename)
+void SetComponentsAttribute(const string &filename)
 {
     PrintTimestamp("Set component attributes");
     g_config_path = filename;

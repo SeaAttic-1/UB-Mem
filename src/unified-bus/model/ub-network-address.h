@@ -81,14 +81,14 @@ inline uint32_t Cna16ToPortId(uint32_t cnaAddr)
 
 inline Ipv4Address Cna16ToIp(uint32_t cnaAddr)
 {
-    // 先CAN转NodeId，再NodeId转IP
+    // Convert CNA to NodeId, then NodeId to IP
     uint32_t node_id = Cna16ToNodeId(cnaAddr);
     return NodeIdToIp(node_id);
 }
 
 inline uint32_t IpToCna16(Ipv4Address ip)
 {
-    // 先IP转NodeId，再NodeId转Cna16
+    // Convert IP to NodeId, then NodeId to Cna16
     uint32_t node_id = IpToNodeId(ip);
     return NodeIdToCna16(node_id);
 }
@@ -127,14 +127,14 @@ inline uint32_t Cna24ToPortId(uint32_t cnaAddr)
 
 inline Ipv4Address Cna24ToIp(uint32_t cnaAddr)
 {
-    // 先CAN转NodeId，再NodeId转IP
+    // Convert CNA to NodeId, then NodeId to IP
     uint32_t node_id = Cna24ToNodeId(cnaAddr);
     return NodeIdToIp(node_id);
 }
 
 inline uint32_t IpToCna24(Ipv4Address ip)
 {
-    // 先IP转NodeId，再NodeId转Cna16
+    // Convert IP to NodeId, then NodeId to Cna24
     uint32_t node_id = IpToNodeId(ip);
     return NodeIdToCna24(node_id);
 }
