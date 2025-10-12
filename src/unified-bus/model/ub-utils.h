@@ -67,14 +67,19 @@ inline void PrintTimestamp(const std::string &message)
     NS_LOG_UNCOND("[" << std::put_time(&localTime, "%H:%M:%S") << "]:" << message);
 }
 
-void ParseTrace(bool isTest = false)
+void ParseTrace(string customTraceDir = "", bool isTest = false)
 {
     BooleanValue val;
     g_parse_enable.GetValue(val);
     bool ParseEnable = val.Get();
     if (ParseEnable) {
         PrintTimestamp("Start Parse Trace File.");
-        string cmd = "python3 /home/ytxing/cluster-network-sim-tools/trace_analysis/parse_trace.py " + trace_path;
+        string targetTraceDir = customTraceDir.empty() ? trace_path : customTraceDir;
+        // 确保路径以/结尾
+        if (!targetTraceDir.empty() && targetTraceDir.back() != '/') {
+            targetTraceDir += "/";
+        }
+        string cmd = "python3 /home/ytxing/cluster-network-sim-tools/trace_analysis/parse_trace.py " + targetTraceDir;
         if (isTest) {
             cmd += " true";
         } else {
