@@ -25,8 +25,8 @@ void UbRoutingProcess::AddShortestRoute(const uint32_t destIP, const std::vector
 {
     // 标准化端口集合（排序去重）
     std::vector<uint16_t> target;
-    auto itRt = m_rtShorest.find(destIP);
-    if (itRt != m_rtShorest.end()) {
+    auto itRt = m_rtShortest.find(destIP);
+    if (itRt != m_rtShortest.end()) {
         target.insert(target.end(), (*(itRt->second)).begin(), (*(itRt->second)).end());
     }
     target.insert(target.end(), outPorts.begin(), outPorts.end());
@@ -36,12 +36,12 @@ void UbRoutingProcess::AddShortestRoute(const uint32_t destIP, const std::vector
     auto it = m_portSetPool.find(normalized);
     if (it != m_portSetPool.end()) {
         //  已存在相同端口集合，共享指针
-        m_rtShorest[destIP] = it->second;
+        m_rtShortest[destIP] = it->second;
     } else {
         // 创建新端口集合并加入池中
         auto sharedPorts = std::make_shared<std::vector<uint16_t>>(normalized);
         m_portSetPool[normalized] = sharedPorts;
-        m_rtShorest[destIP] = sharedPorts;
+        m_rtShortest[destIP] = sharedPorts;
     }
 }
 
@@ -72,8 +72,8 @@ void UbRoutingProcess::AddOtherRoute(const uint32_t destIP, const std::vector<ui
 const std::vector<uint16_t>& UbRoutingProcess::GetShortestOutPorts(const uint32_t destIP)
 {
     static const std::vector<uint16_t> empty; // 返回空集的引用
-    auto it = m_rtShorest.find(destIP);
-    return it != m_rtShorest.end() ? *(it->second) : empty;
+    auto it = m_rtShortest.find(destIP);
+    return it != m_rtShortest.end() ? *(it->second) : empty;
 }
 
 const std::vector<uint16_t>& UbRoutingProcess::GetOtherOutPorts(const uint32_t destIP)
@@ -90,7 +90,7 @@ const std::vector<uint16_t> UbRoutingProcess::GetAllOutPorts(const uint32_t dest
     if (it != m_rtOther.end()) {
         res.insert(res.end(), (*(it->second)).begin(), (*(it->second)).end());
     }
-    it = m_rtShorest.find(destIP);
+    it = m_rtShortest.find(destIP);
     if (it != m_rtOther.end()) {
         res.insert(res.end(), (*(it->second)).begin(), (*(it->second)).end());
     }
@@ -101,7 +101,7 @@ const std::vector<uint16_t> UbRoutingProcess::GetAllOutPorts(const uint32_t dest
 // 删除路由条目
 bool UbRoutingProcess::RemoveShortestRoute(const uint32_t destIP)
 {
-    return m_rtShorest.erase(destIP) > 0;
+    return m_rtShortest.erase(destIP) > 0;
 }
 
 // 删除路由条目
@@ -182,7 +182,7 @@ int UbRoutingProcess::SelectOutPort(uint32_t sip, uint32_t dip, uint16_t sport, 
     }
 }
 
-bool UbRoutingProcess::GetSelectShorestPath()
+bool UbRoutingProcess::GetSelectShortestPath()
 {
     return m_selectShortestPaths;
 }

@@ -71,7 +71,7 @@ namespace ns3 {
          * @param Client传入内存语义任务
          */
         void PushLdstTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
-                           UbMemOpearationType type, uint32_t threadId);
+                           UbMemOperationType type, uint32_t threadId);
 
         Ptr<Node> GetNode() {return m_node;}
     private:

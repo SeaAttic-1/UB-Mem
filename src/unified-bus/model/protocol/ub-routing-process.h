@@ -49,7 +49,7 @@ public:
     // 删除路由条目
     bool RemoveShortestRoute(const uint32_t destIP);
     bool RemoveOtherRoute(const uint32_t destIP);
-    bool GetSelectShorestPath();
+    bool GetSelectShortestPath();
 
 private:
     struct VectorHash {
@@ -70,7 +70,7 @@ private:
     std::unordered_map<std::vector<uint16_t>, std::shared_ptr<std::vector<uint16_t> >, VectorHash> m_portSetPool;
     
     // 路由表：目的IP -> 共享的端口集合指针
-    std::unordered_map<uint32_t, std::shared_ptr<std::vector<uint16_t> > > m_rtShorest;
+    std::unordered_map<uint32_t, std::shared_ptr<std::vector<uint16_t> > > m_rtShortest;
     std::unordered_map<uint32_t, std::shared_ptr<std::vector<uint16_t> > > m_rtOther;
     
     // 辅助函数：标准化端口集合（排序去重）

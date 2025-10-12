@@ -82,9 +82,9 @@ void UbApiLdstThread::SetUbLdstThread(Ptr<Node> node, uint32_t ldstThreadNum,
 
 void UbApiLdstThread::PushMemTask(Ptr<UbMemTask> ubMemTask)
 {
-    if (ubMemTask->GetType() == UbMemOpearationType::STORE) {
+    if (ubMemTask->GetType() == UbMemOperationType::STORE) {
         m_memStoreTaskQueue.push_back(ubMemTask);
-    } else if (ubMemTask->GetType() == UbMemOpearationType::LOAD) {
+    } else if (ubMemTask->GetType() == UbMemOperationType::LOAD) {
         m_memLoadTaskQueue.push_back(ubMemTask);
     }
     m_taskidSendCnt[ubMemTask->GetMemTaskId()] = 0;
@@ -212,11 +212,11 @@ void UbApiLdstThread::GenPacketAndSend()
     }
 }
 
-void UbApiLdstThread::IncreaseOutstanding(UbMemOpearationType type)
+void UbApiLdstThread::IncreaseOutstanding(UbMemOperationType type)
 {
-    if (type == UbMemOpearationType::STORE) {
+    if (type == UbMemOperationType::STORE) {
         m_storeOutstanding++;
-    } else if (type == UbMemOpearationType::LOAD) {
+    } else if (type == UbMemOperationType::LOAD) {
         m_loadOutstanding++;
     }
 }
@@ -246,9 +246,9 @@ Ptr<Packet> UbApiLdstThread::GenDataPacket(Ptr<UbMemTask> memTask, uint32_t payl
     p->AddHeader(cMAETah);
     // add TaHeader
     UbTransactionHeader taHeader; // 以后替换为cTAH
-    if (memTask->GetType() == UbMemOpearationType::STORE) {
+    if (memTask->GetType() == UbMemOperationType::STORE) {
         taHeader.SetTaOpcode(TaOpcode::TA_OPCODE_WRITE);
-    } else if (memTask->GetType() == UbMemOpearationType::LOAD) {
+    } else if (memTask->GetType() == UbMemOperationType::LOAD) {
         taHeader.SetTaOpcode(TaOpcode::TA_OPCODE_READ);
     }
     

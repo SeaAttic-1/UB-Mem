@@ -200,7 +200,7 @@ void UbFunction::PushWqeToJetty(Ptr<UbWqe> wqe, uint32_t jettyNum)
 }
 
 void UbFunction::PushLdstTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
-                              UbMemOpearationType type, uint32_t threadId)
+                              UbMemOperationType type, uint32_t threadId)
 {
     if (m_apiLdst != nullptr) {
         m_apiLdst->PushMemTask(src, dest, size, taskId, type, threadId);

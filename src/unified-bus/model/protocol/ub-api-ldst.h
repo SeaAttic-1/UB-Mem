@@ -20,7 +20,7 @@ namespace ns3 {
 
         void SetUbLdst(Ptr<Node> node);
         void PushMemTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
-                         UbMemOpearationType type, uint32_t threadId);
+                         UbMemOperationType type, uint32_t threadId);
         void RecvResponse(Ptr<Packet> p);
         void SetClientCallback(Callback<void, uint32_t> cb);
         Callback<void, uint32_t> FinishCallback;
@@ -48,7 +48,7 @@ namespace ns3 {
 
         std::map<uint32_t, uint32_t> m_taskReplyRsp; // taskid和返回ack的个数
         std::vector<Ptr<UbApiLdstThread>> m_ldstThreadVector;
-        std::map<uint32_t, UbMemOpearationType> m_taskTypeMap; // taskid和任务类型对应关系
+        std::map<uint32_t, UbMemOperationType> m_taskTypeMap; // taskid和任务类型对应关系
         std::map<uint32_t, uint32_t> m_taskThreadMap; // taskid和threadid对应关系
         std::map<uint32_t, uint32_t> m_taskAckcountMap; // taskid和收到的ack数目
     };

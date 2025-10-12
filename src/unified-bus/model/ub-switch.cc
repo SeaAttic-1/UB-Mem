@@ -354,7 +354,7 @@ void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
         return;
     }
     /* 绕路路由防止形成环 */
-    if (!m_routingProcess->GetSelectShorestPath()) {
+    if (!m_routingProcess->GetSelectShortestPath()) {
         ChangePakcetRoutingPolicy(packet, true);
     }
     /* 缓存管理 */

@@ -83,7 +83,7 @@ std::vector<Ptr<UbApiLdstThread>> UbApiLdst::GetLdstThreads()
 }
 
 void UbApiLdst::PushMemTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
-                            UbMemOpearationType type, uint32_t threadId)
+                            UbMemOperationType type, uint32_t threadId)
 {
     NS_LOG_DEBUG("PushMemTask, threadId: " << std::to_string(threadId));
     // 判断threadid是否在合理范围
@@ -98,9 +98,9 @@ void UbApiLdst::PushMemTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t
     Ptr<UbMemTask> ubMemTask = CreateObject<UbMemTask>();
     ubMemTask->SetSrc(src);
     ubMemTask->SetDest(dest);
-    if (type == UbMemOpearationType::STORE) {
+    if (type == UbMemOperationType::STORE) {
         ubMemTask->SetSize(size, m_storeReqSize);
-    } else if (type == UbMemOpearationType::LOAD) {
+    } else if (type == UbMemOperationType::LOAD) {
         ubMemTask->SetSize(size, m_loadRspSize);
     } else {
         NS_ASSERT_MSG(0, "task type is wrong");

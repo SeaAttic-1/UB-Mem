@@ -35,14 +35,8 @@ const uint32_t UB_MTU_BYTE = 4 * 1024;              // 最大传输单元（TP�
 // Credit相关常量
 const uint8_t UB_CREDIT_MAX_VALUE = 63;             // CREDIT最大值
 
-// 操作类型枚举
-enum class UbOpearationType : uint8_t {
-    WRITE = 0, // 写操作
-    READ = 1   // 读操作
-};
-
 // 内存语义操作类型枚举
-enum class UbMemOpearationType : uint8_t {
+enum class UbMemOperationType : uint8_t {
     STORE = 0,
     LOAD = 1,
     MEM_STORE_ACK = 2,
@@ -161,7 +155,7 @@ public:
     UbMemTask()
         : m_src(0),
           m_dest(0),
-          m_type(UbMemOpearationType::STORE),
+          m_type(UbMemOperationType::STORE),
           m_size(0),
           m_bytesLeft(0)
     {
@@ -169,7 +163,7 @@ public:
 
     UbMemTask(uint32_t src,
               uint32_t dest,
-              UbMemOpearationType type,
+              UbMemOperationType type,
               uint32_t size,
               UbPriority priority)
         : m_src(src),
@@ -205,7 +199,7 @@ public:
         return m_dest;
     }
 
-    UbMemOpearationType GetType() const
+    UbMemOperationType GetType() const
     {
         return m_type;
     }
@@ -235,7 +229,7 @@ public:
         m_dest = dest;
     }
 
-    void SetType(UbMemOpearationType type)
+    void SetType(UbMemOperationType type)
     {
         m_type = type;
     }
@@ -323,7 +317,7 @@ private:
     // ========== 任务描述信息 ==========
     uint32_t m_src;                 // 源节点标识符
     uint32_t m_dest;                // 目的节点标识符
-    UbMemOpearationType m_type = UbMemOpearationType::STORE; // 操作类型
+    UbMemOperationType m_type = UbMemOperationType::STORE; // 操作类型
     uint32_t m_size = 0;                                     // MemTask数据大小 (字节)
     UbPriority m_priority = UB_PRIORITY_DEFAULT;             // MemTask优先级 (0-15, 0最高)
 

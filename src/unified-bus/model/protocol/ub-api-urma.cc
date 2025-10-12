@@ -244,11 +244,11 @@ void UbApiUrma::SendTraffic(TrafficRecord record)
 
     if (record.opType == "MEM_STORE" || record.opType == "MEM_LOAD") {
         // 内存语义发送
-        UbMemOpearationType type = UbMemOpearationType::STORE;
+        UbMemOperationType type = UbMemOperationType::STORE;
         if (record.opType == "MEM_STORE") {
-            type = UbMemOpearationType::STORE;
+            type = UbMemOperationType::STORE;
         } else if (record.opType == "MEM_LOAD") {
-            type = UbMemOpearationType::LOAD;
+            type = UbMemOperationType::LOAD;
         }
         Ptr<UbFunction> ubFunc = m_node->GetObject<UbController>()->GetUbFunction();
         Ptr<UbApiLdst> ldst = ubFunc->GetUbLdst();

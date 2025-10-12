@@ -21,7 +21,7 @@ namespace ns3 {
         void PushMemTask(Ptr<UbMemTask> memTask);
         Ptr<Packet> GenDataPacket(Ptr<UbMemTask> memTask, uint32_t payloadSize, uint16_t destPort);
         void GenPacketAndSend();
-        void IncreaseOutstanding(UbMemOpearationType type);
+        void IncreaseOutstanding(UbMemOperationType type);
         uint32_t GetThreadNum();
         void SetUsePacketSpray(bool usePacketSpray);
         void SetUseShortestPaths(bool useShortestPaths);
