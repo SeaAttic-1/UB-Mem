@@ -1,6 +1,6 @@
 #include "ub-datatype.h"
 
-#include "ns3/ub-api-urma.h"
+#include "ub-traffic-gen.h"
 
 namespace ns3 {
 

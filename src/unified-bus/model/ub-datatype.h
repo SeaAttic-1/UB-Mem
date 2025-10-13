@@ -35,6 +35,13 @@ const uint32_t UB_MTU_BYTE = 4 * 1024;              // 最大传输单元（TP�
 // Credit相关常量
 const uint8_t UB_CREDIT_MAX_VALUE = 63;             // CREDIT最大值
 
+// 操作类型枚举
+enum class UbOperationType : uint8_t
+{
+    WRITE = 0, // 写操作
+    READ = 1   // 读操作
+};
+
 // 内存语义操作类型枚举
 enum class UbMemOperationType : uint8_t {
     STORE = 0,

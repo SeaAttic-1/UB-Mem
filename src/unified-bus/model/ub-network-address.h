@@ -11,6 +11,20 @@ using namespace ns3;
 
 namespace utils {
 
+// brief
+struct TrafficRecord
+{
+    int taskId;
+    int sourceNode;
+    int destNode;
+    int dataSize;
+    string opType;
+    int priority;
+    string delay;
+    int phaseId;
+    vector<uint32_t> dependOnPhases;
+};
+
 constexpr long DEFAULT_PORT_BUFFER_SIZE = 2097152;
 // 根据NodeId转IPv4地址
 constexpr int BYTE_RANGE = 256;
