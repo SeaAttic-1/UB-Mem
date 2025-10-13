@@ -11,7 +11,7 @@ default ns3::UbPort::PfcUpThld "1677721"
 default ns3::UbPort::PfcLowThld "1342176"
 default ns3::UbTransportChannel::EnableRetrans "false"
 default ns3::UbTransportChannel::InitialRTO "25600ns"
-default ns3::UbApiUrma::EnableMultiPath "false"
+default ns3::UbApp::EnableMultiPath "false"
 
 default ns3::UbApiLdstThread::StoreOutstanding "64"
 default ns3::UbApiLdstThread::LoadOutstanding "64"

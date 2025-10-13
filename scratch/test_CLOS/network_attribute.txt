@@ -1,4 +1,4 @@
-default ns3::UbApiUrma::EnableMultiPath "false"
+default ns3::UbApp::EnableMultiPath "false"
 default ns3::UbLink::Delay "+0ns"
 default ns3::UbPort::UbDataRate "400Gbps"
 default ns3::UbPort::UbInterframeGap "+0ns"

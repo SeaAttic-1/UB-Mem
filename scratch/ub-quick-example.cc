@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
     // LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiUrma", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbController", LOG_LEVEL_ALL);
     // LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);
