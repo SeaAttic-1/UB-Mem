@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-switch-allocator.h"
 #include "ns3/ub-switch.h"
 #include "ns3/ub-port.h"

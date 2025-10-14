@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ub-traffic-gen.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"

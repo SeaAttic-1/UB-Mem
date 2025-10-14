@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_CONTROL_H
 #define UB_CONTROL_H
 

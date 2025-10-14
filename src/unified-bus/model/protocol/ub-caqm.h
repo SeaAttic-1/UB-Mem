@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_CAQM_H
 #define UB_CAQM_H
 #include <unordered_map>

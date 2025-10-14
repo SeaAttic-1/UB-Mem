@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_ROUTING_PROCESS_H
 #define UB_ROUTING_PROCESS_H
 

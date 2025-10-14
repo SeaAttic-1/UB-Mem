@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_NETWORK_ADDRESS_H
 #define UB_NETWORK_ADDRESS_H
 

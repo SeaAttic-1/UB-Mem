@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_APILDSTTHREAD_H
 #define UB_APILDSTTHREAD_H
 
