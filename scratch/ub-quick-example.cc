@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     Time::SetResolution(Time::NS);
 
     // 日志中添加时间前缀
-    ns3::LogComponentEnableAll(LOG_PREFIX_TIME);
+    //ns3::LogComponentEnableAll(LOG_PREFIX_TIME);
 
     // 示例：设置指定组件日志级别，设置指定组件打印时间前缀
     // LogComponentEnable("UbApp", LOG_LEVEL_INFO);
@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
     // LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbTrafficGen", LOG_LEVEL_ALL);
     // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbController", LOG_LEVEL_ALL);
