@@ -34,7 +34,7 @@ public:
 
     void SetGetTpnRule(GetTpnRuleT type)
     {
-        m_getTpnRuler = type;
+        m_getTpnRule = type;
     }
 
     void SetUseShortestPath(bool useShortestPath)
@@ -76,7 +76,7 @@ private:
     // 控制器
     bool m_multiPathEnable;
 
-    GetTpnRuleT m_getTpnRuler = GetTpnRuleT::BY_PEERNODE_PRIORITY; // 获取Tpn的方式
+    GetTpnRuleT m_getTpnRule = GetTpnRuleT::BY_PEERNODE_PRIORITY; // 获取Tpn的方式
     bool m_useShortestPath = true; // 是否根据跳数寻找最短路径
 
     Ptr<Node> m_node;              // 当前节点

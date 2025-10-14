@@ -36,10 +36,10 @@ using namespace ns3;
 namespace utils {
 
 // 保存node
-unordered_map<uint32_t, Ptr<Node>> node_map;
+map<uint32_t, Ptr<Node>> node_map;
 unordered_map<uint32_t, vector<uint32_t>> NodeTpns;
 unordered_map<int, Ptr<UbApp>> client_map;
-unordered_map<std::string, std::ofstream *> files;  // 存储文件名和对应的文件句柄
+map<std::string, std::ofstream *> files;  // 存储文件名和对应的文件句柄
 
 // 设置Trace全局变量
 GlobalValue g_task_enable = GlobalValue("UB_TRACE_ENABLE", "enable trace", BooleanValue(false), MakeBooleanChecker());
@@ -88,7 +88,7 @@ void ParseTrace(bool isTest = false)
     }
 }
 
-void Destroy(ApplicationContainer apps)
+void Destroy()
 {
     node_map.clear();
     NodeTpns.clear();
@@ -134,7 +134,6 @@ inline void PrintTraceInfo(string fileName, string info)
     }
 
     *files[fileName] << "[" << Simulator::Now().GetSeconds() * 1e6 << "us] " << info << "\n";
-    files[fileName]->flush();
 }
 
 inline void PrintTraceInfoNoTs(string fileName, string info)
