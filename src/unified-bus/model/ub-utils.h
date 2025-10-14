@@ -50,8 +50,16 @@ GlobalValue g_parse_enable =
 
 GlobalValue g_record_pkt_trace_enable =
     GlobalValue("UB_RECORD_PKT_TRACE", "enable record all packet trace", BooleanValue(false), MakeBooleanChecker());
+
 GlobalValue g_fault_enable =
     GlobalValue("UB_FAULT_ENABLE", "fault moudle enabled", BooleanValue(false), MakeBooleanChecker());
+    
+GlobalValue g_python_script_path = 
+    GlobalValue("UB_PYTHON_SCRIPT_PATH", 
+                "Path to parse_trace.py script (REQUIRED - must be set by user)", 
+                StringValue("/path/to/ns-3-ub-tools/trace_analysis/parse_trace.py"), 
+                MakeStringChecker());
+
 string g_config_path;
 string trace_path;
 
@@ -76,7 +84,13 @@ void ParseTrace(bool isTest = false)
     bool ParseEnable = val.Get();
     if (ParseEnable) {
         PrintTimestamp("Start Parse Trace File.");
-        string cmd = "python3 ./../../ns-3-ub-tools-main/trace_analysis/parse_trace.py " + trace_path;
+        
+        // 从GlobalValue获取路径
+        StringValue scriptPathValue;
+        g_python_script_path.GetValue(scriptPathValue);
+        string python_script_path = scriptPathValue.Get();
+        
+        string cmd = "python3 " + python_script_path + " " + trace_path;
         if (isTest) {
             cmd += " true";
         } else {
