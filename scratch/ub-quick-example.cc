@@ -116,6 +116,7 @@ int main(int argc, char* argv[])
     PrintTimestamp("Simulator finished!");
 
     ParseTrace();
+    Destroy();
     auto end = std::chrono::high_resolution_clock::now();
     // 计算持续时间
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
