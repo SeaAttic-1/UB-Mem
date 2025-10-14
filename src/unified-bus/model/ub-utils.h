@@ -93,7 +93,6 @@ void Destroy()
     node_map.clear();
     NodeTpns.clear();
     client_map.clear();
-    apps.Stop(Time(0));
 
     for (auto &pair : files) {
         if (pair.second->is_open()) {
