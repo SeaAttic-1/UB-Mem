@@ -79,7 +79,7 @@ void ParseTrace(string customTraceDir = "", bool isTest = false)
         if (!targetTraceDir.empty() && targetTraceDir.back() != '/') {
             targetTraceDir += "/";
         }
-        string cmd = "python3 /home/ytxing/cluster-network-sim-tools/trace_analysis/parse_trace.py " + targetTraceDir;
+        string cmd = "python3 /path/to/ns-3-ub-tools/trace_analysis/parse_trace.py " + targetTraceDir;
         if (isTest) {
             cmd += " true";
         } else {
