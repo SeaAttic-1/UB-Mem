@@ -27,3 +27,4 @@ default ns3::UbApiLdst::QueuePriority "1"
 
 global UB_PRIORITY_NUM "16"
 global UB_VL_NUM "16"
+global UB_PYTHON_SCRIPT_PATH "/path/to/ns-3-ub-tools/trace_analysis/parse_trace.py"
