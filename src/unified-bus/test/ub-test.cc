@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-utils.h"
 #include <chrono>
 #include "ns3/test.h"
@@ -21,7 +22,7 @@ public:
     void DoRun() override;
 
 private:
-    void CheckExampleProcess(unordered_map<int, Ptr<UbApiUrma>> client_map);
+    void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map);
 
     void RunCase(const string& configPath);
 
@@ -121,11 +122,11 @@ void ubTest::IsPathExist(const std::string &path)
     NS_TEST_ASSERT_MSG_EQ(std::filesystem::exists(path), true, "test path not exist");
 }
 
-void ubTest::CheckExampleProcess(unordered_map<int, Ptr<UbApiUrma>> client_map)
+void ubTest::CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
 {
     PrintTimestamp("Check Example Process.");
     for (auto it = client_map.begin(); it != client_map.end(); it++) {
-        Ptr<UbApiUrma> client = it->second;
+        Ptr<UbApp> client = it->second;
         if (!client->IsCompleted()) {
             Simulator::Schedule(MicroSeconds(10), &ubTest::CheckExampleProcess, this, client_map);
             return ;
@@ -159,7 +160,7 @@ void ubTest::RunCase(const string& configPath)
     for (auto& record : trafficData) {
         auto it = client_map.find(record.sourceNode);
         if (it == client_map.end()) {
-            Ptr<UbApiUrma> client = CreateObject<UbApiUrma> ();
+            Ptr<UbApp> client = CreateObject<UbApp> ();
             client_map[record.sourceNode] = client;
             ClientTraceConnect(record.sourceNode);
 

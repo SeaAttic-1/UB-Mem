@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_UBSWITCH_ALLOCATOR_H
 #define UB_UBSWITCH_ALLOCATOR_H
 

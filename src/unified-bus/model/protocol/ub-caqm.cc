@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include <climits>
 #include "ns3/log.h"
 #include "ns3/ub-switch.h"

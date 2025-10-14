@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-fault.h"
 #include "ns3/node-list.h"
 #include "ns3/node.h"

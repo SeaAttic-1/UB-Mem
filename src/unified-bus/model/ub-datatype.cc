@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ub-datatype.h"
 
-#include "ns3/ub-api-urma.h"
+#include "ub-traffic-gen.h"
 
 namespace ns3 {
 

@@ -1,14 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include <chrono>
 #include "ns3/ub-utils.h"
 
 using namespace utils;
 
 ApplicationContainer appCon;
-void CheckExampleProcess(unordered_map<int, Ptr<UbApiUrma>> client_map)
+void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
 {
     PrintTimestamp("Check Example Process.");
     for (auto it = client_map.begin(); it != client_map.end(); it++) {
-        Ptr<UbApiUrma> client = it->second;
+        Ptr<UbApp> client = it->second;
         if (!client->IsCompleted()) {
             Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
             return ;
@@ -47,7 +48,7 @@ void RunCase(const string& configPath)
     for (auto& record : trafficData) {
         auto it = client_map.find(record.sourceNode);
         if (it == client_map.end()) {
-            Ptr<UbApiUrma> client = CreateObject<UbApiUrma> ();
+            Ptr<UbApp> client = CreateObject<UbApp> ();
             client_map[record.sourceNode] = client;
             ClientTraceConnect(record.sourceNode);
 
@@ -77,14 +78,14 @@ int main(int argc, char* argv[])
     // ns3::LogComponentEnableAll(ns3::LOG_PREFIX_TIME);
 
     // 示例：设置指定组件日志级别，设置指定组件打印时间前缀
-    // LogComponentEnable("UbApiUrma", LOG_LEVEL_INFO);
-    // LogComponentEnable("UbApiUrma", LOG_PREFIX_TIME);
+    // LogComponentEnable("UbApp", LOG_LEVEL_INFO);
+    // LogComponentEnable("UbApp", LOG_PREFIX_TIME);
 
     // 激活日志
     // LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
     // LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiUrma", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbController", LOG_LEVEL_ALL);
     // LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);

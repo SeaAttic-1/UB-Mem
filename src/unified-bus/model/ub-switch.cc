@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include <iostream>
 #include "ns3/ipv4.h"
 #include "ns3/packet.h"

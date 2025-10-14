@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -16,7 +17,8 @@
 #include "ns3/ptr.h"
 #include "ns3/object-factory.h"
 #include "ns3/ub-switch.h"
-#include "ns3/ub-api-urma.h"
+#include "ns3/ub-traffic-gen.h"
+#include "ns3/ub-app.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
@@ -35,10 +37,10 @@ using namespace ns3;
 namespace utils {
 
 // 保存node
-unordered_map<uint32_t, Ptr<Node>> node_map;
+map<uint32_t, Ptr<Node>> node_map;
 unordered_map<uint32_t, vector<uint32_t>> NodeTpns;
-unordered_map<int, Ptr<UbApiUrma>> client_map;
-unordered_map<std::string, std::ofstream *> files;  // 存储文件名和对应的文件句柄
+unordered_map<int, Ptr<UbApp>> client_map;
+map<std::string, std::ofstream *> files;  // 存储文件名和对应的文件句柄
 
 // 设置Trace全局变量
 GlobalValue g_task_enable = GlobalValue("UB_TRACE_ENABLE", "enable trace", BooleanValue(false), MakeBooleanChecker());
@@ -101,12 +103,11 @@ void ParseTrace(bool isTest = false)
     }
 }
 
-void Destroy(ApplicationContainer apps)
+void Destroy()
 {
     node_map.clear();
     NodeTpns.clear();
     client_map.clear();
-    apps.Stop(Time(0));
 
     for (auto &pair : files) {
         if (pair.second->is_open()) {
@@ -709,7 +710,7 @@ TpConnectionManager CreateTp(const string &filename)
     return retTpConnectionManager;
 }
 
-std::map<uint32_t, map<uint32_t, set<uint32_t>>> m_dependOnPhasesToTaskId;
+std::map<uint32_t, set<uint32_t>> m_dependOnPhasesToTaskId; // key: phaseId, value: depend
 
 // 读取Traffic配置文件
 enum class FIELDCOUNT : int {
@@ -789,7 +790,7 @@ vector<TrafficRecord> ReadTrafficCSV(const string &filename)
             SetRecord(fieldCount, field, record);
             fieldCount++;
         }
-        m_dependOnPhasesToTaskId[record.phaseId][record.sourceNode].insert(record.taskId);
+        m_dependOnPhasesToTaskId[record.phaseId].insert(record.taskId);
         records.push_back(record);
     }
     file.close();
@@ -812,15 +813,15 @@ void SetComponentsAttribute(const string &filename)
     config.ConfigureDefaults();
 }
 
-set<uint32_t> GetDependsToTaskId(vector<uint32_t> dependOnPhases, int sourceNode)
+set<uint32_t> GetDependsToTaskId(vector<uint32_t> dependOnPhases)
 {
     set<uint32_t> result;
     if (dependOnPhases.empty()) {
         return result;
     }
     for (const auto &dependId : dependOnPhases) {
-        result.insert(m_dependOnPhasesToTaskId[dependId][sourceNode].begin(),
-            m_dependOnPhasesToTaskId[dependId][sourceNode].end());
+        result.insert(m_dependOnPhasesToTaskId[dependId].begin(),
+            m_dependOnPhasesToTaskId[dependId].end());
     }
     return result;
 }

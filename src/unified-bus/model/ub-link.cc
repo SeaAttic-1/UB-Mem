@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ub-link.h"
 #include "ns3/log.h"
 

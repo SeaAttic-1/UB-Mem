@@ -1,10 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+#include "ub-api-ldst-thread.h"
+
+#include "../../../core/model/log.h"
+#include "../ub-queue-manager.h"
+#include "ub-routing-process.h"
+
 #include "ns3/log.h"
 #include "ns3/simulator.h"
-#include "ns3/ub-datatype.h"
 #include "ns3/ub-controller.h"
-#include "ub-routing-process.h"
-#include "../ub-queue-manager.h"
-#include "ub-api-ldst-thread.h"
+#include "ns3/ub-datatype.h"
 
 namespace ns3 {
 
@@ -95,14 +99,10 @@ void UbApiLdstThread::PushMemTask(Ptr<UbMemTask> ubMemTask)
 void UbApiLdstThread::GenPacketAndSend()
 {
     if (m_storeOutstanding > 0 && m_memStoreTaskQueue.size() > 0) {
-        NS_LOG_DEBUG("MEM STORE Task Starts, Outstandings: "<< m_storeOutstanding <<", taskId: " << std::to_string(m_memStoreTaskQueue.front()->GetMemTaskId()));
+        NS_LOG_INFO("MEM Task Starts, taskId: "<< std::to_string(m_memStoreTaskQueue.front()->GetMemTaskId()));
     }
     // store发送
     while (m_storeOutstanding > 0 && m_memStoreTaskQueue.size() > 0) {
-        // 添加日志监控 StoreOutstanding
-        NS_LOG_DEBUG("StoreOutstanding status - Current: " << m_storeOutstanding 
-                   << ", Queue size: " << m_memStoreTaskQueue.size());
-        
         Ptr<UbMemTask> currentMemTask = m_memStoreTaskQueue.front();
         if (currentMemTask == nullptr) {
             continue;
@@ -152,9 +152,6 @@ void UbApiLdstThread::GenPacketAndSend()
         }
 
         m_storeOutstanding--;
-        
-        // 添加日志显示递减后的状态
-        NS_LOG_DEBUG("StoreOutstanding decreased - Remaining: " << m_storeOutstanding);
 
         // 所有包都发完
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == currentMemTask->GetPsnSize()) {
@@ -165,14 +162,10 @@ void UbApiLdstThread::GenPacketAndSend()
     }
 
     if (m_loadOutstanding > 0 && m_memLoadTaskQueue.size() > 0) {
-        NS_LOG_DEBUG("MEM LOAD Task Starts, Outstandings: "<< m_loadOutstanding <<", taskId: " << std::to_string(m_memLoadTaskQueue.front()->GetMemTaskId()));
+        NS_LOG_INFO("MEM Task Starts, taskId: " << std::to_string(m_memLoadTaskQueue.front()->GetMemTaskId()));
     }
     // load发送
     while (m_loadOutstanding > 0 && m_memLoadTaskQueue.size() > 0) {
-        // 添加日志监控 LoadOutstanding
-        NS_LOG_DEBUG("LoadOutstanding status - Current: " << m_loadOutstanding 
-                   << ", Queue size: " << m_memLoadTaskQueue.size());
-        
         Ptr<UbMemTask> currentMemTask = m_memLoadTaskQueue.front();
         if (currentMemTask == nullptr) {
             continue;
@@ -214,9 +207,6 @@ void UbApiLdstThread::GenPacketAndSend()
             FirstPacketSendsNotify(m_node->GetId(), currentMemTask->GetMemTaskId());
         }
         m_loadOutstanding--;
-        
-        // 添加日志显示递减后的状态
-        NS_LOG_DEBUG("LoadOutstanding decreased - Remaining: " << m_loadOutstanding);
 
         // 所有包都发完
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == currentMemTask->GetPsnSize()) {
@@ -224,25 +214,14 @@ void UbApiLdstThread::GenPacketAndSend()
             m_memLoadTaskQueue.pop_front();
         }
     }
-    
-    // 添加日志，但要先检查队列是否为空
-    if (m_storeOutstanding == 0 && !m_memStoreTaskQueue.empty()) {
-        NS_LOG_WARN("StoreOutstanding exhausted! Pending tasks: " << m_memStoreTaskQueue.size());
-    }
-    
-    if (m_loadOutstanding == 0 && !m_memLoadTaskQueue.empty()) {
-        NS_LOG_WARN("LoadOutstanding exhausted! Pending tasks: " << m_memLoadTaskQueue.size());
-    }
 }
 
 void UbApiLdstThread::IncreaseOutstanding(UbMemOperationType type)
 {
     if (type == UbMemOperationType::STORE) {
         m_storeOutstanding++;
-        NS_LOG_DEBUG("StoreOutstanding increased - Current: " << m_storeOutstanding);
     } else if (type == UbMemOperationType::LOAD) {
         m_loadOutstanding++;
-        NS_LOG_DEBUG("LoadOutstanding increased - Current: " << m_loadOutstanding);
     }
 }
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #ifndef UB_TAG_H
 #define UB_TAG_H
 #include <unordered_map>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-congestion-control.h"
 #include "ns3/ub-caqm.h"
 #include "ns3/boolean.h"

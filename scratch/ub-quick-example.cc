@@ -1,41 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-utils.h"
 #include <chrono>
-#include <iomanip>
 
 using namespace utils;
 
 ApplicationContainer appCon;
-static int checkCount = 0;
 
-void CheckExampleProcess(unordered_map<int, Ptr<UbApiUrma>> client_map)
+void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
 {
-    // 使用 \r 让输出在同一行更新
-    auto now = std::chrono::system_clock::now();
-    std::time_t nowTime = std::chrono::system_clock::to_time_t(now);
-    std::tm localTime = *std::localtime(&nowTime);
-    
-    // 获取仿真时间（微秒）
-    double simTimeUs = Simulator::Now().GetMicroSeconds();
-    
-    if (checkCount != 0) {
-        std::cout << "\r[" << std::put_time(&localTime, "%H:%M:%S") 
-              << "]:Check Example Process... (" << ++checkCount 
-              << ") | Sim Time: " << std::fixed << std::setprecision(2) << simTimeUs << " us" 
-              << std::flush;
-    } else {
-        ++checkCount;
-    }
-    
-    for (auto it = client_map.begin(); it != client_map.end(); it++) {
-        Ptr<UbApiUrma> client = it->second;
-        if (!client->IsCompleted()) {
+    PrintTimestamp("Check Example Process.");
+    if (!UbTrafficGen::GetInstance().IsCompleted()) {
             Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
-            return ;
-        }
+            return;
     }
-    std::cout << std::endl; // 完成后换行
     Simulator::Stop();
-    return ;
+    return;
 }
 
 // 根据配置文件路径执行用例
@@ -68,96 +47,43 @@ void RunCase(const string& configPath)
     for (auto& record : trafficData) {
         auto it = client_map.find(record.sourceNode);
         if (it == client_map.end()) {
-            Ptr<UbApiUrma> client = CreateObject<UbApiUrma> ();
+            Ptr<UbApp> client = CreateObject<UbApp> ();
+            utils::node_map[record.sourceNode]->AddApplication(client);
             client_map[record.sourceNode] = client;
             ClientTraceConnect(record.sourceNode);
-
-            Ptr<Node> sN = node_map[record.sourceNode];
-            sN->AddApplication (client_map[record.sourceNode]);
-            appCon.Add(client_map[record.sourceNode]);
         }
 
         client_map[record.sourceNode]->SetNode(node_map[record.sourceNode]);
-        client_map[record.sourceNode]->AddTask(record.taskId, record,
-                                               GetDependsToTaskId(record.dependOnPhases, record.sourceNode));
+        UbTrafficGen::GetInstance().AddTask(record.taskId, record,
+                                               GetDependsToTaskId(record.dependOnPhases));
         client_map[record.sourceNode]->GetTpnConn(retConnectionManager.GetConnectionManagerByNode(record.sourceNode));
     }
-    appCon.Start(Time(0));
-
+    Simulator::ScheduleNow(&UbTrafficGen::ScheduleNextTasks,&UbTrafficGen::GetInstance());
     CheckExampleProcess(client_map);
 }
 
 // 根据配置文件路径执行用例
 int main(int argc, char* argv[])
 {
+    if (QueryAttributeInfor(argc, argv))
+        return 0;
     // 开始计时
     auto start = std::chrono::high_resolution_clock::now();
     Time::SetResolution(Time::NS);
-    
-    // 配置文件路径
-    string configPath = "scratch/test_CLOS";
-    string customTraceDir = "";
-    string className = "";
-    string attributeName = "";
-    
-    // 使用 CommandLine 解析参数
-    CommandLine cmd;
-    cmd.Usage("\nns-3 Unified Bus 仿真程序\n\n"
-              "示例:\n"
-              "  ./ns3 run 'scratch/ub-quick-example --CaseDir=scratch/test_CLOS'\n"
-              "  ./ns3 run 'scratch/ub-quick-example --CaseDir=scratch/test_CLOS --TraceDir=/tmp/trace'\n"
-              "  ./ns3 run 'scratch/ub-quick-example --ClassName=ns3::UbPort'\n");
-    cmd.AddValue("CaseDir", "指定用例文件夹路径", configPath);
-    cmd.AddValue("TraceDir", "指定ParseTrace使用的输出文件夹", customTraceDir);
-    cmd.AddValue("ClassName", "查询指定类的属性信息", className);
-    cmd.AddValue("AttributeName", "查询指定属性的详细信息", attributeName);
-    cmd.Parse(argc, argv);
-    
-    // 处理属性查询
-    if (!className.empty()) {
-        TypeId tid;
-        try {
-            tid = TypeId::LookupByName(className);
-        } catch (const std::exception& e) {
-            NS_LOG_UNCOND("错误: 找不到类 '" << className << "'");
-            return 1;
-        }
-        
-        if (!attributeName.empty()) {
-            struct TypeId::AttributeInformation info;
-            if (tid.LookupAttributeByName(attributeName, &info)) {
-                NS_LOG_UNCOND("Attribute: " << info.name << "\n"
-                            << "Description: " << info.help << "\n"
-                            << "DataType: " << info.checker->GetValueTypeName() << "\n"
-                            << "Default: " << info.initialValue->SerializeToString(info.checker));
-            } else {
-                NS_LOG_UNCOND("错误: 在类 '" << className << "' 中找不到属性 '" << attributeName << "'");
-            }
-        } else {
-            NS_LOG_UNCOND("类 '" << className << "' 的所有属性:\n");
-            for (uint32_t i = 0; i < tid.GetAttributeN(); ++i) {
-                TypeId::AttributeInformation info = tid.GetAttribute(i);
-                NS_LOG_UNCOND("Attribute: " << info.name << "\n"
-                            << "Description: " << info.help << "\n"
-                            << "DataType: " << info.checker->GetValueTypeName() << "\n"
-                            << "Default: " << info.initialValue->SerializeToString(info.checker) << "\n");
-            }
-        }
-        return 0;
-    }
-    
+
     // 日志中添加时间前缀
-    ns3::LogComponentEnableAll(LogLevel(LOG_PREFIX_TIME | LOG_PREFIX_FUNC | LOG_PREFIX_NODE));
+    //ns3::LogComponentEnableAll(LOG_PREFIX_TIME);
 
     // 示例：设置指定组件日志级别，设置指定组件打印时间前缀
-    // LogComponentEnable("UbApiUrma", LOG_LEVEL_INFO);
-    // LogComponentEnable("UbApiUrma", LOG_PREFIX_TIME);
+    // LogComponentEnable("UbApp", LOG_LEVEL_INFO);
+    // LogComponentEnable("UbApp", LOG_PREFIX_TIME);
 
     // 激活日志
     // LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
     // LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiUrma", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbTrafficGen", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
     // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbController", LOG_LEVEL_ALL);
     // LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);
@@ -174,17 +100,24 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbFault", LOG_LEVEL_ALL);
     // LogComponentEnable("UbTransaction", LOG_LEVEL_ALL);
 
+    // 配置文件路径
+    string configPath = "scratch/test_CLOS";
+    if (argc > 1)
+    {
+        configPath = string(argv[1]);
+    }
+
     // 读取配置文件并执行用例
     string runCase = "Run case: " + configPath;
     PrintTimestamp(runCase);
     RunCase(configPath);
-    
-    PrintTimestamp("Simulator Start!");
+
     Simulator::Run();
     Simulator::Destroy();
     PrintTimestamp("Simulator finished!");
-    Destroy(appCon);
-    ParseTrace(customTraceDir);
+
+    ParseTrace();
+    Destroy();
     auto end = std::chrono::high_resolution_clock::now();
     // 计算持续时间
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

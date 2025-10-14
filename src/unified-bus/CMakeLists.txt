@@ -19,7 +19,8 @@ build_lib(
   LIBNAME unified-bus
   SOURCE_FILES
     ${mpi_sources}
-	model/protocol/ub-api-urma.cc
+	model/ub-traffic-gen.cc
+	model/ub-app.cc
     model/ub-controller.cc
 	model/protocol/ub-datalink.cc
 	model/ub-datatype.cc
@@ -41,7 +42,8 @@ build_lib(
 	model/ub-fault.cc
   HEADER_FILES
     ${mpi_headers}
-	model/protocol/ub-api-urma.h
+	model/ub-traffic-gen.h
+	model/ub-app.h
     model/ub-controller.h
 	model/protocol/ub-datalink.h
 	model/ub-datatype.h
