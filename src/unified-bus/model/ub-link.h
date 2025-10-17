@@ -49,8 +49,11 @@ public:
      */
     void Attach(Ptr<UbPort> device);
 
+    // Import parent class TransmitStart method to avoid hiding warning
+    using PointToPointChannel::TransmitStart;
+    
     /**
-    * @brief Transmit a packet over this link
+    * @brief Transmit a packet over this link (UbPort version)
     * @param p Packet to transmit
     * @param src Source UbPort
     * @param txTime Transmit time to apply

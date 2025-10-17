@@ -8,15 +8,12 @@ ApplicationContainer appCon;
 void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
 {
     PrintTimestamp("Check Example Process.");
-    for (auto it = client_map.begin(); it != client_map.end(); it++) {
-        Ptr<UbApp> client = it->second;
-        if (!client->IsCompleted()) {
-            Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
-            return ;
-        }
+    if (!UbTrafficGen::GetInstance().IsCompleted()) {
+        Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
+        return;
     }
     Simulator::Stop();
-    return ;
+    return;
 }
 
 // 根据配置文件路径执行用例
@@ -58,8 +55,8 @@ void RunCase(const string& configPath)
         }
 
         client_map[record.sourceNode]->SetNode(node_map[record.sourceNode]);
-        client_map[record.sourceNode]->AddTask(record.taskId, record,
-                                               GetDependsToTaskId(record.dependOnPhases, record.sourceNode));
+        UbTrafficGen::GetInstance().AddTask(record.taskId, record,
+                                               GetDependsToTaskId(record.dependOnPhases));
         client_map[record.sourceNode]->GetTpnConn(retConnectionManager.GetConnectionManagerByNode(record.sourceNode));
     }
     appCon.Start(Time(0));
@@ -116,7 +113,7 @@ int main(int argc, char* argv[])
     Simulator::Run();
     Simulator::Destroy();
     PrintTimestamp("Simulator finished.");
-    Destroy(appCon);
+    Destroy();
     ParseTrace();
     auto end = std::chrono::high_resolution_clock::now();
     // 计算持续时间
