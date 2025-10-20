@@ -4,12 +4,10 @@
 
 using namespace utils;
 
-ApplicationContainer appCon;
-
-void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
+void CheckExampleProcess()
 {
     if (!UbTrafficGen::Get()->IsCompleted()) {
-            Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
+            Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess);
             return;
     }
     Simulator::Stop();

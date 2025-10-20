@@ -22,7 +22,7 @@ namespace ns3 {
 /**
  * @brief 任务图应用,管理多个WQE任务及依赖关系
  */
-class UbTrafficGen : public Singleton<UbTrafficGen> {
+class UbTrafficGen : public Object , public Singleton<UbTrafficGen> {
 public:
     static UbTrafficGen& GetInstance() {
         static UbTrafficGen instance;

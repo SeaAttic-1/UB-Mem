@@ -39,7 +39,7 @@ void UbTrafficGen::AddTask(TrafficRecord record)
         return;
     }
     m_tasks[taskId] = record;
-    for (const auto &dependId : record.dependOnPhase) {
+    for (const auto &dependId : record.dependOnPhases) {
         m_dependencies[taskId].insert(m_dependOnPhasesToTaskId[dependId].begin(),
             m_dependOnPhasesToTaskId[dependId].end());
     }

@@ -120,7 +120,7 @@ void UbTransportChannel::DoDispose()
 {
     NS_LOG_FUNCTION(this);
     m_ackQ = queue<Ptr<Packet>>();
-    m_relatedJetty.clear();
+    m_relatedJettys.clear();
     m_wqeSegmentVector.clear();
     m_congestionCtrl = nullptr;
     m_recvPsnBitset.clear();

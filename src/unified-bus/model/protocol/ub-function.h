@@ -176,7 +176,7 @@ namespace ns3 {
 
         Ptr<UbTransaction> GetTransaction() { return m_transaction; }
 
-        void SetNodeId(uint32_t nodeId) {m_nodeId = nodeId};
+        void SetNodeId(uint32_t nodeId) {m_nodeId = nodeId; }
 
         uint32_t GetNodeId() { return m_nodeId; }
 

@@ -439,7 +439,7 @@ void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw)
             m_bps.push_back(DynamicCast<UbPort>(node->GetDevice(i))->GetDataRate());
         }
     }
-    m_sw->SetCongestionCtrl(this);
+    sw->SetCongestionCtrl(this);
 }
 
 void UbSwitchCaqm::ResetLocalCc()

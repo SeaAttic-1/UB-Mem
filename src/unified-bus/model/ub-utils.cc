@@ -16,7 +16,7 @@ enum class FIELDCOUNT : int {
     DEPENDONPHASES
 };
 
-inline void UbUtils::PrintTimestamp(const std::string &message)
+void UbUtils::PrintTimestamp(const std::string &message)
 {
     // 获取当前系统时间点
     auto now = std::chrono::system_clock::now();
@@ -30,7 +30,7 @@ inline void UbUtils::PrintTimestamp(const std::string &message)
     NS_LOG_UNCOND("[" << std::put_time(&localTime, "%H:%M:%S") << "]:" << message);
 }
 
-void UbUtils::ParseTrace(bool isTest = false)
+void UbUtils::ParseTrace(bool isTest)
 {
     BooleanValue val;
     g_parse_enable.GetValue(val);
@@ -38,12 +38,7 @@ void UbUtils::ParseTrace(bool isTest = false)
     if (ParseEnable) {
         PrintTimestamp("Start Parse Trace File.");
         
-        // 从GlobalValue获取路径
-        StringValue scriptPathValue;
-        g_python_script_path.GetValue(scriptPathValue);
-        string python_script_path = scriptPathValue.Get();
-        
-        string cmd = "python3 " + python_script_path + " " + trace_path;
+        string cmd = "python3 ./../../toolchain/trace_analysis/parse_trace.py" + trace_path;
         if (isTest) {
             cmd += " true";
         } else {
@@ -58,10 +53,6 @@ void UbUtils::ParseTrace(bool isTest = false)
 
 void UbUtils::Destroy()
 {
-    node_map.clear();
-    NodeTpns.clear();
-    client_map.clear();
-
     for (auto &pair : files) {
         if (pair.second->is_open()) {
             pair.second->close();
@@ -71,7 +62,7 @@ void UbUtils::Destroy()
     files.clear();
 }
 
-inline void UbUtils::CreateTraceDir()
+void UbUtils::CreateTraceDir()
 {
     size_t last_slash_pos = g_config_path.find_last_of('/');
     string dir_path;
@@ -79,7 +70,7 @@ inline void UbUtils::CreateTraceDir()
         dir_path = g_config_path.substr(0, last_slash_pos + 1);
     else
         NS_ASSERT_MSG(0, "Not find testcase dir");
-    trace_path = dir_path;
+    trace_path = std::string(dir_path);
     std::string command = "rm -rf " + dir_path + "runlog && mkdir " + dir_path + "runlog";
     // 执行系统命令
     if (system(command.c_str()) != 0)
@@ -103,7 +94,7 @@ inline void UbUtils::PrintTraceInfo(string fileName, string info)
     *files[fileName] << "[" << Simulator::Now().GetSeconds() * 1e6 << "us] " << info << "\n";
 }
 
-inline UbUtils::void PrintTraceInfoNoTs(string fileName, string info)
+inline void UbUtils::PrintTraceInfoNoTs(string fileName, string info)
 {
     // 检查文件是否已经打开
     if (files.find(fileName) == files.end()) {
@@ -200,6 +191,9 @@ inline string UbUtils::Among(string s, string ts)
 void UbUtils::TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn, uint32_t dstTpn,
     PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag)
 {
+    std::map<PacketType, std::string> typeMap = {
+    {PacketType::PACKET, "PKT"}, {PacketType::ACK, "ACK"}, {PacketType::CONTROL_FRAME, "CONTROL"}};
+
     std::ostringstream oss;
     oss << "Uid:" << packetUid << " Psn:" << psn << " Src:" << src << " Dst:" << dst << " SrcTpn:" << srcTpn
         << " DstTpn:" << dstTpn << " Type:" << typeMap[type] << " Size:" << size << " TaskId:" << taskId;
@@ -389,8 +383,8 @@ void UbUtils::CreateTopo(const string &filename)
         bandwidth = cell;
         getline(ss, cell, ',');
         delay = cell;
-        Ptr<Node> n1 = node_map[node1];
-        Ptr<Node> n2 = node_map[node2];
+        Ptr<Node> n1 = NodeList::GetNode(node1);
+        Ptr<Node> n2 = NodeList::GetNode(node2);
 
         Ptr<UbPort> p1 = DynamicCast<UbPort>(n1->GetDevice(port1));
         Ptr<UbPort> p2 = DynamicCast<UbPort>(n2->GetDevice(port2));
@@ -402,8 +396,9 @@ void UbUtils::CreateTopo(const string &filename)
         p2->Attach(channel);
     }
 
-    for (auto it = node_map.begin(); it != node_map.end(); ++it) {
-        Ptr<UbCongestionControl> congestionCtrl = (it->second)->GetObject<ns3::UbSwitch>()->GetCongestionCtrl();
+    for (auto it = NodeList::Begin(); it != NodeList::End(); ++it) {
+        Ptr<Node> node = *it;
+        Ptr<UbCongestionControl> congestionCtrl = node->GetObject<ns3::UbSwitch>()->GetCongestionCtrl();
         if (congestionCtrl->GetCongestionAlgo() == CAQM) {
             Ptr<UbSwitchCaqm> swCaqm = DynamicCast<UbSwitchCaqm>(congestionCtrl);
             swCaqm->ResetLocalCc();
@@ -413,7 +408,7 @@ void UbUtils::CreateTopo(const string &filename)
 }
 
 // 解析节点范围（如 "1..4"）
-inline void UbUtils::ParseNodeRange(const string &rangeStr, vector<uint32_t> &result)
+inline void UbUtils::ParseNodeRange(const string &rangeStr, NodeEle nodeEle)
 {
     size_t dotPos = rangeStr.find("..");
     if (dotPos != string::npos) {
@@ -421,11 +416,11 @@ inline void UbUtils::ParseNodeRange(const string &rangeStr, vector<uint32_t> &re
         uint32_t start = stoi(rangeStr.substr(0, dotPos));
         uint32_t end = stoi(rangeStr.substr(dotPos + 2));
         for (auto i = start; i <= end; ++i) {
-            result.push_back(i);
+            nodeEle_map[i]=nodeEle;
         }
     } else {
         // 处理单个节点
-        result.push_back(stoi(rangeStr));
+        nodeEle_map[stoi(rangeStr)] = nodeEle;
     }
 }
 
@@ -455,43 +450,52 @@ void UbUtils::CreateNode(const string &filename)
         getline(ss, nodeTypeStr, ',');
         getline(ss, portNumStr, ',');
         getline(ss, forwardDelay);
+
+        NodeEle nodeEle = {};
+        nodeEle.nodeIdStr = nodeIdStr;
+        nodeEle.nodeTypeStr = nodeTypeStr;
+        nodeEle.portNumStr = portNumStr;
+        nodeEle.forwardDelay = forwardDelay;
+
         // 解析节点ID（范围 or 单个节点）
-        vector<uint32_t> nodeIds;
-        ParseNodeRange(nodeIdStr, nodeIds);
-        int portNum = stoi(portNumStr);
-        // 创建节点
-        for (uint32_t id : nodeIds) {
-            (void)id;  // 显式忽略警告
-            Ptr<Node> node = CreateObject<Node>();
-            Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
-            node->AggregateObject(sw);
-            if (nodeTypeStr == "DEVICE") {
-                Ptr<UbController> ubCtrl = CreateObject<UbController>();
-                node->AggregateObject(ubCtrl);
-                ubCtrl->SetNode(node);
-                sw->SetNodeType(UB_DEVICE);
-            } else if (nodeTypeStr == "SWITCH") {
-                sw->SetNodeType(UB_SWITCH);
-            } else {
-                NS_ASSERT_MSG(0, "node type not support");
-            }
-            sw->SetNode(node);
-            node_map[node->GetId()] = node;
-            for (int i = 0; i < portNum; i++) {
-                Ptr<UbPort> port = CreateObject<UbPort>();
-                port->SetAddress(Mac48Address::Allocate());
-                node->AddDevice(port);
-            }
-            sw->Init();
-            auto cc = UbCongestionControl::Create(UB_SWITCH);
-            cc->SwitchInit(sw);
-            if (!forwardDelay.empty()) {
-                auto allocator = sw->GetAllocator();
-                allocator->SetAttribute("AllocationTime", StringValue(forwardDelay));
-            }
-        }
+        ParseNodeRange(nodeIdStr, nodeEle);
     }
     file.close();
+    // 创建节点
+    for (auto it: nodeEle_map) {
+        string nodeIdStr = it.second.nodeIdStr;
+        string nodeTypeStr = it.second.nodeTypeStr;
+        string portNumStr = it.second.portNumStr;
+        string forwardDelay = it.second.forwardDelay;
+        int portNum = stoi(portNumStr);
+        Ptr<Node> node = CreateObject<Node>();
+        Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
+        node->AggregateObject(sw);
+        if (nodeTypeStr == "DEVICE") {
+            Ptr<UbController> ubCtrl = CreateObject<UbController>();
+            node->AggregateObject(ubCtrl);
+            ubCtrl->SetNode(node);
+            sw->SetNodeType(UB_DEVICE);
+        } else if (nodeTypeStr == "SWITCH") {
+            sw->SetNodeType(UB_SWITCH);
+        } else {
+            NS_ASSERT_MSG(0, "node type not support");
+        }
+        sw->SetNode(node);
+        node_map[node->GetId()] = node;
+        for (int i = 0; i < portNum; i++) {
+            Ptr<UbPort> port = CreateObject<UbPort>();
+            port->SetAddress(Mac48Address::Allocate());
+            node->AddDevice(port);
+        }
+        sw->Init();
+        auto cc = UbCongestionControl::Create(UB_SWITCH);
+        cc->SwitchInit(sw);
+        if (!forwardDelay.empty()) {
+            auto allocator = sw->GetAllocator();
+            allocator->SetAttribute("AllocationTime", StringValue(forwardDelay));
+        }
+    }
 }
 
 // 读取路由
@@ -553,7 +557,7 @@ void UbUtils::AddRoutingTable(const string &filename)
         }
     }
     for (auto &nodert : rtTable) {
-        auto rt = node_map[nodert.first]->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
+        auto rt = NodeList::GetNode(nodert.first)->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
         for (auto &destiprow : nodert.second) {
             auto ip = destiprow.first;
             int i = 0;
@@ -615,6 +619,7 @@ void UbUtils::ParseLine(const std::string &line, Connection &conn)
 
 TpConnectionManager UbUtils::CreateTp(const string &filename)
 {
+    std::unordered_map<uint32_t, std::vector<uint32_t>> NodeTpns;
     // key1:node1 key2:node2 value:Connection
     TpConnectionManager retTpConnectionManager;
     ifstream file(filename);
@@ -634,8 +639,8 @@ TpConnectionManager UbUtils::CreateTp(const string &filename)
         }
         Connection conn;
         ParseLine(line, conn);
-        Ptr<Node> sN = node_map[conn.node1];
-        Ptr<Node> rN = node_map[conn.node2];
+        Ptr<Node> sN = NodeList::GetNode(node1);
+        Ptr<Node> rN = NodeList::GetNode(node2);
 
         Ptr<ns3::UbController> sendCtrl = sN->GetObject<ns3::UbController>();
         Ptr<ns3::UbController> receiveCtrl = rN->GetObject<ns3::UbController>();
@@ -725,7 +730,7 @@ vector<TrafficRecord> UbUtils::ReadTrafficCSV(const string &filename)
             SetRecord(fieldCount, field, record);
             fieldCount++;
         }
-        m_dependOnPhasesToTaskId[record.phaseId].insert(record.taskId);
+        UbtrafficGen::Get()->SetPhaseDepend(record.phaseId, record.taskId);
         records.push_back(record);
     }
     file.close();
@@ -736,7 +741,7 @@ vector<TrafficRecord> UbUtils::ReadTrafficCSV(const string &filename)
 void UbUtils::SetComponentsAttribute(const string &filename)
 {
     PrintTimestamp("Set component attributes");
-    g_config_path = filename;
+    g_config_path = std::string(filename);
     std::ifstream file(filename.c_str());
     if (!file.good()) {
         NS_ASSERT_MSG(0, "Can not open File: " << filename);
@@ -748,20 +753,7 @@ void UbUtils::SetComponentsAttribute(const string &filename)
     config.ConfigureDefaults();
 }
 
-set<uint32_t> UbUtils::GetDependsToTaskId(vector<uint32_t> dependOnPhases)
-{
-    set<uint32_t> result;
-    if (dependOnPhases.empty()) {
-        return result;
-    }
-    for (const auto &dependId : dependOnPhases) {
-        result.insert(m_dependOnPhasesToTaskId[dependId].begin(),
-            m_dependOnPhasesToTaskId[dependId].end());
-    }
-    return result;
-}
-bool TaskEnable = false;
-void TopoTraceConnect()
+void UbUtils::TopoTraceConnect()
 {
     BooleanValue val;
     g_task_enable.GetValue(val);
@@ -773,13 +765,13 @@ void TopoTraceConnect()
     if (!TaskEnable) {
         return;  // 若不开启trace则直接返回
     }
-    for (const auto &nodePair : node_map) {
+    for (uint32_t i = 0; i < NodeList::GetNNodes(); ++i) {
         // 若某个node不需要添加trace，可以在此处添加判断条件
-        // if (nodePair.first == 0) { // node0不需要添加trace
+        // if (i == 0) { // node0不需要添加trace
         //     continue;
         // }
 
-        Ptr<Node> node = nodePair.second;
+        Ptr<Node> node = NodeList::GetNode(i);
         Ptr<UbController> ubCtrl = node->GetObject<ns3::UbController>();
         Ptr<UbSwitch> sw = node->GetObject<ns3::UbSwitch>();
         sw->TraceConnectWithoutContext("LastPacketTraversesNotify", MakeCallback(SwitchLastPacketTraversesNotify));
@@ -836,15 +828,16 @@ void TopoTraceConnect()
     }
 }
 
-void ClientTraceConnect(int srcNode)
+void UbUtils::ClientTraceConnect(int srcNode)
 {
     if (!TaskEnable) {
         return;  // 若不开启trace则直接返回
     }
-    client_map[srcNode]->TraceConnectWithoutContext("MemTaskStartsNotify", MakeCallback(DagMemTaskStartsNotify));
-    client_map[srcNode]->TraceConnectWithoutContext("MemTaskCompletesNotify", MakeCallback(DagMemTaskCompletesNotify));
-    client_map[srcNode]->TraceConnectWithoutContext("WqeTaskStartsNotify", MakeCallback(DagWqeTaskStartsNotify));
-    client_map[srcNode]->TraceConnectWithoutContext("WqeTaskCompletesNotify", MakeCallback(DagWqeTaskCompletesNotify));
+    Ptr<ns3::UbApp> client = DynamicCast<ns3::UbApp>(NodeList::GetNode(srcNode)->GetApplication(0));
+    client->TraceConnectWithoutContext("MemTaskStartsNotify", MakeCallback(DagMemTaskStartsNotify));
+    client->TraceConnectWithoutContext("MemTaskCompletesNotify", MakeCallback(DagMemTaskCompletesNotify));
+    client->TraceConnectWithoutContext("WqeTaskStartsNotify", MakeCallback(DagWqeTaskStartsNotify));
+    client->TraceConnectWithoutContext("WqeTaskCompletesNotify", MakeCallback(DagWqeTaskCompletesNotify));
 }
 
 bool UbUtils::QueryAttributeInfor(int argc, char *argv[])
@@ -889,10 +882,11 @@ bool UbUtils::QueryAttributeInfor(int argc, char *argv[])
 void UbUtils::InitFaultMoudle(const string &FaultConfigFile)
 {
     Ptr<UbFault> ubFault = CreateObject<UbFault>();
-    for (auto it = node_map.begin(); it != node_map.end(); ++it) {
-        uint16_t portNum = it->second->GetNDevices();
+    for (auto it = NodeList::Begin(); it != NodeList::End(); ++it) {
+        Ptr<Node> = *it;
+        uint16_t portNum = node->GetNDevices();
         for (int i = 0; i < portNum; i++) {
-            Ptr<UbPort> port = DynamicCast<ns3::UbPort>(it->second->GetDevice(i));
+            Ptr<UbPort> port = DynamicCast<ns3::UbPort>(node->GetDevice(i));
             port->SetFaultCallBack(MakeCallback(&UbFault::FaultCallback, ubFault));
         }
     }

@@ -55,7 +55,7 @@ public:
 
     void ParseTrace(bool isTest = false);
 
-    void Destory();
+    void Destroy();
     
     void CreateTraceDir();
 
@@ -69,6 +69,8 @@ public:
     
     // 读取路由
     void AddRoutingTable(const string &filename);
+
+    TpConnectionManager CreateTp(const string &filename);
 
     // 从TXT文件加载配置
     void SetComponentsAttribute(const string &filename);
@@ -122,7 +124,7 @@ private:
 
     static string Among(string s, string ts);
 
-    static void SetRecord(int fieldCount, string field, TrafficRecord &record);
+    void SetRecord(int fieldCount, string field, TrafficRecord &record);
 
     static void PrintTraceInfo(string fileName, string info);
 
@@ -171,7 +173,7 @@ private:
     static void SwitchLastPacketTraversesNotify(uint32_t nodeId, UbTransportHeader ubTpHeader);
 
     // 解析节点范围（如 "1..4"）
-    inline void ParseNodeRange(const string &rangeStr, vector<uint32_t> &result);
+    inline void ParseNodeRange(const string &rangeStr, NodeEle nodeEle);
 
     // 读取TP配置文件
     void ParseLine(const std::string &line, Connection &conn)

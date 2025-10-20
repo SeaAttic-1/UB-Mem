@@ -96,7 +96,7 @@ void UbTransaction::WqeFinish(Ptr<UbWqe> wqe)
     }
 }
 
-void UbTransation::DoDispose()
+void UbTransaction::DoDispose()
 {
     NS_LOG_FUNCTION(this);
     m_wqeVector.clear();

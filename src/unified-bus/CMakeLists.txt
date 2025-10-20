@@ -33,7 +33,7 @@ build_lib(
 	model/protocol/ub-transport.cc
 	model/protocol/ub-routing-process.cc
 	model/ub-switch-allocator.cc
-	mode/ub-utils.cc
+	model/ub-utils.cc
 	model/protocol/ub-api-ldst.cc
 	model/protocol/ub-api-ldst-thread.cc
 	model/protocol/ub-congestion-control.cc
