@@ -10,6 +10,7 @@
 #include "ns3/uinteger.h"
 #include "ns3/ub-port.h"
 #include "ns3/ub-caqm.h"
+#include "ns3/ub-utils.h"
 
 namespace ns3 {
 
@@ -114,11 +115,14 @@ UbHostCaqm::UbHostCaqm()
 
 UbHostCaqm::~UbHostCaqm()
 {
+    NS_LOG_FUNCTION(this);
 }
 
 void UbHostCaqm::TpInit(Ptr<UbTransportChannel> tp)
 {
-    m_tp = tp;
+    m_src = tp->GetSrc();
+    m_dst = tp->GetDest();
+    m_tpn = tp->GetTpn();
 }
 
 // 获取剩余窗口，CAQM LDCP需要
@@ -191,9 +195,9 @@ void UbHostCaqm::SenderUpdateCongestionCtrlData(uint32_t psn, uint32_t size)
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                       << "[Debug]"
                       << "[" << __FUNCTION__ << "]"
-                      << " Send pkt. Local:" << m_tp->GetSrc()
-                      << " Send to:" << m_tp->GetDest()
-                      << " Tpn:" << m_tp->GetTpn()
+                      << " Send pkt. Local:" << m_src
+                      << " Send to:" << m_dst
+                      << " Tpn:" << m_tpn
                       << " Psn:" << psn
                       << " Size:" << size
                       << " Send byte:" << m_dataByteSent
@@ -214,9 +218,9 @@ void UbHostCaqm::RecverRecordPacketData(uint32_t psn, uint32_t size, UbNetworkHe
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                   << "[Debug]"
                   << "[" << __FUNCTION__ << "]"
-                  << " Local:" << m_tp->GetSrc()
-                  << " recv from:" << m_tp->GetDest()
-                  << " tpn:" << m_tp->GetTpn()
+                  << " Local:" << m_src
+                  << " recv from:" << m_dst
+                  << " tpn:" << m_tpn
                   << " psn:" << psn
                   << " size:" << size
                   << " C:" << (int)header.GetC()
@@ -250,9 +254,9 @@ UbCongestionExtTph UbHostCaqm::RecverGenAckCeTphHeader(uint32_t psnStart, uint32
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                   << "[Debug]"
                   << "[" << __FUNCTION__ << "]"
-                  << " Gen ack, Local:" << m_tp->GetSrc()
-                  << " send back to:" << m_tp->GetDest()
-                  << " tpn:" << m_tp->GetTpn()
+                  << " Gen ack, Local:" << m_src
+                  << " send back to:" << m_dst
+                  << " tpn:" << m_tpn
                   << " C_E:" << (int)m_CE
                   << " I_E:" << (int)m_IE
                   << " Hint_e:" << (int)m_HintE);
@@ -298,10 +302,10 @@ void UbHostCaqm::SenderRecvAck(uint32_t psn, UbCongestionExtTph header)
                   << "[Debug]"
                   << "[" << __FUNCTION__ << "]"
                   << " Recv ack."
-                  << " Local:"<< m_tp->GetSrc()
-                  << " Recv from:" << m_tp->GetDest()
+                  << " Local:"<< m_src
+                  << " Recv from:" << m_dst
                   << " Psn:" << psn
-                  << " Tpn:" << m_tp->GetTpn()
+                  << " Tpn:" << m_tpn
                   << " Sent byte:" << m_dataByteSent
                   << " Sequence:" << sequence
                   << " Inflght:" << m_inFlight
@@ -378,6 +382,17 @@ void UbHostCaqm::StateReset()
     m_congestionState = SLOW_START;
 }
 
+void UbHostCaqm::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_recvdPsnPacketSizeMap.clear();
+    m_recvdPsnHintMap.clear();
+    m_recvdPsnCMap.clear();
+    m_recvdPsnIMap.clear();
+    m_psnSendTimeMap.clear();
+    Object::DoDispose();
+}
+
 // switch
 
 NS_OBJECT_ENSURE_REGISTERED(UbSwitchCaqm);
@@ -392,6 +407,7 @@ UbSwitchCaqm::UbSwitchCaqm()
 
 UbSwitchCaqm::~UbSwitchCaqm()
 {
+    NS_LOG_FUNCTION(this);
 }
 
 TypeId UbSwitchCaqm::GetTypeId(void)
@@ -411,15 +427,16 @@ TypeId UbSwitchCaqm::GetTypeId(void)
 
 void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw)
 {
-    m_sw = sw;
+    auto node = sw->GetObject<Node>();
+    m_nodeId = node->GetId();
     if (m_congestionCtrlEnabled) {
-        uint32_t ndevice = m_sw->GetNode()->GetNDevices();
+        uint32_t ndevice = node->GetNDevices();
         for (uint32_t i = 0; i < ndevice; i++) {
             m_txSize.push_back(0);
             m_cc.push_back(0);
             m_DC.push_back(0);
             m_creditAllocated.push_back(0);
-            m_bps.push_back(DynamicCast<UbPort>(sw->GetNode()->GetDevice(i))->GetDataRate());
+            m_bps.push_back(DynamicCast<UbPort>(node->GetDevice(i))->GetDataRate());
         }
     }
     m_sw->SetCongestionCtrl(this);
@@ -428,14 +445,16 @@ void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw)
 void UbSwitchCaqm::ResetLocalCc()
 {
     if (m_congestionCtrlEnabled) {
-        uint32_t ndevice = m_sw->GetNode()->GetNDevices();
+        auto node = NodeList::GetNode(m_nodeId);
+        auto sw = node->GetObject<UbSwitch>();
+        uint32_t ndevice = node->GetNDevices();
         for (uint32_t portId = 0; portId < ndevice; portId++) {
             uint64_t cc = uint64_t(m_lambda *
                                 (m_ccUpdatePeriod.GetSeconds()
                                 * m_bps[portId].GetBitRate() / 8
                                 - m_txSize[portId]
                                 + m_idealQueueSize
-                                - m_sw->GetQueueManager()->GetAllEgressUsed(portId)
+                                - sw->GetQueueManager()->GetAllEgressUsed(portId)
                                 - m_creditAllocated[portId]));
             m_cc[portId] = cc;
             m_txSize[portId] = 0;
@@ -467,13 +486,14 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
             return;
         }
         m_txSize[outPort] += p->GetSize();
+        auto sw = NodeList::GetNode(m_nodeId)->GetObject<UbSwitch>();
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                   << "[Debug]"
                   << "[" << __FUNCTION__ << "]"
-                  << " Node:" << m_sw->GetNode()->GetId()
+                  << " Node:" << m_nodeId
                   << " Inport:" << inPort
                   << " OutPort:" << outPort
-                  << " Egress queue size:" << m_sw->GetQueueManager()->GetAllEgressUsed(outPort)
+                  << " Egress queue size:" << sw->GetQueueManager()->GetAllEgressUsed(outPort)
                   << " Txsize:" << m_txSize[outPort]);
         UbDatalinkPacketHeader dlPktHeader;
         UbNetworkHeader netHeader;
@@ -545,4 +565,17 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
         p->AddHeader(dlPktHeader);
     }
 }
+
+void UbSwitchCaqm::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_cc.clear();
+    m_txSize.clear();
+    m_DC.clear();
+    m_creditAllocated.clear();
+    m_bps.clear();
+    m_random = nullptr;
+    Object::DoDispose();
+}
+
 }

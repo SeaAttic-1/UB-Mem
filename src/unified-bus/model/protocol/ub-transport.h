@@ -88,7 +88,7 @@ public:
      */
     void RecvTpAck(Ptr<Packet> p);
 
-    void SetUbTransport(Ptr<Node> node,
+    void SetUbTransport(uint32_t nodeId,
                         uint32_t src,
                         uint32_t dest,
                         uint32_t srcTpn,        // TP Number
@@ -215,6 +215,7 @@ public:
     uint32_t GetSrc() { return m_src; }
     uint32_t GetDest() { return m_dest; }
 private:
+    void DoDispose() override;
 
     TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> m_traceFirstPacketSendsNotify;
     TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> m_traceLastPacketSendsNotify;
@@ -238,7 +239,7 @@ private:
     void TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn, uint32_t dstTpn,
                       PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
     // Node and controller references
-    Ptr<Node> m_node;
+    uint32_t m_nodeId;
 
     // Network identification parameters
     uint32_t m_src;
@@ -279,7 +280,7 @@ private:
     // Status flags
     bool m_isActive = true;
     bool m_tpFullFlag = false; // 记录tp队列状态是否满
-
+    bool m_sendWindowFlag = false; // 记录发送窗口是否满
     uint64_t m_defaultMaxWqeSegNum;
     uint64_t m_defaultMaxInflightPacketSize;
     bool m_usePacketSpray;

@@ -31,19 +31,21 @@ UbTrafficGen::~UbTrafficGen()
 {
 }
 
-void UbTrafficGen::AddTask(uint32_t taskId, TrafficRecord record, const std::set<uint32_t> &dependencies)
+void UbTrafficGen::AddTask(TrafficRecord record)
 {
-    NS_LOG_FUNCTION(this << taskId << dependencies.size());
+    uint32_t taskId = record.taskId;
     if (m_tasks.find(taskId) != m_tasks.end()) {
         NS_LOG_ERROR("TaskId " << taskId << " already exists, cannot add duplicate task!");
         return;
     }
     m_tasks[taskId] = record;
-
-    m_dependencies[taskId] = std::set<uint32_t>(dependencies.begin(), dependencies.end());
+    for (const auto &dependId : record.dependOnPhase) {
+        m_dependencies[taskId].insert(m_dependOnPhasesToTaskId[dependId].begin(),
+            m_dependOnPhasesToTaskId[dependId].end());
+    }
 
     // 设置初始状态
-    if (dependencies.empty()) {
+    if (m_dependencies[taskId].empty()) {
         m_taskStates[taskId] = TaskState::READY;
         m_readyTasks.insert(taskId);
     } else {
@@ -51,11 +53,11 @@ void UbTrafficGen::AddTask(uint32_t taskId, TrafficRecord record, const std::set
     }
 
     // 建立反向依赖映射
-    for (uint32_t depId : dependencies) {
+    for (uint32_t depId : m_dependencies[taskId]) {
         m_dependents[depId].insert(taskId);
     }
 
-    NS_LOG_DEBUG("Added task " << taskId << " with " << dependencies.size() << " dependencies");
+    NS_LOG_DEBUG("Added task " << taskId << " with " << m_dependencies[taskId].size() << " dependencies");
 }
 
 void UbTrafficGen::MarkTaskCompleted(uint32_t taskId)
@@ -97,7 +99,7 @@ void UbTrafficGen::MarkTaskCompleted(uint32_t taskId)
         }
     }
 
-    ScheduleNextTasks();
+    UbTrafficGen::Get()->ScheduleNextTasks();
 
     // 检查是否全部完成
     if (IsCompleted()) {
@@ -125,7 +127,7 @@ void UbTrafficGen::ScheduleNextTasks()
 
             auto taskIt = m_tasks.find(taskId);
             if (taskIt != m_tasks.end()) {
-                auto app = DynamicCast<UbApp>(utils::node_map[taskIt->second.sourceNode]->GetApplication(0));
+                auto app = DynamicCast<UbApp>(NodeList::GetNode(taskIt->second.sourceNode)->GetApplication(0));
                 app->SendTraffic(taskIt->second);
                 NS_LOG_DEBUG("Scheduled task " << taskId);
             }

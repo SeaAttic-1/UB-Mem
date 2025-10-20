@@ -68,8 +68,9 @@ TypeId UbRoundRobinAllocator::GetTypeId(void)
 
 void UbRoundRobinAllocator::Init()
 {
-    uint32_t portsNum = m_node->GetNDevices();
-    auto vlNum = m_node->GetObject<UbSwitch>()->GetVLNum();
+    auto node = NodeList::GetNode(m_nodeId);
+    uint32_t portsNum = node->GetNDevices();
+    auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
     m_rrIdx.resize(portsNum);
     for (auto &v: m_rrIdx) {
         v.resize(vlNum, 0);
@@ -114,14 +115,15 @@ Ptr<UbIngressQueue> UbRoundRobinAllocator::DispatchPacket(uint32_t outPort)
     uint32_t idx;
     uint32_t pi;
     uint32_t outPortId = outPort;
-    auto vlNum = m_node->GetObject<UbSwitch>()->GetVLNum();
+    auto node = NodeList::GetNode(m_nodeId);
+    auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
     for (pi = 0 ; pi < vlNum; pi++) {
         size_t qSize = m_igsrc[outPortId][pi].size();
         for (idx = 0; idx < qSize; idx++) {
             auto qidx = (idx + m_rrIdx[outPortId][pi]) % qSize;
             if (!m_igsrc[outPortId][pi][qidx]->IsEmpty()) {
                 m_rrIdx[outPortId][pi] = (qidx + 1) % qSize;
-                NS_LOG_DEBUG("[UbSwitchAllocator DispatchPacket] " << " NodeId: " << m_node->GetId()
+                NS_LOG_DEBUG("[UbSwitchAllocator DispatchPacket] " << " NodeId: " << node->GetId()
                 << " PortId: " << outPortId <<" qidx: "<< qidx);
                 return m_igsrc[outPortId][pi][qidx];
             }

@@ -47,7 +47,10 @@ namespace ns3 {
         void WqeFinish(Ptr<UbWqe> wqe);
 
     private:
-        Ptr<Node> m_node;
+
+        void DoDispose() override;
+        
+        uint32_t m_nodeId;
         TransactionServiceMode m_serviceMode = TransactionServiceMode::ROI;
         // 记录wqe的Order序列
         std::vector<uint32_t> m_wqeVector;

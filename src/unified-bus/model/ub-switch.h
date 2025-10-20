@@ -54,8 +54,6 @@ public:
     {
         m_vlNum = vlNum;
     }
-    Ptr<Node> GetNode() {return m_node;}
-    void SetNode(Ptr<Node> node) {m_node = node;}
     UbNodeType_t GetNodeType() {return m_nodeType;}
     void SetNodeType(UbNodeType_t type) {m_nodeType = type;}
     uint32_t GetPortsNum() {return m_portsNum;}
@@ -99,7 +97,6 @@ private:
 
     Ptr<UbQueueManager> m_queueManager;   // Memory Management Unit
     Ptr<UbCongestionControl> m_congestionCtrl;
-    Ptr<Node> m_node;
     UbNodeType_t m_nodeType;
     uint32_t m_portsNum = 1025;
     Ptr<UbSwitchAllocator> m_allocator;

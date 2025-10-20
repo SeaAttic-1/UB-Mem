@@ -31,7 +31,7 @@ UbTransaction::~UbTransaction()
 
 UbTransaction::UbTransaction(Ptr<Node> node)
 {
-    m_node = node;
+    m_nodeId = node->GetId();
 }
 
 // 用于判断某个wqe是否order
@@ -94,6 +94,13 @@ void UbTransaction::WqeFinish(Ptr<UbWqe> wqe)
             m_wqeVector.erase(it);
         }
     }
+}
+
+void UbTransation::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_wqeVector.clear();
+    Object::DoDispose();
 }
 
 } // namespace ns3

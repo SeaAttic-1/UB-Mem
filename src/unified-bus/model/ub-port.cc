@@ -43,7 +43,7 @@ TypeId UbEgressQueue::GetTypeId(void)
     return tid;
 }
 
-UbEgressQueue::UbEgressQueue(uint32_t nodeType)
+UbEgressQueue::UbEgressQueue()
 {
     m_rrLast = 0;
     m_priLast = 0;
@@ -183,7 +183,7 @@ TypeId UbPort::GetTypeId(void)
 UbPort::UbPort()
 {
     NS_LOG_FUNCTION(this);
-    m_ubEQ = CreateObject<UbEgressQueue>(0);
+    m_ubEQ = CreateObject<UbEgressQueue>();
     m_ubSendState = SendState::READY;
     m_txBytes = 0;
     BooleanValue val;
@@ -194,7 +194,6 @@ UbPort::UbPort()
 UbPort::~UbPort()
 {
     NS_LOG_FUNCTION(this);
-    DeInitFc();
 }
 
 void UbPort::SetIfIndex(const uint32_t portId)
@@ -246,15 +245,10 @@ void UbPort::CreateAndInitFc(const std::string& type)
     }
 }
 
-void UbPort::DeInitFc()
-{
-    m_flowControl->Destroy();
-}
-
 void UbPort::TransmitComplete()
 {
     NS_LOG_DEBUG("[UbPort TransmitComplete] complete at: "
-        << " NodeId: " << m_node->GetId()
+        << " NodeId: " << GetNode()->GetId()
         << " PortId: " << GetIfIndex()
         << " PacketUid: " << m_currentPkt->GetUid());
     NS_LOG_FUNCTION(this);
@@ -263,10 +257,10 @@ void UbPort::TransmitComplete()
     NS_ASSERT_MSG(
         m_currentPkt != nullptr, "UbPort::TransmitComplete(): m_currentPkt zero");
 
-    if (m_node->GetObject<UbSwitch>()->GetNodeType() == UB_SWITCH) {
-        m_node->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentIgQ->GetIgqPriority(), m_currentPkt);
+    if (GetNode()->GetObject<UbSwitch>()->GetNodeType() == UB_SWITCH) {
+        GetNode()->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentIgQ->GetIgqPriority(), m_currentPkt);
     }
-    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentIgQ, m_node);
+    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentIgQ, GetNode());
 
     m_currentPkt = 0;
     m_currentIgQ = 0;
@@ -275,12 +269,12 @@ void UbPort::TransmitComplete()
 
 void UbPort::DequeuePacket(void)
 {
-    NS_ASSERT_MSG(!m_ubEQ->IsEmpty(), "No packets can be sent! NodeId: "<< m_node->GetId()
+    NS_ASSERT_MSG(!m_ubEQ->IsEmpty(), "No packets can be sent! NodeId: "<< GetNode()->GetId()
         << " PortId: " << m_portId);
     m_ubSendState = SendState::BUSY;
     auto ingressQ = m_ubEQ->DoPeekqueue();
     if (m_flowControl->IsFcLimited(ingressQ)) { // 未能发送，则直接结束
-        NS_LOG_DEBUG("PAUSE prohibits send at node " << m_node->GetId());
+        NS_LOG_DEBUG("PAUSE prohibits send at node " << GetNode()->GetId());
         NS_LOG_DEBUG("[UbPort send] limit");
         m_ubSendState = SendState::READY;
         m_ubEQ->DoDequeue(); // Prevent data packets from blocking subsequent control frames
@@ -289,7 +283,7 @@ void UbPort::DequeuePacket(void)
 
     Ptr<Packet> packet = ingressQ->GetNextPacket();
     if (packet == nullptr) {
-        NS_LOG_DEBUG("PAUSE prohibits send at node " << m_node->GetId());
+        NS_LOG_DEBUG("PAUSE prohibits send at node " << GetNode()->GetId());
         NS_LOG_DEBUG("[UbPort send] no pkt in ubeq");
         m_ubSendState = SendState::READY;
         return;
@@ -299,18 +293,18 @@ void UbPort::DequeuePacket(void)
     m_currentIgQ = ingressQ;
     m_ubEQ->DoDequeue();
     // Switch allocation when port sendding packet.
-    auto allocator = m_node->GetObject<UbSwitch>()->GetAllocator();
+    auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
     Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
     
     // switch节点, 通知switch发送了packet
     if ((ingressQ->GetIqType() == IngressQueueType::VOQ) &&
         (ingressQ->GetInPortId() != ingressQ->GetOutPortId())) { // 转发的报文
-        m_node->GetObject<UbSwitch>()->NotifySwitchDequeue(ingressQ->GetInPortId(), ingressQ->GetOutPortId(),
+        GetNode()->GetObject<UbSwitch>()->NotifySwitchDequeue(ingressQ->GetInPortId(), ingressQ->GetOutPortId(),
             ingressQ->GetIgqPriority(), packet);
     }
 
     if (!m_faultCallBack.IsNull()) {
-        m_faultCallBack(packet, m_node->GetId(), m_portId, this);
+        m_faultCallBack(packet, GetNode()->GetId(), m_portId, this);
         return;
     }
     TransmitPacket(packet, Time(0));
@@ -319,23 +313,23 @@ void UbPort::DequeuePacket(void)
 
 void UbPort::TransmitPacket(Ptr<Packet> packet, Time delay)
 {
-    PortTxNotify(m_node->GetId(), m_portId, packet->GetSize());
-    NS_LOG_DEBUG("[UbPort send] nodetype: " << g_node_type_map[m_node->GetObject<UbSwitch>()->GetNodeType()]
-        << " NodeId: " << m_node->GetId() << " PortId: " << m_portId << " send to:"
+    PortTxNotify(GetNode()->GetId(), m_portId, packet->GetSize());
+    NS_LOG_DEBUG("[UbPort send] nodetype: " << g_node_type_map[GetNode()->GetObject<UbSwitch>()->GetNodeType()]
+        << " NodeId: " << GetNode()->GetId() << " PortId: " << m_portId << " send to:"
         << " NodeId: " << m_channel->GetDestination(this)->GetNode()->GetId()
         << " PortId: " << m_channel->GetDestination(this)->GetIfIndex()
         << " PacketUid: " << packet->GetUid());
     if (m_pktTraceEnabled) {
         UbPacketTraceTag tag;
         packet->RemovePacketTag(tag);
-        tag.AddPortSendTrace(m_node->GetId(), m_portId, Simulator::Now().GetNanoSeconds());
+        tag.AddPortSendTrace(GetNode()->GetId(), m_portId, Simulator::Now().GetNanoSeconds());
         packet->AddPacketTag(tag);
     }
 
     Time txTime = m_bps.CalculateBytesTxTime(packet->GetSize()) + delay;
     Time txCompleteTime = txTime + m_tInterframeGap;
     TraComEventNotify(packet, txCompleteTime);
-    m_flowControl->HandleSentPacket(m_currentPkt, m_currentIgQ, m_node, this);
+    m_flowControl->HandleSentPacket(m_currentPkt, m_currentIgQ, GetNode(), this);
 
     Simulator::Schedule(txCompleteTime, &UbPort::TransmitComplete, this);
     bool result = m_channel->TransmitStart(packet, this, txTime);
@@ -351,8 +345,8 @@ void UbPort::TransmitPacket(Ptr<Packet> packet, Time delay)
 
 void UbPort::Receive(Ptr<Packet> packet)
 {
-    NS_LOG_DEBUG("[UbPort recv] nodetype: " << g_node_type_map[m_node->GetObject<UbSwitch>()->GetNodeType()]
-        << " NodeId: " << m_node->GetId()
+    NS_LOG_DEBUG("[UbPort recv] nodetype: " << g_node_type_map[GetNode()->GetObject<UbSwitch>()->GetNodeType()]
+        << " NodeId: " << GetNode()->GetId()
         << " PortId: " << GetIfIndex()
         << " recv from:"
         << " NodeId: " << m_channel->GetDestination(this)->GetNode()->GetId()
@@ -361,11 +355,11 @@ void UbPort::Receive(Ptr<Packet> packet)
     if (m_pktTraceEnabled) {
         UbPacketTraceTag tag;
         packet->RemovePacketTag(tag);
-        tag.AddPortRecvTrace(m_node->GetId(), m_portId, Simulator::Now().GetNanoSeconds());
+        tag.AddPortRecvTrace(GetNode()->GetId(), m_portId, Simulator::Now().GetNanoSeconds());
         packet->AddPacketTag(tag);
     }
-    PortRxNotify(m_node->GetId(), m_portId, packet->GetSize());
-    m_node->GetObject<UbSwitch>()->SwitchHandlePacket(this, packet);
+    PortRxNotify(GetNode()->GetId(), m_portId, packet->GetSize());
+    GetNode()->GetObject<UbSwitch>()->SwitchHandlePacket(this, packet);
 
     return;
 }
@@ -449,7 +443,7 @@ bool UbPort::IsUb(void) const
 
 void UbPort::TriggerTransmit()
 {
-    NS_LOG_DEBUG("[UbPort TriggerTransmit] nodeId: " << m_node->GetId()
+    NS_LOG_DEBUG("[UbPort TriggerTransmit] nodeId: " << GetNode()->GetId()
         << " portId: " << GetIfIndex() <<" TriggerTransmit...");
     if (!m_linkUp) {
         NS_LOG_DEBUG("[UbPort TriggerTransmit] m_linkUp");
@@ -461,7 +455,7 @@ void UbPort::TriggerTransmit()
     }
     if (m_ubEQ->IsEmpty()) {
         NS_LOG_DEBUG("[UbPort TriggerTransmit] trigger Allocator");
-        auto allocator = m_node->GetObject<UbSwitch>()->GetAllocator();
+        auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
         return;
     }
@@ -542,21 +536,11 @@ bool UbPort::IsBusy()
     return m_ubSendState == SendState::BUSY;
 }
 
-void UbPort::SetNode(Ptr<Node> node)
-{
-    m_node = node;
-}
-
-Ptr<Node> UbPort::GetNode() const
-{
-    return m_node;
-}
-
 void UbPort::SetDataRate(DataRate bps)
 {
     NS_LOG_DEBUG("port set data rate");
     m_bps = bps;
-    Ptr<UbCongestionControl> congestionCtrl = m_node->GetObject<UbSwitch>()->GetCongestionCtrl();
+    Ptr<UbCongestionControl> congestionCtrl = GetNode()->GetObject<UbSwitch>()->GetCongestionCtrl();
     if (congestionCtrl->GetCongestionAlgo() == CAQM) {
         Ptr<UbSwitchCaqm> caqmSw = DynamicCast<UbSwitchCaqm>(congestionCtrl);
         caqmSw->SetDataRate(m_portId, bps);
@@ -579,7 +563,7 @@ void UbPort::IncreaseRcvQueueSize(Ptr<Packet> p, Ptr<UbPort> port)
 
 void UbPort::DecreaseRcvQueueSize(Ptr<Packet> p, uint32_t portId)
 {
-    Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(portId));
+    Ptr<UbPort> port = DynamicCast<UbPort>(GetNode()->GetDevice(portId));
     uint32_t pktSize = p->GetSize();
     NS_LOG_DEBUG("[UbFc DecreaseRcvQueueSize] pktSize: " << pktSize << " PortId: " << port->GetIfIndex());
     UbDatalinkPacketHeader pktHeader;
@@ -610,6 +594,19 @@ void UbPort::PortTxNotify(uint32_t nodeId, uint32_t mPortId, uint32_t size)
 void UbPort::PortRxNotify(uint32_t nodeId, uint32_t mPortId, uint32_t size)
 {
     m_tracePortRxNotify(nodeId, mPortId, size);
+}
+
+void UbPort::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_ubEQ = nullptr;
+    m_channel = nullptr;
+    m_currentPkt = nullptr;
+    m_currentIgQ = nullptr;
+    m_datalink = nullptr;
+    m_flowControl = nullptr;
+    m_revQueueSize.clear();
+    NetDevice::DoDispose();
 }
 
 } // namespace ns3

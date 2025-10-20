@@ -40,10 +40,10 @@ Ptr<UbApiLdst> UbFunction::GetUbLdst()
     return m_apiLdst;
 }
 
-void UbFunction::SetUbFunction(Ptr<Node> node)
+void UbFunction::SetUbFunction(uint32_t nodeId)
 {
-    m_node = node;
-    m_apiLdst->SetUbLdst(m_node);
+    m_nodeId = nodeId;
+    m_apiLdst->SetUbLdst(m_nodeId);
 }
 
 void UbFunction::CreateJetty(uint32_t src, uint32_t dest, uint32_t jettyNum)
@@ -92,6 +92,7 @@ std::vector<Ptr<UbTransportChannel>> UbFunction::GetTransportChannelVec(uint32_t
 
 void UbFunction::DestroyJetty(uint32_t jettyNum)
 {
+    NS_LOG_DEBUG(this);
     auto it = m_numToJetty.find(jettyNum);
     if (it != m_numToJetty.end()) {
         m_numToJetty.erase(it);
@@ -134,7 +135,8 @@ bool UbFunction::jettyBindTp(uint32_t src, uint32_t dest, uint32_t jettyNum,
     std::vector<Ptr<UbTransportChannel>> ubTransportGroup;
     for (uint32_t i = 0; i < tpns.size(); i++) {
         uint32_t tpn = tpns[i];
-        ubTransportGroup.push_back(m_node->GetObject<UbController>()->GetTp(tpn));
+        auto node = NodeList::GetNode(m_nodeId);
+        ubTransportGroup.push_back(node->GetObject<UbController>()->GetTp(tpn));
     }
     // 在事务层模式为ROL时只能开启单路径模式
     if (ubJetty->GetTransaction()->GetTransactionServiceMode() == TransactionServiceMode::ROL) {
@@ -165,6 +167,7 @@ bool UbFunction::jettyBindTp(uint32_t src, uint32_t dest, uint32_t jettyNum,
 
 Ptr<UbWqe> UbFunction::CreateWqe(uint32_t src, uint32_t dest, uint32_t size, uint32_t wqeId)
 {
+    NS_LOG_DEBUG(this);
     // 创建新的 WQE
     Ptr<UbWqe> ubWqe = CreateObject<UbWqe>();
     ubWqe->SetSrc(src);
@@ -176,12 +179,13 @@ Ptr<UbWqe> UbFunction::CreateWqe(uint32_t src, uint32_t dest, uint32_t size, uin
 
 void UbFunction::PushWqeToJetty(Ptr<UbWqe> wqe, uint32_t jettyNum)
 {
+    NS_LOG_DEBUG(this);
     Ptr<UbJetty> ubJetty = GetJetty(jettyNum);
     if (ubJetty == nullptr) {
         NS_LOG_WARN("Get jetty failed");
         return;
     }
-    ubJetty->SetFunction(this);
+    ubJetty->SetNodeId(m_nodeId);
     // 将 WQE 添加到 Jetty
     ubJetty->PushWqe(wqe);
     std::vector<Ptr<UbTransportChannel>> ubTransportGrpVec = GetTransportChannelVec(jettyNum);
@@ -203,11 +207,31 @@ void UbFunction::PushWqeToJetty(Ptr<UbWqe> wqe, uint32_t jettyNum)
 void UbFunction::PushLdstTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
                               UbMemOperationType type, uint32_t threadId)
 {
+    NS_LOG_DEBUG(this);
     if (m_apiLdst != nullptr) {
         m_apiLdst->PushMemTask(src, dest, size, taskId, type, threadId);
     } else {
         NS_LOG_WARN("Get ldst failed");
     }
+}
+
+void UbFunction::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_apiLdst = nullptr;
+    for (auto i = m_jettyVector.begin(); i != m_jettyVector.end(); i++) {
+        *i = nullptr;
+    }
+    m_jettyVector.clear();
+    m_numToJetty.clear();
+    for (auto &it : m_jettyTpGroup) {
+        for (auto tp : it.second) {
+            tp = nullptr;
+        }
+    }
+    m_jettyTpGroup.clear();
+    m_random = nullptr;
+    Object::DoDispose();
 }
 
 NS_OBJECT_ENSURE_REGISTERED(UbJetty);
@@ -401,7 +425,8 @@ bool UbJetty::ProcessWqeSegmentComplete(uint32_t taSsnAck)
     }
 
     if (IsLimited()) {
-        std::vector<Ptr<UbTransportChannel>> ubTransportGrpVec = m_function->GetTransportChannelVec(m_jettyNum);
+        Ptr<UbFunction> function = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbFunction();
+        std::vector<Ptr<UbTransportChannel>> ubTransportGrpVec = function->GetTransportChannelVec(m_jettyNum);
         for (uint32_t i = 0; i < ubTransportGrpVec.size(); i++) {
             ubTransportGrpVec[i]->TriggerTransmit();
         }
@@ -481,7 +506,8 @@ void UbJetty::CheckAndRemoveCompletedWqe()
             FinishCallback(wqeId, m_jettyNum); // 调用应用层的回调
             m_transaction->WqeFinish(wqe);
             // trigger tp
-            std::vector<Ptr<UbTransportChannel>> ubTransportGrpVec = m_function->GetTransportChannelVec(m_jettyNum);
+            Ptr<UbFunction> function = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbFunction();
+            std::vector<Ptr<UbTransportChannel>> ubTransportGrpVec = function->GetTransportChannelVec(m_jettyNum);
             for (uint32_t i = 0; i < ubTransportGrpVec.size(); i++) {
                 ubTransportGrpVec[i]->TriggerTransmit();
             }
@@ -498,6 +524,7 @@ void UbJetty::CheckAndRemoveCompletedWqe()
 
 bool UbJetty::IsWqeCompleted(Ptr<UbWqe> wqe)
 {
+    NS_LOG_DEBUG(this);
     if (!wqe) {
         return false;
     }
@@ -509,6 +536,15 @@ bool UbJetty::IsWqeCompleted(Ptr<UbWqe> wqe)
 
     // 如果WQE的最后一个分段已经被确认，则WQE完成
     return (wqeEndSsn < m_taSsnSndUna);
+}
+
+void UbJetty::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_wqeVector.clear();
+    m_ssnAckBitset.clear();
+    m_transaction = nullptr;
+    Object::DoDispose();
 }
 
 

@@ -47,7 +47,6 @@ public:
     static TypeId GetTypeId(void);
     UbFlowControl() {}
     virtual ~UbFlowControl() {}
-    virtual void Destroy() {}
     virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ)
     {
         return false;
@@ -74,7 +73,7 @@ public:
 
     void Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDataPacket,
               uint8_t retCellGrainControlPacket, int32_t portTxfree);
-    virtual void Destroy() override;
+
     virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
                                                   Ptr<UbIngressQueue> ingressQ, Ptr<Node> node) override;
@@ -93,6 +92,7 @@ public:
 
 private:
     FcType m_fcType { CBFC };
+    void DoDispose() override;
 
     /**
     * @brief cbfc相关参数配置
@@ -120,7 +120,7 @@ public:
     virtual FcType GetFcType() override;
     
     void Init(int32_t portpfcUpThld, int32_t portpfcLowThld);
-    virtual void Destroy() override;
+    
     virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
                                                   Ptr<UbIngressQueue> ingressQ, Ptr<Node> node) override;
@@ -133,6 +133,7 @@ public:
     Ptr<Packet> CheckPfcThreshold(Ptr<Packet> p, uint32_t portId, Ptr<Node> node);
 private:
     FcType m_fcType { PFC };
+    void DoDispose() override;
 
     /**
     * @brief pfc水线参数配置

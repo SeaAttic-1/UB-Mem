@@ -64,7 +64,7 @@ private:
         }
     };
 
-    bool m_selectShortestPaths;
+    bool m_selectShortestPaths = false;
     uint64_t CalcHash(uint32_t sip, uint32_t dip, uint16_t sport, uint16_t dport, uint8_t priority);
 
     // 全局端口集合池：存储所有唯一的端口集合

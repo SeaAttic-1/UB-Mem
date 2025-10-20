@@ -76,10 +76,10 @@ UbApiLdstThread::~UbApiLdstThread()
 {
 }
 
-void UbApiLdstThread::SetUbLdstThread(Ptr<Node> node, uint32_t ldstThreadNum,
+void UbApiLdstThread::SetUbLdstThread(uint32_t nodeId, uint32_t ldstThreadNum,
                                       uint32_t storeReqSize)
 {
-    m_node = node;
+    m_nodeId = nodeId;
     m_threadNum = ldstThreadNum;
     m_storeReqSize = storeReqSize;
 }
@@ -92,7 +92,7 @@ void UbApiLdstThread::PushMemTask(Ptr<UbMemTask> ubMemTask)
         m_memLoadTaskQueue.push_back(ubMemTask);
     }
     m_taskidSendCnt[ubMemTask->GetMemTaskId()] = 0;
-    MemTaskStartsNotify(m_node->GetId(), ubMemTask->GetMemTaskId());
+    MemTaskStartsNotify(m_nodeId, ubMemTask->GetMemTaskId());
     GenPacketAndSend();
 }
 
@@ -122,7 +122,10 @@ void UbApiLdstThread::GenPacketAndSend()
         rtKey.priority = m_queuePriority;
         rtKey.useShortestPath = m_useShortestPaths;
         rtKey.usePacketSpray = m_usePacketSpray;
-        int outPort = m_node->GetObject<UbSwitch>()->GetRoutingProcess()->GetOutPort(rtKey);
+
+        auto node = NodeList::GetNode(m_nodeId);
+        auto sw = node->GetObject<UbSwitch>();
+        int outPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
         if (outPort < 0) {
             // Route failed
             NS_ASSERT_MSG(0, "The route cannot be found");
@@ -140,15 +143,15 @@ void UbApiLdstThread::GenPacketAndSend()
         }
         
         // 发到队列 如果要从port0发，就放到port0 优先级为1的voq
-        m_node->GetObject<UbSwitch>()->AddPktToVoq(p, destPort, m_queuePriority, destPort);
-        Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(destPort));
+        sw->AddPktToVoq(p, destPort, m_queuePriority, destPort);
+        Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(destPort));
         port->TriggerTransmit();
 
         currentMemTask->UpdateSentBytes(payloadSize);
         m_taskidSendCnt[currentMemTask->GetMemTaskId()]++;
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == 1) {
             // 加入trace
-            FirstPacketSendsNotify(m_node->GetId(), currentMemTask->GetMemTaskId());
+            FirstPacketSendsNotify(m_nodeId, currentMemTask->GetMemTaskId());
         }
 
         m_storeOutstanding--;
@@ -156,7 +159,7 @@ void UbApiLdstThread::GenPacketAndSend()
         // 所有包都发完
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == currentMemTask->GetPsnSize()) {
             // 加入trace
-            LastPacketSendsNotify(m_node->GetId(), currentMemTask->GetMemTaskId());
+            LastPacketSendsNotify(m_nodeId, currentMemTask->GetMemTaskId());
             m_memStoreTaskQueue.pop_front();
         }
     }
@@ -180,7 +183,9 @@ void UbApiLdstThread::GenPacketAndSend()
         rtKey.priority = m_queuePriority;
         rtKey.useShortestPath = m_useShortestPaths;
         rtKey.usePacketSpray = m_usePacketSpray;
-        int outPort = m_node->GetObject<UbSwitch>()->GetRoutingProcess()->GetOutPort(rtKey);
+        auto node = NodeList::GetNode(m_nodeId);
+        auto sw = node->GetObject<UbSwitch>();
+        int outPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
         if (outPort < 0) {
             // Route failed
             NS_ASSERT_MSG(0, "The route cannot be found");
@@ -198,19 +203,19 @@ void UbApiLdstThread::GenPacketAndSend()
         }
 
         // 发到队列 如果要从port0发，就放到port0->port0 优先级为1的voq
-        m_node->GetObject<UbSwitch>()->AddPktToVoq(p, destPort, m_queuePriority, destPort);
-        Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(destPort));
+        sw->AddPktToVoq(p, destPort, m_queuePriority, destPort);
+        Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(destPort));
         port->TriggerTransmit();
 
         m_taskidSendCnt[currentMemTask->GetMemTaskId()]++;
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == 1) {
-            FirstPacketSendsNotify(m_node->GetId(), currentMemTask->GetMemTaskId());
+            FirstPacketSendsNotify(m_nodeId, currentMemTask->GetMemTaskId());
         }
         m_loadOutstanding--;
 
         // 所有包都发完
         if (m_taskidSendCnt[currentMemTask->GetMemTaskId()] == currentMemTask->GetPsnSize()) {
-            LastPacketSendsNotify(m_node->GetId(), currentMemTask->GetMemTaskId());
+            LastPacketSendsNotify(m_nodeId, currentMemTask->GetMemTaskId());
             m_memLoadTaskQueue.pop_front();
         }
     }
@@ -274,6 +279,20 @@ Ptr<Packet> UbApiLdstThread::GenDataPacket(Ptr<UbMemTask> memTask, uint32_t payl
                                 m_usePacketSpray, m_useShortestPaths, UbDatalinkHeaderConfig::PACKET_UB_MEM);
     NS_LOG_DEBUG("GenDataPacket successful!!!");
     return p;
+}
+
+void UbApiLdstThread::DoDispose()
+{
+    NS_LOG_DEBUG(this);
+    m_taskidSendCnt.clear();
+    for (auto i = m_memStoreTaskQueue.begin(); i != m_memStoreTaskQueue.end(); i++) {
+        *i = nullptr;
+    }
+    m_memStoreTaskQueue.clear();
+    for (auto i = m_memLoadTaskQueue.begin(); i != m_memLoadTaskQueue.end(); i++) {
+        *i = nullptr;
+    }
+    m_memLoadTaskQueue.clear();
 }
 
 void UbApiLdstThread::MemTaskStartsNotify(uint32_t nodeId, uint32_t memTaskId)

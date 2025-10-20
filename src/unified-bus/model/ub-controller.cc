@@ -24,17 +24,12 @@ TypeId UbController::GetTypeId()
 UbController::UbController()
 {
     NS_LOG_FUNCTION(this);
-    m_function = CreateObject<UbFunction>();
 }
 
-void UbController::SetNode(Ptr<Node> node)
+void UbController::CreateUbFunction()
 {
-    if (m_node == nullptr) {
-        m_node = node;
-        m_function->SetUbFunction(m_node);
-    } else {
-        NS_ASSERT_MSG (m_node == nullptr, "m_node != nullptr");
-    }
+    m_function = CreateObject<UbFunction>();
+    m_function->SetUbFunction(GetObject<Node>()->GetId());
 }
 
 UbController::~UbController()
@@ -69,7 +64,7 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
 
     // 创建新的Transport Channel
     // 需要先获取当前节点
-    Ptr<Node> currentNode = m_node;
+    Ptr<Node> currentNode = GetObject<Node>();
 
     if (!currentNode) {
         // 如果没有关联节点，可能需要从其他地方获取或设置默认值
@@ -81,11 +76,11 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     Ipv4Address dip = NodeIdToIp(dest);
 
     Ptr<UbTransportChannel> tp = CreateObject<UbTransportChannel>();
-    tp->SetUbTransport(currentNode, src, dest, srcTpn, dstTpn, 0, static_cast<uint8_t>(priority),
+    tp->SetUbTransport(currentNode->GetId(), src, dest, srcTpn, dstTpn, 0, static_cast<uint8_t>(priority),
                        static_cast<uint16_t>(sport), static_cast<uint16_t>(dport), sip, dip, congestionCtrl);
     m_numToTp[srcTpn] = tp;
     m_transportsCount++;
-    m_node->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
+    currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
 
     NS_LOG_DEBUG("Created transport channel success");
     return true;
