@@ -22,7 +22,7 @@ namespace ns3 {
 /**
  * @brief 任务图应用,管理多个WQE任务及依赖关系
  */
-class UbTrafficGen : public Object {
+class UbTrafficGen : public Object , public Singleton<UbTrafficGen> {
 public:
     static UbTrafficGen& GetInstance() {
         static UbTrafficGen instance;
@@ -38,7 +38,7 @@ public:
     UbTrafficGen();
     virtual ~UbTrafficGen();
 
-    void AddTask(uint32_t taskId, TrafficRecord record, const std::set<uint32_t> &dependencies = {});
+    void AddTask(TrafficRecord record);
 
     void MarkTaskCompleted(uint32_t taskId);
 
@@ -54,7 +54,11 @@ public:
      */
     void ScheduleNextTasks();
 
-private:
+    void SetPhaseDepend(uint32_t phaseId, uint32_t taskId)
+    {
+        m_dependOnPhasesToTaskId[phaseId].insert(taskId);
+    }
+
     // ========== 数据成员 ==========
     // 任务状态枚举
     enum class TaskState {
@@ -77,6 +81,7 @@ private:
         m_dependents{}; // 每个任务ID对应所有依赖它的任务ID集合(即这些任务等待该任务完成)
     std::unordered_map<uint32_t, TaskState> m_taskStates{};
     std::set<uint32_t> m_readyTasks{};
+    std::map<uint32_t, set<uint32_t>> m_dependOnPhasesToTaskId{};
 };
 
 } // namespace ns3

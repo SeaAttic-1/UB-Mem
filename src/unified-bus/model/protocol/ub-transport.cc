@@ -9,6 +9,7 @@
 #include "ns3/ub-switch.h"
 #include "ns3/ub-queue-manager.h"
 #include "ns3/ub-transport.h"
+#include "ns3/ub-utils.h"
 
 using namespace utils;
 namespace ns3 {
@@ -111,10 +112,18 @@ UbTransportChannel::UbTransportChannel()
 UbTransportChannel::~UbTransportChannel()
 {
     // Clear WQE queues and release resources
-    m_wqeSegmentVector.clear();
+    NS_LOG_FUNCTION(this);
+}
 
-    // Set pointers to null
-    m_node = nullptr;
+
+void UbTransportChannel::DoDispose()
+{
+    NS_LOG_FUNCTION(this);
+    m_ackQ = queue<Ptr<Packet>>();
+    m_relatedJettys.clear();
+    m_wqeSegmentVector.clear();
+    m_congestionCtrl = nullptr;
+    m_recvPsnBitset.clear();
 }
 
 /**
@@ -135,6 +144,11 @@ Ptr<Packet> UbTransportChannel::GetNextPacket()
         return nullptr;
     }
 
+    if (IsInflightLimited()) {
+        m_sendWindowFlag = true;
+        NS_LOG_DEBUG("Full Send Window");
+        return nullptr;
+    }
     for (size_t i = 0; i < m_wqeSegmentVector.size(); ++i) {
         Ptr<UbWqeSegment> currentSegment = m_wqeSegmentVector[i];
 
@@ -164,12 +178,12 @@ Ptr<Packet> UbTransportChannel::GetNextPacket()
 
         if (currentSegment->GetBytesLeft() == currentSegment->GetSize()) {
             // wqe segment first packet
-            FirstPacketSendsNotify(m_node->GetId(), currentSegment->GetTaskId(), m_tpn, m_dstTpn,
+            FirstPacketSendsNotify(m_nodeId, currentSegment->GetTaskId(), m_tpn, m_dstTpn,
                 currentSegment->GetTpMsn(), m_psnSndNxt, m_sport);
         }
         if (currentSegment->GetBytesLeft() == payload_size) {
             // wqe segment last packet
-            LastPacketSendsNotify(m_node->GetId(), currentSegment->GetTaskId(), m_tpn, m_dstTpn,
+            LastPacketSendsNotify(m_nodeId, currentSegment->GetTaskId(), m_tpn, m_dstTpn,
                 currentSegment->GetTpMsn(), m_psnSndNxt, m_sport);
         }
         // PacketUid: TaskId: Tpn: Psn: PacketType: Src: Dst: PacketSize:
@@ -321,6 +335,11 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
     // 拿到多个packet后组成taack发送
     if ((TpHeader.GetPsn() + 1) > m_psnSndUna) {
         m_psnSndUna = TpHeader.GetPsn() + 1;
+        if (m_sendWindowFlag && IsInflightLimited() == false) {
+            m_sendWindowFlag = false;
+            Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
+            port->TriggerTransmit(); // 触发发送
+        }
         NS_LOG_DEBUG("[Transport channel] Recv ack."
                   << " PacketUid: " << p->GetUid()
                   << " Tpn: " << m_tpn
@@ -353,13 +372,13 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
             // 对应ack的所有wqeSeg完成
             if (TpHeader.GetLastPacket()) {
                 // 尾包ack被确认
-                LastPacketACKsNotify(m_node->GetId(), m_wqeSegmentVector[i]->GetTaskId(), m_tpn, m_dstTpn,
+                LastPacketACKsNotify(m_nodeId, m_wqeSegmentVector[i]->GetTaskId(), m_tpn, m_dstTpn,
                     TpHeader.GetTpMsn(), TpHeader.GetPsn(), m_sport);
             }
-            auto UbFunc = m_node->GetObject<UbController>()->GetUbFunction();
+            auto UbFunc = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbFunction();
             Ptr<UbJetty> curr_jetty = UbFunc->GetJetty(m_wqeSegmentVector[i]->GetJettyNum());
             if (curr_jetty->ProcessWqeSegmentComplete(m_wqeSegmentVector[i]->GetTaSsn())) {
-                WqeSegmentCompletesNotify(m_node->GetId(), m_wqeSegmentVector[i]->GetTaskId(),
+                WqeSegmentCompletesNotify(m_nodeId, m_wqeSegmentVector[i]->GetTaskId(),
                     m_wqeSegmentVector[i]->GetTaSsn());
                 m_wqeSegmentVector.erase(m_wqeSegmentVector.begin() + i);
             } else {
@@ -380,14 +399,14 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
         }
     }
     if (m_congestionCtrl->GetCongestionAlgo() == CAQM && m_congestionCtrl->GetRestCwnd() >= UB_MTU_BYTE) {
-        Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(m_sport));
+        Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
         port->TriggerTransmit(); // 触发发送
     }
     NS_LOG_DEBUG("Recv TP(data packet) acknowledgment");
 }
 
 
-void UbTransportChannel::SetUbTransport(Ptr<Node> node,
+void UbTransportChannel::SetUbTransport(uint32_t nodeId,
                                         uint32_t src,
                                         uint32_t dest,
                                         uint32_t srcTpn,        // TP Number
@@ -400,7 +419,7 @@ void UbTransportChannel::SetUbTransport(Ptr<Node> node,
                                         Ipv4Address dip,         // Dest IP address
                                         Ptr<UbCongestionControl> congestionCtrl)
 {
-    m_node = node;
+    m_nodeId = nodeId;
     m_src = src;
     m_dest = dest;
     m_tpn = srcTpn;
@@ -468,7 +487,7 @@ void UbTransportChannel::RecvDataPacket(Ptr<Packet> p)
     ackp->AddPacketTag(flowTag);
     if (TpHeader.GetLastPacket()) {
         // 尾包被接收
-        LastPacketReceivesNotify(m_node->GetId(), TpHeader.GetSrcTpn(), TpHeader.GetDestTpn(), TpHeader.GetTpMsn(),
+        LastPacketReceivesNotify(m_nodeId, TpHeader.GetSrcTpn(), TpHeader.GetDestTpn(), TpHeader.GetTpMsn(),
             TpHeader.GetPsn(), m_dport);
     }
     if (IsRepeatPacket(psn)) {
@@ -501,7 +520,7 @@ void UbTransportChannel::RecvDataPacket(Ptr<Packet> p)
                   << " Src: " << m_src
                   << " Dst: " << m_dest
                   << " PacketSize: " << ackp->GetSize());
-        Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(m_sport));
+        Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
         port->TriggerTransmit(); // 触发发送
         return;
     }
@@ -567,7 +586,7 @@ void UbTransportChannel::RecvDataPacket(Ptr<Packet> p)
                   << " Src: " << m_src
                   << " Dst: " << m_dest
                   << " PacketSize: " << ackp->GetSize());
-    Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(m_sport));
+    Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
     port->TriggerTransmit(); // 触发发送
 }
 
@@ -597,7 +616,7 @@ void UbTransportChannel::ReTxTimeout()
 
     // 重新发送
     m_retransEvent = Simulator::Schedule(m_rto, &UbTransportChannel::ReTxTimeout, this);
-    Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(m_sport));
+    Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
     port->TriggerTransmit(); // 触发发送
 }
 
@@ -779,8 +798,8 @@ void UbTransportChannel::GetWqeSegmentFromRelatedJetty()
             m_wqeSegmentVector.push_back(wqeSegment);
             NS_LOG_INFO("WQE Segment Sends,taskId: "  << wqeSegment->GetTaskId()
                 << " TASSN: " << wqeSegment->GetTaSsn());
-            WqeSegmentSendsNotify(m_node->GetId(), wqeSegment->GetTaskId(), wqeSegment->GetTaSsn());
-            Ptr<UbPort> port = DynamicCast<UbPort>(m_node->GetDevice(m_sport));
+            WqeSegmentSendsNotify(m_nodeId, wqeSegment->GetTaskId(), wqeSegment->GetTaSsn());
+            Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
             port->TriggerTransmit(); // 触发发送
             wqeSegmentFlag = true;
         }

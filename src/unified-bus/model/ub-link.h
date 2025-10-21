@@ -48,9 +48,6 @@ public:
      * @param device pointer to the ubdevice to attach to the link
      */
     void Attach(Ptr<UbPort> device);
-
-    // Import parent class TransmitStart method to avoid hiding warning
-    using PointToPointChannel::TransmitStart;
     
     /**
     * @brief Transmit a packet over this link (UbPort version)

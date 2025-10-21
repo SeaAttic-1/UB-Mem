@@ -51,7 +51,7 @@ public:
     uint32_t m_maxIngressQueues;   // eq存储最大包数
 
     static TypeId GetTypeId(void);
-    explicit UbEgressQueue(uint32_t nodeType);
+    explicit UbEgressQueue();
 
     bool DoEnqueue(Ptr<UbIngressQueue> igq);  // 向端口eq塞入队列
     Ptr<UbIngressQueue> DoPeekqueue(void);    // 查看eq队列
@@ -116,10 +116,6 @@ public:
 
     uint64_t GetTxBytes();
 
-    Ptr<Node> GetNode() const override;
-
-    void SetNode(Ptr<Node> node) override;
-
     void SetIfIndex(const uint32_t index) override;
 
     void SetSendState(SendState state);
@@ -130,7 +126,6 @@ public:
     void DecreaseRcvQueueSize(Ptr<Packet> p, uint32_t portId);
 
     void CreateAndInitFc(const std::string& type);
-    void DeInitFc();
 
     Ptr<UbFlowControl> GetFlowControl()
     {
@@ -190,13 +185,11 @@ private:
 
     void UpdateTxBytes(uint64_t bytes);
 
+    void DoDispose() override;
+
     uint32_t m_portId;
 
-    uint32_t m_nodeId;
-
     Ptr<UbEgressQueue> m_ubEQ;
-
-    Ptr<Node> m_node;
 
     Ptr<UbLink> m_channel;
 

@@ -1,107 +1,191 @@
 // SPDX-License-Identifier: GPL-2.0-only
+#include "ns3/ub-utils.h"
+#include <chrono>
+#include <ns3/test.h>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
 
-/**
- * @file ub-test.cc
- * @brief Test suite for the unified-bus module
- * 
- * This file contains unit tests for the unified-bus functionality,
- * including basic object creation, configuration, and core features.
- */
-
-#include "ns3/test.h"
-#include "ns3/ub-app.h"
-#include "ns3/ub-traffic-gen.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/config.h"
-#include "ns3/rng-seed-manager.h"
-#include "ns3/node-container.h"
-
+using namespace utils;
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE("UbTest");
 
 /**
- * @brief Unified-bus functionality test
- * 
- * Tests basic unified-bus module functionality including:
- * - Object creation and initialization
- * - Singleton pattern verification
- * - Configuration system integration
- * - Basic API functionality
+ * @brief Unified-bus test class
  */
-class UbFunctionalityTest : public TestCase
+class UbTest : public TestCase
 {
 public:
-    UbFunctionalityTest();
+    UbTest(string testPath);
+    /**
+     * @brief Run the test
+     */
     void DoRun() override;
-    
+
 private:
-    void DoSetup() override;
+    void checkExampleProcess(unordered_map<int, Ptr<UbApp>> client_map);
+
+    void RunCase(const string& configPath);
+
+    void IsPathExist(const std::string &path);
+
+    void VerifyGenFile(const string& configPath);
+
+    string testPath;
+    
     void DoTeardown() override;
+    virtual void DoSetUp(void);
+    bool compareCSVFiles(const std::string& file1, const std::string& file2);
+
+    ApplicationContainer appCon;
 };
 
-UbFunctionalityTest::UbFunctionalityTest()
-    : TestCase("UnifiedBus - Core functionality test")
+void UbTest::DoSetUp(void)
 {
-}
-
-void UbFunctionalityTest::DoSetup()
-{
+    // 重置全局状态
     Config::Reset();
-    RngSeedManager::SetSeed(12345);
 }
 
-void UbFunctionalityTest::DoTeardown()
+void UbTest::DoTeardown()
 {
-    // Minimal cleanup
-    if (!Simulator::IsFinished()) {
-        Simulator::Destroy();
+    Simulator::Destory();
+}
+
+UbTest::UbTest(string testPath)
+    : TestCase("ubTest"),
+    testPath(testPath)
+{
+}
+
+void ubTest:: VerifyGenFile(const string& configPath)
+{
+    //验证生成的task_statistics.csv文件
+    string taskFilel = configPath + "/output/task_statistics.csv";
+    string taskFile2 = configPath + "/test/task_statistics.csv";
+    // 逐行读取并比较<br/>
+    NS_TEST_ASSERT_MSG_EQ(compareCSVFiles(taskFile1, taskFile2), true, "task_statistics.csv not same.");
+    // 验证生成的throughput.csv文件
+    string throughputFilel<br/>= configPath + "/output/throughput.csv" ;
+    string thropghputFile2 = configPath + "/test/throughput.csv" ;
+    // 逐行读取并比较
+    NS_TEST_ASSERT_MSG_EQ(compareCSVFiles(throughputFile1, throughputFile2), true, "throughput.csv not same.");
+}
+
+bool ubTest:: compareCSVFiles(const std: :string& filel, const std:: string& file2)
+{
+    std:: ifstream filelStream(file1);
+    std:: ifstream file2Stream(file2);
+    if (IfilelStream.is_open(), || Ifile2Stream.is_open())
+    {
+        return false;
     }
+    std:: string linel; 
+    std:: string line2;
+    while (std:: getline(filelStream, linel) && std:: getline(file2Stream, line2)) {
+        if (line1 ! = line2) {
+            return false;
+        }
+        line1.clear(); 
+        line2.clear();
+    }
+        if (linel != line2) {
+            return false;
+        }
+
+        //检查是否有文件还有剩余行
+        if(file1Stream.peek()!= EOF || file2Stream.peek()!= EOF){
+            return false;
+        }
+        
+        return true;
 }
 
-void UbFunctionalityTest::DoRun()
+void ubTest:: DoRun (void){
+    string runCase = "Run case:" + testPath;
+    PrintTimestamp (runCase) ;
+    // 读取配置文件并执行用例
+    RunCase(testPath);
+    Simulator::Run();
+    Destroy(appcon);
+    ParseTrace(true);
+    VerifyGenFile(testPath);
+}
+
+void ubTest::IsPathExist(const std:: string &path){
+    NS_TEST_ASSERT_MSG_EQ(std:: filesystem: exists(path), true, "test path not exist");
+}
+
+void ubTest:: CheckExampleProcess(unordered_map<int, Ptr<UbApp»> client_map) {
+    PrintTimestamp ("Check Example Process.");
+    for (auto it = client_map.begin(); it != client_map. end(); it++) 
+    Ptr<UbApp> client = it->second; 
+    if (!client->IsCompleted ()) {
+        Simulator::Schedule(MicroSeconds (10), &ubTest::CheckExampleProcess, this, client_map);
+        return;
+    }
+    Simulator::Stop();
+    return;
+}
+
+// 根据配置文件路径执行用例
+void ubTest:: RunCase(const string& configPath)
 {
-    NS_LOG_FUNCTION(this);
-    
-    // Test 1: UbTrafficGen singleton
-    UbTrafficGen& gen1 = UbTrafficGen::GetInstance();
-    UbTrafficGen& gen2 = UbTrafficGen::GetInstance();
-    NS_TEST_ASSERT_MSG_EQ(&gen1, &gen2, "UbTrafficGen should be singleton");
-    
-    // Test 2: Initial state
-    NS_TEST_ASSERT_MSG_EQ(gen1.IsCompleted(), true, "UbTrafficGen should be completed initially");
-    
-    // Test 3: UbApp creation
-    Ptr<UbApp> app = CreateObject<UbApp>();
-    NS_TEST_ASSERT_MSG_NE(app, nullptr, "UbApp creation should succeed");
-    
-    // Test 4: Node creation
-    NodeContainer nodes;
-    nodes.Create(2);
-    NS_TEST_ASSERT_MSG_EQ(nodes.GetN(), 2, "Should create 2 nodes");
-    
-    // Test 5: Configuration setting (without getting)
-    Config::SetDefault("ns3::UbApp::EnableMultiPath", BooleanValue(false));
-    Config::SetDefault("ns3::UbPort::UbDataRate", StringValue("400Gbps"));
-    
-    NS_LOG_INFO("All basic tests completed successfully");
+    IsPathExist(configPath);
+RngSeedManager: : SetSeed (10) ;
+string LoadConfigFilePath = configPath + "/network_attribute.txt";
+SetComponentsAttribute(LoadConfigFilePath);
+CreateTraceDir();
+string NodeConfigFile = configPath + "/node. csv";
+CreateNode (NodeConfigFile) ;
+string TopoConfigFile = configPath + "/topology. csv";
+CreateTopo (TopoConfigFile);
+string RouterConfigFile = configPath + "/router_table.csv";
+AddRoutingTable (RouterConfigFile);
+string TpConfigFile = configPath + "/transport_channel.csv" ;
+TpConnectionManager retConnectionManager = CreateTp(TpConfigFile);
+TopoTraceConnect ( );
+string TrafficConfigFile = configPath + "/traffic.csv";
+auto trafficData = ReadTrafficCSV(TrafficConfigFile);
+// ApplicationContainer appon;
+// 遍历Traffic数据，并启动client
+for (auto& record : trafficData) {
+    auto it = client_map. find (record. sourceNode);
+    if (it == client_map. end ()) {
+        Ptr<UbApp> client = CreateObject<UbApp>();
+        client_map[record.sourceNode] = client;
+        ClientTraceConnect(record. sourceNode);
+        Ptr<Node> sN = node_map[record. sourceNode];
+        sN->AddApplication(client_map[record. sourceNode]);
+        appCon.Add(client_map[record.sourceNode]);
+    }
+    client_map[record. sourceNode]->SetNode(node_map[record.sourceNode]);
+    client_map[record. sourceNode]->AddTask(record. taskId, record, 
+        GetDependsToTaskId(record dependOnPhases, record. sourceNode));
+    client_map[record. sourceNode]->GetTpnConn(retConnectionManager.GetConnectionManagerByNode(record.sourceNode));
+}
+    appcon.Start (Time (0));
+    CheckExampleProcess (client_map);
+
 }
 
 /**
- * @brief Unified-bus test suite
+ * @brief unified-bus testsuite class
  */
-class UbTestSuite : public TestSuite
+class ubTestSuite : public TestSuite
 {
-public:
-    UbTestSuite();
+    public:
+    /**
+     * @brief Constructor
+     */
+    ubTestSuite();
 };
 
-UbTestSuite::UbTestSuite()
-    : TestSuite("unified-bus", Type::UNIT)
+ubTestSuite::ubTestSuite()
+  : TestSuite("ubTest", Type: : UNIT)
 {
-    AddTestCase(new UbFunctionalityTest(), TestCase::Duration::QUICK);
+  AddTestCase (new ubTest ("scratch/test_CLOS"), TestCase:: Duration: : QUICK);
+  AddTestCase (new ubTest("scratch/test_CCFC"), TestCase:: Duration: : QUICK);
 }
 
-// Register the test suite
-static UbTestSuite g_ubTestSuite;
+// 注册测试用例
+static ubTestSuite ubTestSuite;

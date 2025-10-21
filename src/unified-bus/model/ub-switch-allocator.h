@@ -28,7 +28,7 @@ public:
     static TypeId GetTypeId (void);
     virtual void TriggerAllocator(Ptr<UbPort> outPort);
     virtual void Init();
-    void SetNode(Ptr<Node> node) {m_node = node;}
+    void SetNodeId(uint32_t nodeId) {m_nodeId = nodeId;}
     void RegisterUbIngressQueue(Ptr<UbIngressQueue> ingressQueue, uint32_t outPort, uint32_t priority);
     void RegisterEgressStauts(uint32_t portsNum);
     void SetEgressStatus(uint32_t portId, bool status);
@@ -36,7 +36,7 @@ public:
 
 protected:
     Time m_allocationTime;
-    Ptr<Node> m_node;
+    uint32_t m_nodeId;
     IngressSource_t m_igsrc;
     EgressStatus_t m_egStatus;
 };

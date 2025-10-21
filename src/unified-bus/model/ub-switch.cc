@@ -42,10 +42,11 @@ TypeId UbSwitch::GetTypeId (void)
  */
 void UbSwitch::Init()
 {
-    m_portsNum = m_node->GetNDevices();
+    auto node = GetObject<Node>();
+    m_portsNum = node->GetNDevices();
     // alg init
     m_allocator = CreateObject<UbRoundRobinAllocator>();
-    m_allocator->SetNode(m_node);
+    m_allocator->SetNodeId(node->GetId());
     m_allocator->Init();
     VoqInit();
     AddVoqIntoAlgroithm();
@@ -58,7 +59,7 @@ void UbSwitch::Init()
 
     NodePortsFcInit();
     m_routingProcess = CreateObject<UbRoutingProcess>();
-    m_Ipv4Addr = utils::NodeIdToIp(m_node->GetId());
+    m_Ipv4Addr = utils::NodeIdToIp(node->GetId());
 }
 
 /**
@@ -70,7 +71,7 @@ void UbSwitch::NodePortsFcInit()
                 << " m_isPFCEnable: " << m_isPFCEnable);
 
     for (uint32_t pidx = 0; pidx < m_portsNum; pidx++) {
-        Ptr<UbPort> port = DynamicCast<ns3::UbPort>(m_node->GetDevice(pidx));
+        Ptr<UbPort> port = DynamicCast<ns3::UbPort>(GetObject<Node>()->GetDevice(pidx));
         if (m_isCBFCEnable) {
             port->CreateAndInitFc("CBFC");
         } else if (m_isPFCEnable) {
@@ -186,7 +187,7 @@ void UbSwitch::SwitchHandlePacket(Ptr<UbPort> port, Ptr<Packet> packet)
     auto packetType = GetPacketType(packet);
     switch (packetType) {
         case UB_CONTROL_FRAME:
-            port->m_flowControl->HandleReceivedPacket(packetType, packet, m_node, port->GetIfIndex(), true);
+            port->m_flowControl->HandleReceivedPacket(packetType, packet, GetObject<Node>(), port->GetIfIndex(), true);
             break;
         case UB_URMA_DATA_PACKET:
             ParseURMAPacketHeader(packet);
@@ -271,10 +272,10 @@ bool UbSwitch::SinkTpDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     // Sink
     NS_LOG_DEBUG("[UbPort recv] Pkt tb is local");
     UbPacketType_t packetType = UB_URMA_DATA_PACKET;
-    port->m_flowControl->HandleReceivedPacket(packetType, packet, m_node, port->GetIfIndex(), true);
+    port->m_flowControl->HandleReceivedPacket(packetType, packet, GetObject<Node>(), port->GetIfIndex(), true);
 
     uint32_t dstTpn = m_ubTpHeader.GetDestTpn();
-    auto targetTp = m_node->GetObject<UbController>()->GetTpByTpn(dstTpn);
+    auto targetTp = GetObject<UbController>()->GetTpByTpn(dstTpn);
     NS_ASSERT_MSG(targetTp != nullptr, "Port Cannot Get TP By Tpn!");
     if (m_ubTpHeader.GetTPOpcode() == static_cast<uint8_t>(TpOpcode::TP_OPCODE_ACK_WITH_CETPH)
         || m_ubTpHeader.GetTPOpcode() == static_cast<uint8_t>(TpOpcode::TP_OPCODE_ACK_WITHOUT_CETPH)) {
@@ -301,14 +302,14 @@ bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     uint16_t dCna = m_memHeader.GetDcna();
     uint32_t dnode = utils::Cna16ToNodeId(dCna);
     // Forward
-    if (dnode != m_node->GetId()) {
+    if (dnode != GetObject<Node>()->GetId()) {
         return false;
     }
     // Sink Packet
     UbPacketType_t packetType = UB_LDST_DATA_PACKET;
-    port->m_flowControl->HandleReceivedPacket(packetType, packet, m_node, port->GetIfIndex(), true);
+    port->m_flowControl->HandleReceivedPacket(packetType, packet, GetObject<Node>(), port->GetIfIndex(), true);
 
-    auto UbApiLdst = m_node->GetObject<UbController>()->GetUbFunction()->GetUbLdst();
+    auto UbApiLdst = GetObject<Node>()->GetObject<UbController>()->GetUbFunction()->GetUbLdst();
     NS_ASSERT_MSG(UbApiLdst != nullptr, "UbApiLdst can not be nullptr!");
 
     uint8_t type = m_dummyTaHeader.GetTaOpcode();
@@ -337,7 +338,7 @@ void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     RoutingKey rtKey;
     switch (GetPacketType(packet)) {
         case UB_URMA_DATA_PACKET:
-            LastPacketTraversesNotify(m_node->GetId(), m_ubTpHeader);
+            LastPacketTraversesNotify(GetObject<Node>()->GetId(), m_ubTpHeader);
             GetURMARoutingKey(packet, rtKey);
             break;
         case UB_LDST_DATA_PACKET:  {
@@ -437,14 +438,15 @@ void UbSwitch::GetLdstRoutingKey(Ptr<Packet> packet, RoutingKey &rtKey)
  */
 void UbSwitch::SendPacket(Ptr<Packet> packet, uint32_t inPort, uint32_t outPort, uint32_t priority)
 {
-    Ptr<UbPort> recvPort = DynamicCast<ns3::UbPort>(m_node->GetDevice(inPort));
+    auto node = GetObject<Node>();
+    Ptr<UbPort> recvPort = DynamicCast<ns3::UbPort>(node->GetDevice(inPort));
     m_voq[outPort][priority][inPort]->Push(packet);
     m_queueManager->PushIngress(inPort, priority, packet->GetSize());
     UbPacketType_t packetType = UNKOWN_TYPE;
-    recvPort->m_flowControl->HandleReceivedPacket(packetType, packet, m_node, inPort, false);
+    recvPort->m_flowControl->HandleReceivedPacket(packetType, packet, node, inPort, false);
 
     m_queueManager->PushEgress(outPort, priority, packet->GetSize());
-    Ptr<UbPort> sendPort = DynamicCast<ns3::UbPort>(m_node->GetDevice(outPort));
+    Ptr<UbPort> sendPort = DynamicCast<ns3::UbPort>(node->GetDevice(outPort));
     sendPort->TriggerTransmit();
 }
 
@@ -457,7 +459,7 @@ void UbSwitch::NotifySwitchDequeue(uint16_t inPortId, uint32_t outPort, uint32_t
     UbDatalinkHeader dlHeader;
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
-        NS_LOG_DEBUG("[QMU] Node:" << m_node->GetId()
+        NS_LOG_DEBUG("[QMU] Node:" << GetObject<Node>()->GetId()
               << " port:" << outPort
               << " egress size:" << m_queueManager->GetAllEgressUsed(outPort));
         m_congestionCtrl->SwitchForwardPacket(inPortId, outPort, packet);
@@ -487,7 +489,7 @@ void UbSwitch::SwitchSendFinish(uint32_t portId, uint32_t pri, Ptr<Packet> packe
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
         m_queueManager->PopEgress(portId, pri, packet->GetSize());
-        NS_LOG_DEBUG("[queueManager] Node:" << m_node->GetId()
+        NS_LOG_DEBUG("[queueManager] Node:" << GetObject<Node>()->GetId()
                   << " port:" << portId
                   << " egress size:" << m_queueManager->GetAllEgressUsed(portId));
     }

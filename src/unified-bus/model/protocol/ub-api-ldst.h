@@ -6,7 +6,7 @@
 #include <ns3/ub-api-ldst-thread.h>
 #include "ns3/ub-datatype.h"
 #include "ns3/ub-network-address.h"
-
+#include "ns3/node-list.h"
 namespace ns3 {
     class UbController;
     /**
@@ -19,7 +19,7 @@ namespace ns3 {
         UbApiLdst();
         virtual ~UbApiLdst();
 
-        void SetUbLdst(Ptr<Node> node);
+        void SetUbLdst(uint32_t nodeId);
         void PushMemTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
                          UbMemOperationType type, uint32_t threadId);
         void RecvResponse(Ptr<Packet> p);
@@ -31,7 +31,7 @@ namespace ns3 {
         std::vector<Ptr<UbApiLdstThread>> GetLdstThreads();
 
     private:
-
+        void DoDispose() override;
         TracedCallback<uint32_t, uint32_t> m_traceLastPacketACKsNotify;
         TracedCallback<uint32_t, uint32_t> m_traceMemTaskCompletesNotify;
         TracedCallback<uint32_t, uint32_t, uint32_t> m_tracePeerSendFirstPacketACKsNotify;
@@ -40,7 +40,7 @@ namespace ns3 {
         void MemTaskCompletesNotify(uint32_t nodeId, uint32_t taskId);
         void PeerSendFirstPacketACKsNotify(uint32_t nodeId, uint32_t taskId, uint32_t type);
 
-        Ptr<Node> m_node;
+        uint32_t m_nodeId;
         std::deque<Ptr<UbMemTask>> m_memTaskQueue;
         uint32_t m_threadNum;
         uint32_t m_storeReqSize;

@@ -52,11 +52,6 @@ UbApp::~UbApp()
 {
 }
 
-void UbApp::SetNode(Ptr<Node> node)
-{
-    m_node = node;
-}
-
 void UbApp::GetTpnConn(TpConnectionManager tpConnection)
 {
     m_tpnConn = tpConnection;
@@ -91,22 +86,20 @@ void UbApp::SendTraffic(TrafficRecord record)
         } else if (record.opType == "MEM_LOAD") {
             type = UbMemOperationType::LOAD;
         }
-        Ptr<UbFunction> ubFunc =
-            m_node->GetObject<UbController>()->GetUbFunction();
-        Ptr<UbApiLdst> Ldst = ubFunc->GetUbLdst();
-        SetFinishCallback(MakeCallback(&UbApp::OnMemTaskCompleted, this),
-                          Ldst);
+        Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
+        Ptr<UbApiLdst> ldst = ubFunc->GetUbLdst();
+        SetFinishCallback(MakeCallback(&UbApp::OnMemTaskCompleted, this), ldst);
         NS_LOG_INFO("MEM Task Starts, taskId: " << record.taskId);
-        MemTaskStartsNotify(m_node->GetId(), record.taskId);
+        MemTaskStartsNotify(GetNode()->GetId(), record.taskId);
         ubFunc->PushLdstTask(record.sourceNode, record.destNode, record.dataSize,
                           record.taskId, type, threadId);
         threadId++;
-        if (threadId >= Ldst->GetThreadNum()) {
-            threadId = threadId % Ldst->GetThreadNum();
+        if (threadId >= ldst->GetThreadNum()) {
+            threadId = threadId % ldst->GetThreadNum();
         }
     } else if (record.opType == "URMA_WRITE") {
         // URMA发送
-        Ptr<UbFunction> ubFunc = m_node->GetObject<UbController>()->GetUbFunction();
+        Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
         bool jettyExist = ubFunc->IsJettyExists(m_jettyNum);
         if (jettyExist) {
             NS_LOG_ERROR("Jetty already exists");
@@ -123,11 +116,10 @@ void UbApp::SendTraffic(TrafficRecord record)
             Ptr<UbJetty> curr_jetty = ubFunc->GetJetty(m_jettyNum);
             SetFinishCallback(MakeCallback(&UbApp::OnTaskCompleted, this), curr_jetty);
             NS_LOG_INFO("WQE Starts, jettyNum: " << m_jettyNum << " taskId: " << record.taskId);
-            WqeTaskStartsNotify(m_node->GetId(), m_jettyNum, record.taskId);
-            NS_LOG_INFO("[APPLICATION INFO] taskId: " << record.taskId << ",start time:"
-                        << Simulator::Now().GetNanoSeconds() << "ns");
-            Ptr<UbWqe> wqe = ubFunc->CreateWqe(record.sourceNode, record.destNode,
-                                record.dataSize, record.taskId);
+            WqeTaskStartsNotify(GetNode()->GetId(), m_jettyNum, record.taskId);
+            NS_LOG_INFO("[APPLICATION INFO] taskId: " << record.taskId << ",start time:" << 
+                Simulator::Now().GetNanoSeconds() << "ns");
+            Ptr<UbWqe> wqe = ubFunc->CreateWqe(record.sourceNode, record.destNode, record.dataSize, record.taskId);
             ubFunc->PushWqeToJetty(wqe, m_jettyNum);
         }
         m_jettyNum++; // m_jettyNum 在client里是唯一的，不重复的
@@ -140,30 +132,30 @@ void UbApp::OnTaskCompleted(uint32_t taskId, uint32_t jettyNum)
 {
     NS_LOG_FUNCTION(this << taskId);
     NS_LOG_INFO("WQE Completes, jettyNum: " << jettyNum << " taskId: " << taskId);
-    WqeTaskCompletesNotify(m_node->GetId(), jettyNum, taskId);
+    WqeTaskCompletesNotify(GetNode()->GetId(), jettyNum, taskId);
     NS_LOG_INFO("[APPLICATION INFO] taskId: " << taskId << ",finish time:" << Simulator::Now().GetNanoSeconds() << "ns");
-    Ptr<UbFunction> ubFunc = m_node->GetObject<UbController>()->GetUbFunction();
+    Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
     ubFunc->DestroyJetty(jettyNum);
-    UbTrafficGen::GetInstance().OnTaskCompleted(taskId);
+    UbTrafficGen::Get()->OnTaskCompleted(taskId);
 }
 
 void UbApp::OnTestTaskCompleted(uint32_t taskId, uint32_t jettyNum)
 {
     NS_LOG_FUNCTION(this << taskId);
     NS_LOG_INFO("WQE Completes, jettyNum:" << jettyNum << " taskId:" << taskId);
-    WqeTaskCompletesNotify(m_node->GetId(), jettyNum, taskId);
+    WqeTaskCompletesNotify(GetNode()->GetId(), jettyNum, taskId);
     NS_LOG_INFO("[APPLICATION INFO] taskId:" << taskId << ",finish time:" << Simulator::Now().GetNanoSeconds() << "ns");
-    Ptr<UbFunction> ubFunc = m_node->GetObject<UbController>()->GetUbFunction();
-    UbTrafficGen::GetInstance().OnTaskCompleted(taskId);
+    Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
+    UbTrafficGen::Get()->OnTaskCompleted(taskId);
 }
 
 void UbApp::OnMemTaskCompleted(uint32_t taskId)
 {
     NS_LOG_FUNCTION(this << taskId);
     NS_LOG_INFO("MEM Task Completes, taskId: " << taskId);
-    MemTaskCompletesNotify(m_node->GetId(), taskId);
+    MemTaskCompletesNotify(GetNode()->GetId(), taskId);
     NS_LOG_INFO("[APPLICATION INFO] taskId: " << taskId << ",finish time:" << Simulator::Now().GetNanoSeconds() << "ns");
-    UbTrafficGen::GetInstance().OnTaskCompleted(taskId);
+    UbTrafficGen::Get()->OnTaskCompleted(taskId);
 }
 
 void UbApp::MemTaskStartsNotify(uint32_t nodeId, uint32_t taskId)

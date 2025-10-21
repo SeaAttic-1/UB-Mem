@@ -76,7 +76,12 @@ public:
 private:
     void StateReset();
 
-    Ptr<UbTransportChannel> m_tp;
+    void DoDispose() override;
+
+    uint32_t m_src;
+    uint32_t m_dst;
+    uint32_t m_tpn;
+
     enum CongestionState {
         SLOW_START,
         CONGESTION_AVOIDANCE
@@ -127,6 +132,9 @@ public:
     void ResetLocalCc();
 
 private:
+
+    void DoDispose() override;
+
     Time m_ccUpdatePeriod;                      // 交换机自动更新CC的周期
     std::vector<int64_t> m_cc;                  // Credit Counter，端口可用信用证的数量，代表端口空闲转发能力
     std::vector<uint64_t> m_txSize ;            // 实际吞吐量
@@ -134,7 +142,7 @@ private:
     std::vector<int64_t> m_creditAllocated;     // 上一次循环中分配除去的信用证
     std::vector<DataRate> m_bps;                // port带宽
 
-    Ptr<UbSwitch> m_sw;
+    uint32_t m_nodeId;                          // 绑定的switch节点号
 
     Ptr<UniformRandomVariable> m_random;        // 随机数产生工具，伪随机，多次仿真可复现
 };

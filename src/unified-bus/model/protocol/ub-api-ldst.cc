@@ -61,13 +61,13 @@ UbApiLdst::~UbApiLdst()
 {
 }
 
-void UbApiLdst::SetUbLdst(Ptr<Node> node)
+void UbApiLdst::SetUbLdst(uint32_t nodeId)
 {
-    m_node = node;
+    m_nodeId = nodeId;
     for (size_t i = 0; i < m_threadNum; i++) {
         Ptr<UbApiLdstThread> ldstThread = CreateObject<UbApiLdstThread>();
         if (ldstThread != nullptr) {
-            ldstThread->SetUbLdstThread(node, i, m_storeReqSize);
+            ldstThread->SetUbLdstThread(nodeId, i, m_storeReqSize);
         }
         m_ldstThreadVector.push_back(ldstThread);
     }
@@ -159,7 +159,7 @@ void UbApiLdst::RecvDataPacket(Ptr<Packet> packet, uint8_t vlIndex, uint8_t vl, 
     // 根据taskid去查map，若没有记录，则是第一个要回的response
     if (m_taskReplyRsp.find(taskId) == m_taskReplyRsp.end()) {
         m_taskReplyRsp[taskId] = 1;
-        PeerSendFirstPacketACKsNotify(m_node->GetId(), taskId, type);
+        PeerSendFirstPacketACKsNotify(m_nodeId, taskId, type);
     }
 
     uint16_t tmp = memHeader.GetScna();
@@ -172,12 +172,16 @@ void UbApiLdst::RecvDataPacket(Ptr<Packet> packet, uint8_t vlIndex, uint8_t vl, 
                                 UbDatalinkHeaderConfig::PACKET_UB_MEM);
     
     Ipv4Address ip_node = utils::NodeIdToIp(utils::Cna16ToNodeId(memHeader.GetDcna()));
-    std::vector<uint16_t> vec = m_node->GetObject<UbSwitch>()->GetRoutingProcess()->GetShortestOutPorts(ip_node.Get());
+
+    auto node = NodeList::GetNode(m_nodeId);
+    auto sw = node->GetObject<UbSwitch>();
+
+    std::vector<uint16_t> vec = sw->GetRoutingProcess()->GetShortestOutPorts(ip_node.Get());
     uint16_t destPort = vec[0]; // 暂时使用第0个
 
-    m_node->GetObject<UbSwitch>()->AddPktToVoq(ackp, destPort, m_queuePriority, destPort);
+    sw->AddPktToVoq(ackp, destPort, m_queuePriority, destPort);
 
-    Ptr<UbPort> triggerPort = DynamicCast<UbPort>(m_node->GetDevice(destPort));
+    Ptr<UbPort> triggerPort = DynamicCast<UbPort>(node->GetDevice(destPort));
     triggerPort->TriggerTransmit(); // 触发发送
 
     NS_LOG_DEBUG("RecvDataPacket");
@@ -223,14 +227,31 @@ void UbApiLdst::RecvResponse(Ptr<Packet> p)
     }
     // 所有ack都收到，则内存语义任务完成
     if (psnCnt == m_taskAckcountMap[taskId]) {
-        LastPacketACKsNotify(m_node->GetId(), taskId);
-        MemTaskCompletesNotify(m_node->GetId(), taskId);
+        LastPacketACKsNotify(m_nodeId, taskId);
+        MemTaskCompletesNotify(m_nodeId, taskId);
         NS_LOG_INFO("MEM Task Finishes, taskId: " << std::to_string(taskId));
         FinishCallback(taskId); // 调用应用层的回调
     } else {
         // 继续发包
         GetUbLdstThreadByThreadId(m_taskThreadMap[taskId])->GenPacketAndSend();
     }
+}
+
+void UbApiLdst::DoDispose()
+{
+    NS_LOG_DEBUG(this);
+    for (auto i = m_memTaskQueue.begin(); i != m_memTaskQueue.end(); i++) {
+        *i = nullptr;
+    }
+    m_memTaskQueue.clear();
+    m_taskReplyRsp.clear();
+    for (auto i = m_ldstThreadVector.begin(); i != m_ldstThreadVector.end(); i++) {
+        *i = nullptr;
+    }
+    m_ldstThreadVector.clear();
+    m_taskTypeMap.clear();
+    m_taskThreadMap.clear();
+    m_taskAckcountMap.clear();
 }
 
 void UbApiLdst::LastPacketACKsNotify(uint32_t nodeId, uint32_t taskId)

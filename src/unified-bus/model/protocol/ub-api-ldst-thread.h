@@ -5,7 +5,7 @@
 #include <ns3/node.h>
 #include "ns3/ub-datatype.h"
 #include "ns3/ub-network-address.h"
-
+#include "ns3/node-list.h"
 namespace ns3 {
     constexpr int MAX_LB = 255;
     constexpr int MIN_LB = 0;
@@ -18,7 +18,7 @@ namespace ns3 {
         static TypeId GetTypeId(void);
         UbApiLdstThread();
         virtual ~UbApiLdstThread();
-        void SetUbLdstThread(Ptr<Node> node, uint32_t ldstThreadNum, uint32_t storeReqSize);
+        void SetUbLdstThread(uint32_t nodeId, uint32_t ldstThreadNum, uint32_t storeReqSize);
         void PushMemTask(Ptr<UbMemTask> memTask);
         Ptr<Packet> GenDataPacket(Ptr<UbMemTask> memTask, uint32_t payloadSize, uint16_t destPort);
         void GenPacketAndSend();
@@ -28,7 +28,7 @@ namespace ns3 {
         void SetUseShortestPaths(bool useShortestPaths);
 
     private:
-
+        void DoDispose() override;
         TracedCallback<uint32_t, uint32_t> m_traceMemTaskStartsNotify;
         TracedCallback<uint32_t, uint32_t> m_traceFirstPacketSendsNotify;
         TracedCallback<uint32_t, uint32_t> m_traceLastPacketSendsNotify;
@@ -37,7 +37,7 @@ namespace ns3 {
         void FirstPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId);
         void LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId);
 
-        Ptr<Node> m_node;
+        uint32_t m_nodeId;
         uint32_t m_storeOutstanding; // 发数据包++, 收ack --
         uint32_t m_loadOutstanding; // 发数据包++, 收ack --
         uint32_t m_storeReqSize;

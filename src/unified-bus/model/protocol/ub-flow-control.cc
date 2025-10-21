@@ -39,9 +39,12 @@ void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDat
     NS_LOG_DEBUG("m_crdTxfree[*]: " << m_crdTxfree[0]);
 }
 
-void UbCbfc::Destroy()
+void UbCbfc::DoDispose()
 {
+    NS_LOG_FUNCTION(this);
     delete m_cbfcCfg;
+
+    Object::DoDispose();
 }
 
 bool UbCbfc::IsFcLimited(Ptr<UbIngressQueue> igressQ)
@@ -283,10 +286,12 @@ void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld)
     m_pfcCfg->m_portpfcLowThld = portpfcLowThld;  // 0.8 * m_portpfcUpThld
 }
 
-void UbPfc::Destroy()
+void UbPfc::DoDispose()
 {
+    NS_LOG_FUNCTION(this);
     delete m_pfcCfg;
     delete m_pfcStatus;
+    Object::DoDispose();
 }
 
 bool UbPfc::IsFcLimited(Ptr<UbIngressQueue> igressQ)

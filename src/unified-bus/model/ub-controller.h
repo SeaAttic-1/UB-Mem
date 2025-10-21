@@ -111,12 +111,10 @@ public:
 
     Ptr<UbFunction> GetUbFunction();
 
-    Ptr<Node> m_node = nullptr;
-
     /**
-     * @brief 1.每个controller设置一个node
+     * @brief 1.每个controller创建一个Function
      */
-    void SetNode(Ptr<Node> node);
+    void CreateUbFunction();
 
     std::unordered_map<uint32_t, Ptr<UbTransportChannel>> m_tpsMapInIngressSource; // 统一存到voq队列中，tps的位置
 

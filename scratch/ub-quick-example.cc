@@ -4,13 +4,10 @@
 
 using namespace utils;
 
-ApplicationContainer appCon;
-
-void CheckExampleProcess(unordered_map<int, Ptr<UbApp>> client_map)
+void CheckExampleProcess()
 {
-    PrintTimestamp("Check Example Process.");
-    if (!UbTrafficGen::GetInstance().IsCompleted()) {
-            Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess, client_map);
+    if (!UbTrafficGen::Get()->IsCompleted()) {
+            Simulator::Schedule(MicroSeconds(100), &CheckExampleProcess);
             return;
     }
     Simulator::Stop();
@@ -22,50 +19,47 @@ void RunCase(const string& configPath)
 {
     RngSeedManager::SetSeed(10);
     string LoadConfigFilePath = configPath + "/network_attribute.txt";
-    SetComponentsAttribute(LoadConfigFilePath);
-    CreateTraceDir();
+    UbUtils::Get()->SetComponentsAttribute(LoadConfigFilePath);
+    UbUtils::Get()->CreateTraceDir();
     string NodeConfigFile = configPath + "/node.csv";
-    CreateNode(NodeConfigFile);
+    UbUtils::Get()->CreateNode(NodeConfigFile);
     string TopoConfigFile = configPath + "/topology.csv";
-    CreateTopo(TopoConfigFile);
+    UbUtils::Get()->CreateTopo(TopoConfigFile);
     string RouterConfigFile = configPath + "/routing_table.csv";
-    AddRoutingTable(RouterConfigFile);
+    UbUtils::Get()->AddRoutingTable(RouterConfigFile);
     string TpConfigFile = configPath + "/transport_channel.csv";
-    TpConnectionManager retConnectionManager = CreateTp(TpConfigFile);
-    TopoTraceConnect();
+    TpConnectionManager retConnectionManager = UbUtils::Get()->CreateTp(TpConfigFile);
+    UbUtils::Get()->TopoTraceConnect();
     string TrafficConfigFile = configPath + "/traffic.csv";
-    auto trafficData = ReadTrafficCSV(TrafficConfigFile);
+    auto trafficData = UbUtils::Get()->ReadTrafficCSV(TrafficConfigFile);
 
     BooleanValue gFaultEnable;
-    g_fault_enable.GetValue(gFaultEnable);
+    UbUtils::Get()->g_fault_enable.GetValue(gFaultEnable);
     if (gFaultEnable.Get()) {
         string FaultConfigFile = configPath + "/fault.csv";
-        InitFaultMoudle(FaultConfigFile);
+        UbUtils::Get()->InitFaultMoudle(FaultConfigFile);
     }
     // 遍历Traffic数据，并启动client
-    PrintTimestamp("Start Client.");
+    UbUtils::Get()->PrintTimestamp ("Start Client.");
     for (auto& record : trafficData) {
-        auto it = client_map.find(record.sourceNode);
-        if (it == client_map.end()) {
-            Ptr<UbApp> client = CreateObject<UbApp> ();
-            utils::node_map[record.sourceNode]->AddApplication(client);
-            client_map[record.sourceNode] = client;
-            ClientTraceConnect(record.sourceNode);
+        auto node = NodeList::GetNode (record.sourceNode);
+        if (node->GetNApplications()==0) {
+            Ptr<UbApp> client = CreateObject<UbApp>();
+            node->AddApplication (client);
+            UbUtils::Get()->ClientTraceConnect(record.sourceNode);
         }
-
-        client_map[record.sourceNode]->SetNode(node_map[record.sourceNode]);
-        UbTrafficGen::GetInstance().AddTask(record.taskId, record,
-                                               GetDependsToTaskId(record.dependOnPhases));
-        client_map[record.sourceNode]->GetTpnConn(retConnectionManager.GetConnectionManagerByNode(record.sourceNode));
+        UbTrafficGen::Get()->AddTask(record);
+        Ptr<ns3::UbApp> client = DynamicCast<ns3::UbApp>(node->GetApplication(0));
+        client->GetTpnConn(retConnectionManager.GetConnectionManagerByNode(record.sourceNode));
     }
-    Simulator::ScheduleNow(&UbTrafficGen::ScheduleNextTasks,&UbTrafficGen::GetInstance());
-    CheckExampleProcess(client_map);
+    UbTrafficGen::Get()->ScheduleNextTasks();
+    CheckExampleProcess();
 }
 
 // 根据配置文件路径执行用例
 int main(int argc, char* argv[])
 {
-    if (QueryAttributeInfor(argc, argv))
+    if (UbUtils::Get()->QueryAttributeInfor(argc, argv))
         return 0;
     // 开始计时
     auto start = std::chrono::high_resolution_clock::now();
@@ -109,21 +103,21 @@ int main(int argc, char* argv[])
 
     // 读取配置文件并执行用例
     string runCase = "Run case: " + configPath;
-    PrintTimestamp(runCase);
+    UbUtils::Get()->PrintTimestamp(runCase);
     RunCase(configPath);
 
     Simulator::Run();
+    UbUtils::Get()->Destroy();
     Simulator::Destroy();
-    PrintTimestamp("Simulator finished!");
+    UbUtils::Get()->PrintTimestamp("Simulator finished!");
+    UbUtils::Get()->ParseTrace();
 
-    Destroy();
-    ParseTrace();
     auto end = std::chrono::high_resolution_clock::now();
     // 计算持续时间
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    PrintTimestamp("Program finished.");
+    UbUtils::Get()->PrintTimestamp("Program finished.");
     string runTime = "程序运行时间: " + to_string(duration.count()) + " 毫秒";
-    PrintTimestamp(runTime);
+    UbUtils::Get()->PrintTimestamp(runTime);
     return 0;
 }
 
