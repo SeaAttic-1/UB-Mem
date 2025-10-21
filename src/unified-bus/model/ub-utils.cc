@@ -38,7 +38,12 @@ void UbUtils::ParseTrace(bool isTest)
     if (ParseEnable) {
         PrintTimestamp("Start Parse Trace File.");
         
-        string cmd = "python3 ./../../toolchain/trace_analysis/parse_trace.py" + trace_path;
+        // 从GlobalValue获取路径
+        StringValue scriptPathValue;
+        g_python_script_path.GetValue(scriptPathValue);
+        string python_script_path = scriptPathValue.Get();
+        
+        string cmd = "python3 " + python_script_path + " " + trace_path;
         if (isTest) {
             cmd += " true";
         } else {
@@ -474,15 +479,13 @@ void UbUtils::CreateNode(const string &filename)
         if (nodeTypeStr == "DEVICE") {
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
             node->AggregateObject(ubCtrl);
-            ubCtrl->SetNode(node);
+            ubCtrl->CreateUbFunction();
             sw->SetNodeType(UB_DEVICE);
         } else if (nodeTypeStr == "SWITCH") {
             sw->SetNodeType(UB_SWITCH);
         } else {
             NS_ASSERT_MSG(0, "node type not support");
         }
-        sw->SetNode(node);
-        node_map[node->GetId()] = node;
         for (int i = 0; i < portNum; i++) {
             Ptr<UbPort> port = CreateObject<UbPort>();
             port->SetAddress(Mac48Address::Allocate());
@@ -639,8 +642,8 @@ TpConnectionManager UbUtils::CreateTp(const string &filename)
         }
         Connection conn;
         ParseLine(line, conn);
-        Ptr<Node> sN = NodeList::GetNode(node1);
-        Ptr<Node> rN = NodeList::GetNode(node2);
+        Ptr<Node> sN = NodeList::GetNode(conn.node1);
+        Ptr<Node> rN = NodeList::GetNode(conn.node2);
 
         Ptr<ns3::UbController> sendCtrl = sN->GetObject<ns3::UbController>();
         Ptr<ns3::UbController> receiveCtrl = rN->GetObject<ns3::UbController>();
@@ -883,7 +886,7 @@ void UbUtils::InitFaultMoudle(const string &FaultConfigFile)
 {
     Ptr<UbFault> ubFault = CreateObject<UbFault>();
     for (auto it = NodeList::Begin(); it != NodeList::End(); ++it) {
-        Ptr<Node> = *it;
+        Ptr<Node> node = *it;
         uint16_t portNum = node->GetNDevices();
         for (int i = 0; i < portNum; i++) {
             Ptr<UbPort> port = DynamicCast<ns3::UbPort>(node->GetDevice(i));

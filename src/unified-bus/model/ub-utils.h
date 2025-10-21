@@ -122,6 +122,12 @@ private:
 
     GlobalValue g_record_pkt_trace_enable = GlobalValue("UB_RECORD_PKT_TRACE", "enable record all packet trace", BooleanValue(false), MakeBooleanChecker());
 
+    GlobalValue g_python_script_path = 
+    GlobalValue("UB_PYTHON_SCRIPT_PATH", 
+                "Path to parse_trace.py script (REQUIRED - must be set by user)", 
+                StringValue("/path/to/ns-3-ub-tools/trace_analysis/parse_trace.py"), 
+                MakeStringChecker());
+    
     static string Among(string s, string ts);
 
     void SetRecord(int fieldCount, string field, TrafficRecord &record);
