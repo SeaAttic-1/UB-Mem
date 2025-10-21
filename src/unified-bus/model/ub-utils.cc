@@ -3,19 +3,6 @@
 
 namespace utils {
     
-// 读取Traffic配置文件
-enum class FIELDCOUNT : int {
-    TASKID = 0,
-    SOURCENODE = 1,
-    DESTNODE = 2,
-    DATASIZE,
-    OPTYPE,
-    PRIORITY,
-    DELAY,
-    PHASEID,
-    DEPENDONPHASES
-};
-
 void UbUtils::PrintTimestamp(const std::string &message)
 {
     // 获取当前系统时间点
