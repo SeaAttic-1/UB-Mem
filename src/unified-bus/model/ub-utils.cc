@@ -733,7 +733,7 @@ vector<TrafficRecord> UbUtils::ReadTrafficCSV(const string &filename)
             SetRecord(fieldCount, field, record);
             fieldCount++;
         }
-        UbtrafficGen::Get()->SetPhaseDepend(record.phaseId, record.taskId);
+        UbTrafficGen::Get()->SetPhaseDepend(record.phaseId, record.taskId);
         records.push_back(record);
     }
     file.close();
