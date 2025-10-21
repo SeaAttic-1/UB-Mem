@@ -107,7 +107,7 @@ private:
         string forwardDelay;
     };
 
-    std::map<uint32_t NodeEle> nodeEle_map;
+    std::map<uint32_t, NodeEle> nodeEle_map;
 
     string g_config_path;
 
@@ -182,7 +182,7 @@ private:
     inline void ParseNodeRange(const string &rangeStr, NodeEle nodeEle);
 
     // 读取TP配置文件
-    void ParseLine(const std::string &line, Connection &conn)
+    void ParseLine(const std::string &line, Connection &conn);
 };
 
 }  // namespace utils
