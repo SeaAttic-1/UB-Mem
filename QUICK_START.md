@@ -1,12 +1,5 @@
 # Quick Start
 
-本指南提供从代码获取、依赖安装、编译构建到运行用例与结果验证的完整流程说明。
-
-## Prerequisites
-
-操作系统：Ubuntu 20.04
-# Quick Start
-
 ## Prerequisites
 
 - 操作系统：Ubuntu 20.04
