@@ -47,7 +47,7 @@ python3 -m pip install --user -r scratch/ns-3-ub-tools/requirements.txt
 # conda install pandas matplotlib seaborn
 ```
 
-关于自动安装：`trace_analysis/parse_trace.py` 会在启动时检查并尝试自动安装缺失的第三方包（如 `pandas`、`matplotlib`、`seaborn`）。在受限/离线环境建议预先安装依赖，而非依赖自动安装。
+说明： 请在运行 `trace_analysis/parse_trace.py` 前通过 `requirements.txt` 预先安装所需第三方包。
 
 ## Build
 
