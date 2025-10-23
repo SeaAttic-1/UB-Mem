@@ -43,8 +43,12 @@ global UB_PYTHON_SCRIPT_PATH "scratch/ns-3-ub-tools/trace_analysis/parse_trace.p
 
 ```bash
 python3 -m pip install --user -r scratch/ns-3-ub-tools/requirements.txt
+# 可能会遇到`externally-managed-environment`限制，此时请尝试使用虚拟环境
+# 使用国内镜像源加速下载
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r scratch/ns-3-ub-tools/requirements.txt
 # 或使用 conda：
-# conda install pandas matplotlib seaborn
+conda install pandas matplotlib seaborn
+# 或者手动安装以上依赖
 ```
 
 说明： 请在运行 `trace_analysis/parse_trace.py` 前通过 `requirements.txt` 预先安装所需第三方包。
@@ -65,7 +69,7 @@ python3 -m pip install --user -r scratch/ns-3-ub-tools/requirements.txt
 # 如使用 Conda，请确保其 bin 在 PATH 前（或先激活环境）
 export PATH=/home/ytxing/miniconda3/bin:$PATH
 
-# 安装依赖（推荐）
+# 安装依赖
 python3 -m pip install --user -r scratch/ns-3-ub-tools/requirements.txt
 
 # 运行小示例并触发 trace 分析
