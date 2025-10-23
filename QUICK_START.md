@@ -15,7 +15,7 @@
 
 ```bash
 # 克隆项目
-git clone git@gitcode.com:open-usim/ns-3-ub.git
+git clone https://gitcode.com/open-usim/ns-3-ub.git
 cd ns-3-ub
 
 # 初始化并更新子模块（包含 Python 分析工具）
