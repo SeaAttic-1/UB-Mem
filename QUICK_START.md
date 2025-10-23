@@ -21,6 +21,9 @@ cd ns-3-ub
 # 初始化并更新子模块（包含 Python 分析工具）
 git submodule update --init --recursive
 
+# 如果上述命令失败，可以手动克隆：
+# git clone https://gitcode.com/open-usim/ns-3-ub-tools.git scratch/ns-3-ub-tools
+
 # 验证子模块状态
 git submodule status
 ```
