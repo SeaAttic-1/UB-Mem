@@ -1,3 +1,0 @@
-taskId,sourceNodeId,destNodeId,dataSize(Byte),opType,priority,delay,phaseId,dependOnPhases
-0,0,7,512,MEM_LOAD,7,10ns,1,
-
