@@ -6,9 +6,9 @@
 
 ## Project Overview
 
-`ns-3-UB` is an ns-3 simulation module built based on the [Unified Bus Foundation Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Foundation Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
+`ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus™ (UB) Base Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
 
-> Although every effort has been made to align with the UB Foundation Specification, differences still exist between the two. Please refer to the UB Foundation Specification as the authoritative guide.
+> Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
 
 `ns-3-UB` can be used to research UB protocol-based:
 - Traffic pattern affinity, low-cost, highly reliable innovative topological architectures.
@@ -17,7 +17,7 @@
 - New memory semantic transport control techniques for super-node networks.
 - Innovative adaptive routing, load balancing, congestion control, and QoS optimization algorithms.
 
-> This project provides pluggable "reference implementations" for strategies/algorithms not specified in the specification (such as switch modeling methods, routing selection, congestion marking, buffering and arbitration strategies, etc.). These implementations are not part of the UB Foundation Specification and serve only as examples/baselines that can be replaced or disabled.
+> This project provides pluggable "reference implementations" for strategies/algorithms not specified in the specification (such as switch modeling methods, routing selection, congestion marking, buffering and arbitration strategies, etc.). These implementations are not part of the UB Base Specification and serve only as examples/baselines that can be replaced or disabled.
 >
 > Functions not included in this project include but are not limited to: hardware internal detail modeling, physical layer, performance parameters, control plane behavior (such as initialization behavior, exception event handling, etc.), memory management, security policies, etc.
 
@@ -135,7 +135,7 @@ The **typical simulation capabilities** supported by this project are shown in t
 │   ├── test_CLOS/              # CLOS topology test cases
 │   ├── 2dfm4_4*/               # 2D FullMesh 4x4 test case set
 │
-└── src/unified-bus/            # UB Foundation Specification-based simulation components
+└── src/unified-bus/            # UB Base Specification-based simulation components
     ├── model/                  
     │   ├── protocol/
     │   │   └── ub-*            # Protocol stack related modeling components
@@ -146,9 +146,9 @@ The **typical simulation capabilities** supported by this project are shown in t
 
 ## Core Components
 
-### 1. Unified Bus (UB) Module
+### 1. UnifiedBus (UB) Module
 
-The UB module is a simulation component implemented based on the UB Foundation Specification:
+The UB module is a simulation component implemented based on the UB Base Specification:
 
 #### Network Element Modeling Components
 <p align="center">
