@@ -72,9 +72,10 @@ public:
     virtual FcType GetFcType() override;
 
     void Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDataPacket,
-              uint8_t retCellGrainControlPacket, int32_t portTxfree);
+              uint8_t retCellGrainControlPacket, int32_t portTxfree,
+              uint32_t nodeId, uint32_t portId);
 
-    virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
+    virtual bool IsFcLimited(Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
                                                   uint32_t inPortId, uint32_t outPortId) override;
     virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) override;
@@ -120,18 +121,18 @@ public:
     virtual ~UbPfc() {}
     virtual FcType GetFcType() override;
     
-    void Init(int32_t portpfcUpThld, int32_t portpfcLowThld);
+    void Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId);
     
-    virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
+    virtual bool IsFcLimited(Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
                                                   uint32_t inPortId, uint32_t outPortId) override;
     virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReceivedControlPacket(Ptr<Packet> p) override;
     virtual void HandleReceivedPacket(Ptr<Packet> p) override;
     bool UpdatePfcStatus(Ptr<Packet> p);
-    void SendPfc(Ptr<Packet> servicePacket, uint32_t targetPortId);
+    void SendPfc(Ptr<Packet> pfcPacket, uint32_t targetPortId);
     Ptr<Packet> CheckPfcThreshold(Ptr<Packet> p, uint32_t portId);
-private:
+public:
     FcType m_fcType { FcType::PFC };
     uint32_t m_portId;
     uint32_t m_nodeId;

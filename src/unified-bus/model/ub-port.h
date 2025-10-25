@@ -49,9 +49,9 @@ public:
     static TypeId GetTypeId(void);
     explicit UbEgressQueue();
 
-    bool DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packetPair);  // 向端口eq塞入队列
-    std::tuple<uint32_t, uint32_t, Ptr<Packet>> Peekqueue(void);    // 查看eq队列
-    std::tuple<uint32_t, uint32_t, Ptr<Packet>> DoDequeue(void);      // 端口从eq出队列
+    bool DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packetPair);  // 向端口eq塞入包
+    std::tuple<uint32_t, uint32_t, Ptr<Packet>> Peekqueue(void);
+    std::tuple<uint32_t, uint32_t, Ptr<Packet>> DoDequeue(void);
     // 为报文添加UDP、IPV4、DL packet头
     void AddPacketHeader(Ptr<UbTransportChannel> tp, Ptr<Packet> p, bool credit, bool ack);
 

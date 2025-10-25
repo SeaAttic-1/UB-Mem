@@ -62,24 +62,24 @@ bool UbEgressQueue::DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packet
     return true;
 }
 
-std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::DoPeekqueue()
+std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::Peekqueue()
 {
     NS_LOG_FUNCTION (this);
     if (m_egressQ.empty()) {
         NS_LOG_LOGIC ("Queue empty");
-        return std::make_tuple<0, 0, nullptr>;
+        return std::make_tuple(0, 0, nullptr);
     }
     auto [inPortId, priority, pkt] = m_egressQ.front();
     return std::make_tuple(inPortId, priority, pkt);
 }
 
-Ptr<UbIngressQueue> UbEgressQueue::DoDequeue()
+std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::DoDequeue()
 {
     NS_LOG_FUNCTION (this);
 
     if (m_egressQ.empty()) {
         NS_LOG_LOGIC ("Queue empty");
-        return std::make_tuple<0, 0, nullptr>;
+        return std::make_tuple(0, 0, nullptr);
     }
 
     auto packetPair = m_egressQ.front ();
@@ -214,7 +214,7 @@ void UbPort::CreateAndInitFc(const std::string& type)
         }
         auto flowControl = DynamicCast<UbCbfc>(m_flowControl);
         flowControl->Init(m_cbfcFlitLen, m_cbfcFlitsPerCell, m_cbfcRetCellGrainDataPacket,
-            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNdoe()->GetId(), m_portId);
+            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNode()->GetId(), m_portId);
         NS_LOG_DEBUG("[UbPort CreateAndInitFc] flowControl Cbfc Init");
     } else if (type == "PFC") {
         m_flowControl = CreateObject<UbPfc>();
@@ -223,7 +223,7 @@ void UbPort::CreateAndInitFc(const std::string& type)
             NS_LOG_WARN(this);
         }
         auto flowControl = DynamicCast<UbPfc>(m_flowControl);
-        flowControl->Init(m_pfcUpThld, m_pfcLowThld, GetNdoe()->GetId(), m_portId);
+        flowControl->Init(m_pfcUpThld, m_pfcLowThld, GetNode()->GetId(), m_portId);
         IntegerValue val;
         g_ub_vl_num.GetValue(val);
         int ubVlNum = val.Get();
@@ -250,11 +250,11 @@ void UbPort::TransmitComplete()
     NS_ASSERT_MSG(
         m_currentPkt != nullptr, "UbPort::TransmitComplete(): m_currentPkt zero");
 
-    //转发时通知switch发送完成
+    // 转发时通知switch发送完成
     if (m_currentInPortId != m_portId) {
         GetNode()->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentPriority, m_currentPkt);
     }
-    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentInPortId, GetNode());
+    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentInPortId, m_portId);
 
     m_currentPkt = nullptr;
     m_currentInPortId = 0;
@@ -273,7 +273,7 @@ void UbPort::DequeuePacket(void)
     m_currentPkt = packet;
     m_currentInPortId = inPortId;
     m_currentPriority = priority;
-    if(m_ubEQ->IsEmpty()) {
+    if (m_ubEQ->IsEmpty()) {
         // Switch allocation when port sendding packet.
         auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
@@ -582,7 +582,6 @@ void UbPort::DoDispose()
     m_ubEQ = nullptr;
     m_channel = nullptr;
     m_currentPkt = nullptr;
-    m_currentIgQ = nullptr;
     m_datalink = nullptr;
     m_flowControl = nullptr;
     m_revQueueSize.clear();

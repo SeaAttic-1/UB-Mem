@@ -95,7 +95,7 @@ void UbRoundRobinAllocator::TriggerAllocator(Ptr<UbPort> outPort)
     if (m_isRunning[outPortId]) {
         // one more round flag
         // 为了避免running过程中新生成的包：
-        // 1.无法被当前伦茨调度
+        // 1.无法被当前轮次调度
         // 2.下一次trigger会被当前轮次的状态掩盖
         m_oneMoreRound[outPortId] = true;
         NS_LOG_DEBUG("[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.");
@@ -116,11 +116,11 @@ void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
         auto packet = ingressQueue->GetNextPacket();
         auto inPortId = ingressQueue->GetInPortId();
         auto priority = ingressQ->GetIgqPriority();
-        auto packetPair = std::make_tuple<inPortId, priority, packet>;
+        auto packetPair = std::make_tuple(inPortId, priority, packet);
         outPort->GetFlowControl()->HandleSentPacket(packet, ingressQueue);
-        outPort->GetUbQueue->DoEnqueue(packetPair);
+        outPort->GetUbQueue()->DoEnqueue(packetPair);
     }
-    m_iRunning[outPortId] = false;
+    m_isRunning[outPortId] = false;
     // 通知port发包
     Simulator::ScheduleNow(&UbPort::NotifyAllocationFinish, outPort);
     if (m_oneMoreRound[outPortId] == true) {

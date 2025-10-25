@@ -196,7 +196,7 @@ void UbSwitch::SwitchHandlePacket(Ptr<UbPort> port, Ptr<Packet> packet)
     auto packetType = GetPacketType(packet);
     switch (packetType) {
         case UB_CONTROL_FRAME:
-            port->m_flowControl->HandleReceivedPacket(packet);
+            port->m_flowControl->HandleReceivedControlPacket(packet);
             break;
         case UB_URMA_DATA_PACKET:
             ParseURMAPacketHeader(packet);
@@ -454,7 +454,7 @@ void UbSwitch::SendPacket(Ptr<Packet> packet, uint32_t inPort, uint32_t outPort,
     m_voq[outPort][priority][inPort]->Push(packet);
     m_queueManager->PushIngress(inPort, priority, packet->GetSize());
     if (IsPFCEnable()) {
-        recvport->m_flowControl->HandleReceivedPacket(packet);
+        recvPort->m_flowControl->HandleReceivedPacket(packet);
     }
     m_queueManager->PushEgress(outPort, priority, packet->GetSize());
     Ptr<UbPort> sendPort = DynamicCast<ns3::UbPort>(node->GetDevice(outPort));

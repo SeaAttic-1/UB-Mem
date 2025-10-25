@@ -38,7 +38,7 @@ void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDat
     m_crdToReturn.resize(ubVlNum, 0);
     m_nodeId = nodeId;
     m_portId = portId;
-    NS_LOG_DEBUG("NodeId: " << m_nodeId << "")
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << "PortId: " << m_portId << "Init Cbfc");
 
     NS_LOG_DEBUG("m_crdTxfree[*]: " << m_crdTxfree[0]);
 }
@@ -83,7 +83,7 @@ bool UbCbfc::IsFcLimited(Ptr<UbIngressQueue> ingressQ)
 void UbCbfc::HandleReleaseOccupiedFlowControl(Ptr<Packet> p, uint32_t inPortId, uint32_t outPortId)
 {
     if (inPortId != outPortId) { // 转发的报文
-        Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p,inPortId);
+        Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p, inPortId);
         if (cbfcPkt != nullptr) {
             SendCrdAck(cbfcPkt, inPortId);
         }
@@ -104,18 +104,19 @@ void UbCbfc::HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ)
     }
 }
 
-void UbCbfc::HandleReceivedControlPacket(Ptr<Packet> p) {
+void UbCbfc::HandleReceivedControlPacket(Ptr<Packet> p)
+{
     CbfcRestoreCrd(p);
 }
 
 void UbCbfc::HandleReceivedPacket(Ptr<Packet> p)
 {
-    Ptr<Node> node = NodeList::GetNdoe(m_nodeId);
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
 
     Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p, m_portId);
     if (cbfcPkt != nullptr) {
-        flowControl->SendCrdAck(cbfcPkt, recvPortId, node);
+        SendCrdAck(cbfcPkt, m_portId);
     }
 }
 
@@ -155,7 +156,7 @@ void UbCbfc::UpdateCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> ta
 bool UbCbfc::CbfcConsumeCrd(Ptr<Packet> p)
 {
     uint32_t pktSize = p->GetSize();
-    NS_LOG_DEBUG("NodeId: " << m_nodeId << " PortId: " << targetPort->GetIfIndex() << " pktSize: " << pktSize);
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << " PortId: " << m_portId << " pktSize: " << pktSize);
     UbDatalinkPacketHeader pktHeader;
     p->PeekHeader(pktHeader);
     uint8_t vlId = pktHeader.GetPacketVL();
@@ -172,7 +173,7 @@ bool UbCbfc::CbfcConsumeCrd(Ptr<Packet> p)
 
 bool UbCbfc::CbfcRestoreCrd(Ptr<Packet> p)
 {
-    Ptr<Node> node = NodeList::GetNdoe(m_nodeId);
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
 
     NS_LOG_DEBUG("NodeId: " << m_nodeId << " PortId: " << m_portId);
@@ -313,7 +314,7 @@ bool UbPfc::IsFcLimited(Ptr<UbIngressQueue> ingressQ)
         }
     }
     if (m_pfcStatus->m_portCredits[ingressQ->GetIgqPriority()] == 0) {
-        NS_LOG_INFO("Flow Control Pfc Limited,outPort:{" << ingressQ->GetOutPortId() << "} VL:{"
+        NS_LOG_INFO("Flow Control Pfc Limited! NodeId: " << m_nodeId << ",outPort:{" << ingressQ->GetOutPortId() << "} VL:{"
                     << ingressQ->GetIgqPriority() << "}");
         return true;  // 不允许发送
     }
@@ -346,9 +347,9 @@ void UbPfc::HandleReceivedPacket(Ptr<Packet> p)
     Ptr<Node> node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
 
-    Ptr<Packet> pfcPkt = CheckPfcThreshold(p, recvPortId, node);
+    Ptr<Packet> pfcPkt = CheckPfcThreshold(p, m_portId);
     if (pfcPkt != nullptr) {
-        SendPfc(pfcPkt, recvPortId, node);
+        SendPfc(pfcPkt, m_portId);
     }
     return;
 }
@@ -394,10 +395,10 @@ bool UbPfc::UpdatePfcStatus(Ptr<Packet> p)
     return ret;
 }
 
-void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t portId, Ptr<Node> node)
+void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t targetPortId)
 {
     Ptr<Node> node = NodeList::GetNode(m_nodeId);
-    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
 
     node->GetObject<UbSwitch>()->AddPktToVoq(pfcPacket, targetPortId, 0, targetPortId);
     auto flowControl = DynamicCast<UbPfc>(port->m_flowControl);
@@ -406,10 +407,10 @@ void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t portId, Ptr<Node> node)
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
 }
 
-Ptr<Packet> UbPfc::CheckPfcThreshold(Ptr<Packet> p, uint32_t portId, Ptr<Node> node)
+Ptr<Packet> UbPfc::CheckPfcThreshold(Ptr<Packet> p, uint32_t portId)
 {
     Ptr<Packet> pfcPkt = nullptr;
-    Ptr<Node> node = NOdeList::GetNode(m_nodeId);
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
 
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(portId));
     NS_LOG_DEBUG("NodeId: " << node->GetId() << " PortId: " << portId);
