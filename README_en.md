@@ -6,23 +6,23 @@
 
 ## Project Overview
 
-`ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus (UB) Base Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
+`ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus (UB) Base Specification](https://www.unifiedbus.com/zh). It implements the protocol frameworks and stack including the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
 
-> **Note**: The English version of the UB specification is currently in "Coming Soon" status. 
-Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
+> **Note**: The English version of the UB specification is currently in "Coming Soon" status. Although every effort has been made to align with the UB Base Specification, differences still exist. Please refer to the UB Base Specification as the authoritative guide.
 
-`ns-3-UB` can be used to research:
-- Traffic-affinity, low-cost, highly reliable innovative topological architectures.
-- Collective communication operators and traffic orchestration algorithm optimization techniques.
-- New transaction layer ordering and reliability techniques.
-- New memory semantic transport control techniques for SuperPoD.
-- Innovative adaptive routing, load balancing, congestion control, and QoS optimization algorithms.
+`ns-3-UB` can be used to be used as a simulation tool for UB based research, including but not limited to:
+- Topology innovations to achieve traffic pattern affinity, low-cost and/or high reliability.
+- Optimizations for collective communication operators and traffic engineering algorithms.
+-	New techniques to define and ensure the transaction layer ordering and achieve higher reliability.
+-	New transport techniques for memory semantics in a SuperPoD.
+-	Innovations in other research areas like adaptive routing, load balancing, congestion control, and QoS optimization algorithms.
 
-> This project provides pluggable "reference implementations" for strategies/algorithms not specified in the specification (such as switch modeling methods, routing selection, congestion marking, buffering and arbitration strategies, etc.). These implementations are not part of the UB Base Specification and serve only as examples/baselines that can be replaced or disabled.
+
+> This project provides pluggable "reference implementations" for policies/algorithms not specified in UB Base Specification (such as switch modelings, routing selection, congestion marking, buffering and arbitration, etc.). These reference implementations are not part of the UB Base Specification and are only used as examples/baselines that can be replaced or disabled.
 >
-> Functions not included in this project include but are not limited to: hardware internal detail modeling, physical layer, performance parameters, control plane behavior (such as initialization behavior, exception event handling, etc.), memory management, security policies, etc.
+> Functions not implemented in this project include but are not limited to: detailed modeling for hardware internals, physical layer, performance parameters, control plane behavior (such as initialization behavior, error and exception event handling, etc.), memory management, security policies, etc.
 
-The **typical simulation capabilities** supported by this project are shown in the following table.
+The **typical simulation functionalities** supported by this project are shown in the following table.
 
 <table>
   <thead>
@@ -36,7 +36,7 @@ The **typical simulation capabilities** supported by this project are shown in t
   <tbody>
     <tr>
       <td align="center" rowspan="2">Function Layer</td>
-      <td>Function Types</td>
+      <td>Functions</td>
       <td>Load/Store interface, URMA interface</td>
       <td>URPC, Entity-related advanced features</td>
     </tr>
@@ -146,13 +146,13 @@ The **typical simulation capabilities** supported by this project are shown in t
     └── doc/                    # Documentation and diagrams
 ```
 
-## Core Components
+## Key Components
 
 ### 1. UnifiedBus (UB) Module
 
 The UB module is a simulation component implemented based on the UB Base Specification:
 
-#### Network Element Modeling Components
+#### Modeling Components for Network Elements
 <p align="center">
 <img src="src/unified-bus/doc/figures/arch2-light.D3-LpLKH.png.png" alt="UB Domain System Architecture" width="85%">
 <br>
@@ -165,7 +165,7 @@ The UB module is a simulation component implemented based on the UB Base Specifi
 - **UB Link** (`ub-link.*`) - Point-to-point connections between nodes
 
 #### Protocol Stack Components
-- **Programming Interface Instances** (`ub-api-ldst*`, `ub-app.*`) - Load/Store and URMA programming interface instances, interfacing with function layer programming models
+- **Programming Interface Instances** (`ub-api-ldst*`, `ub-app.*`) - Load/Store and URMA programming interface instances, interfacing with the programming models defined in function layer
 - **UB Function** (`ub-function.*`) - Function layer protocol framework implementation, supporting Load/Store and URMA programming models
 - **UB Transaction** (`ub-transaction.*`) - Transaction layer protocol framework implementation
 - **UB Transport** (`ub-transport.*`) - Transport layer protocol framework implementation
@@ -173,15 +173,15 @@ The UB module is a simulation component implemented based on the UB Base Specifi
 - **UB Datalink** (`ub-datalink.*`) - Data link layer protocol framework implementation
 
 #### Network Algorithm Components
-- **Traffic Injection Component** (`ub-traffic-gen.*`) - Reads user traffic configuration, injects traffic for simulation nodes according to serial and parallel relationships
-- **TP Connection Manager** (`ub-tp-connection-manager.h`) - TP Channel manager, facilitating user lookup of TP Channel information for each node
-- **Switch Allocator** (`ub-allocator.*`) - Models the process of switch allocating output ports for packets
+- **Traffic Injection Component** (`ub-traffic-gen.*`) - Read user traffic configuration, and inject the traffic for simulation nodes according to serial and parallel relationships
+- **TP Connection Manager** (`ub-tp-connection-manager.h`) - TP Channel manager, facilitating user's lookup of TP Channel information for each node
+- **Switch Allocator** (`ub-allocator.*`) - Modelling the whole process of output port lookup for packets in a switch
 - **Queue Manager** (`ub-buffer-manager.*`) - Buffer management module, affecting load balancing, flow control, queuing, packet dropping and other behaviors
 - **Routing Process** (`ub-routing-process.*`) - Routing table module, implementing routing table management and query functionality
-- **Congestion Control** (`ub-congestion-control.*`) - Congestion control algorithm framework module
+- **Congestion Control** (`ub-congestion-control.*`) - The framework module for congestion control algorithm
 - **CAQM Algorithm** (`ub-caqm.*`) - C-AQM congestion control algorithm implementation
 - **Flow Control** (`ub-flow-control.*`) - Flow control framework module
-- **Fault Injection Module** (`ub-fault.*`) - Fault injection, helping users inject packet loss rates, high latency, congestion levels, packet errors, flash disconnections, lane reduction and other faults during specific traffic processes
+- **Fault Injection Module** (`ub-fault.*`) - Fault injection, helping users inject packet loss rates, high latency, congestion levels, packet errors, flash disconnections, lane reduction and other faults related parameter when processing the specific traffics
 
 #### Data Types and Tools
 - **Datatype** (`ub-datatype.*`) - UB data type definitions
@@ -191,31 +191,31 @@ The UB module is a simulation component implemented based on the UB Base Specifi
 ### 2. Core Simulation Features
 
 #### Topology and Traffic Support
-- **Arbitrary Topology**: Supports simulation and modeling of arbitrary topologies, users can quickly build topologies and routing tables using UB toolsets
-- **Arbitrary Traffic**: Supports configuration of arbitrary simulation traffic, users can quickly build collective communications and communication operator graphs using UB toolsets in conjunction with UbClientDag
+- **Arbitrary Topology**: Supports simulation and modeling of arbitrary topologies. Users can quickly build topologies and routing tables using UB toolsets
+- **Arbitrary Traffic**: Supports configuration of arbitrary simulation traffic. Users can quickly build collective communications and communication operator graphs using UB toolsets in conjunction with UbClientDag
 - **Performance Monitoring**: Comprehensive performance metric collection and analysis
 
 #### Protocol Stack Modeling
 - **UB Protocol Stack**: Supports complete protocol stack modeling from physical layer to application layer
 - **Memory Semantics**: Implements Load/Store-based memory semantic behavior modeling
 - **Message Semantics**: Implements URMA-based message semantic behavior modeling
-- **Native Multipath**: Implements native multipath support through TP/TP Group protocol mechanisms
+- **Native Multipathing**: Implements native multipath support through TP/TP Group protocol mechanisms
 
 #### Protocol Algorithm Support
-- **Flow Control**: Implements credit-based flow control mechanism framework, compatible with PFC
-- **Congestion Control**: Implements network-side marking, receiver response, sender response framework commonly used in congestion control algorithms, supports C-AQM algorithm
-- **Routing Strategies**: Supports shortest path routing, bypass strategies, supports packet spraying, ECMP and other load balancing strategies
-- **QoS Support**: Provides end-to-end QoS support, currently supports SP strategy
-- **Switch Arbitration**: Modular implementation of UbSwitch switching arbitration mechanism modeling, currently supports priority-based SP scheduling
+- **Flow Control**: Implements credit-based flow control mechanism framework, compliant with PFC
+- **Congestion Control**: Implement the framework of the well known congestion control loop, including network-side marking, receiver response, sender response and congestion control algorithms; support C-AQM algorithm
+- **Routing Policies**: Support the shortest path routing, bypass strategies; support packet spray, ECMP and other load balancing mechanisms
+- **QoS Support**: Provide end-to-end QoS support, currently supporting SP traffic scheduling policy
+- **Switch Arbitration**: Modular implementation of switching arbitration mechanism of UB Switch, currently supporting priority-based SP scheduling
 
 ### 3. Script Toolset
 
-Provides complete network simulation workflow support:
+Provides the complete network simulation workflow to support:
 
 - **Network Topology Generation**: Automatically generates various network topologies (Clos, 2D Fullmesh, etc.)
-- **Traffic Pattern Generation**: Supports All-Reduce, All-to-All, All-to-All-V and other communication patterns, supports RHD, NHR, OneShot multiple collective communication algorithms
+- **Traffic Pattern Generation**: Supports All-Reduce, All-to-All, All-to-All-V and other communication patterns; support multiple collective communication algorithms like RHD, NHR and OneShot
 - **Performance Analysis Tools**: Throughput calculation, latency analysis, CDF plotting
-- **Formatted Result Output**: Automatically generates basic result information tables for flow completion time, bandwidth, etc., with optional generation of packet-level hop-by-hop information within the network
+- **Formatted Result Output**: Automatically generate basic result information tables for flow completion time, bandwidth, etc., with optional generation of packet-level hop-by-hop information within the network
 
 ## License
 
