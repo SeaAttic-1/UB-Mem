@@ -8,12 +8,11 @@
 
 `ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus (UB) Base Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
 
-> **Note**: The English version of the UB specification is currently in "Coming Soon" status. The terminology used in this document may not be standardized. Please refer to the Chinese version of the protocol specification for authoritative reference, or wait for the official English version to be released.
+> **Note**: The English version of the UB specification is currently in "Coming Soon" status. 
+Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
 
-> Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
-
-`ns-3-UB` can be used to research UB protocol-based:
-- Traffic pattern affinity, low-cost, highly reliable innovative topological architectures.
+`ns-3-UB` can be used to research:
+- Traffic-affinity, low-cost, highly reliable innovative topological architectures.
 - Collective communication operators and traffic orchestration algorithm optimization techniques.
 - New transaction layer ordering and reliability techniques.
 - New memory semantic transport control techniques for SuperPoD.
@@ -95,7 +94,7 @@ The **typical simulation capabilities** supported by this project are shown in t
       <td>User-customizable address allocation and translation strategies</td>
     </tr>
     <tr>
-      <td>Routing Lookup</td>
+      <td>Routing</td>
       <td>Basic routing strategy based on destination address + header RT field, routing strategy based on path Cost, Hash-based ECMP, per-flow / per-packet Hash based on load balancing factors</td>
       <td>User-customizable adaptive routing and other strategies</td>
     </tr>
@@ -105,7 +104,7 @@ The **typical simulation capabilities** supported by this project are shown in t
       <td>User-customizable inter-VL scheduling strategies (such as DWRR, etc.)</td>
     </tr>
     <tr>
-      <td>Congestion Marking</td>
+      <td>Congestion Notification</td>
       <td>CAQM marking mode based on header CC field</td>
       <td>FECN / FECN_RTT marking modes</td>
     </tr>
@@ -135,8 +134,8 @@ The **typical simulation capabilities** supported by this project are shown in t
 ├── scratch/                    # Simulation examples and test cases
 │   ├── ub-quick-example.cc     # Main simulation program
 │   ├── 2nodes*/             	# simple 2 nodes topology test cases
-│   ├── clos*/                	# CLOS topology test cases
-│   └── 2dfm4x4*/       		# 2D FullMesh 4x4 test case set
+│   ├── clos*/                  # CLOS topology test cases
+│   └── 2dfm4x4*/               # 2D FullMesh 4x4 test case set
 │
 └── src/unified-bus/            # UB Base Specification-based simulation components
     ├── model/                  
