@@ -156,7 +156,7 @@ The UB module is a simulation component implemented based on the UB Base Specifi
 <p align="center">
 <img src="src/unified-bus/doc/figures/arch2-light.D3-LpLKH.png.png" alt="UB Domain System Architecture" width="85%">
 <br>
-<em>UB Domain system architecture diagram.</em><em>Source: www.unifiedbus.com</em><br>
+<em>UB Domain system architecture diagram.</em><em> Source: www.unifiedbus.com</em><br>
 </p>
 
 - **UB Controller** (`ub-controller.*`) - Key component for executing UB protocol stack, providing user interfaces
