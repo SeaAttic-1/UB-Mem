@@ -8,15 +8,15 @@
 
 `ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus™ (UB) Base Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
 
-> **Note**: The English version of the UB protocol specification is currently in "Coming Soon" status. The terminology used in this document may not be standardized. Please refer to the Chinese version of the protocol specification for authoritative reference, or wait for the official English version to be released.
+> **Note**: The English version of the UB specification is currently in "Coming Soon" status. The terminology used in this document may not be standardized. Please refer to the Chinese version of the protocol specification for authoritative reference, or wait for the official English version to be released.
 
 > Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
 
 `ns-3-UB` can be used to research UB protocol-based:
 - Traffic pattern affinity, low-cost, highly reliable innovative topological architectures.
 - Collective communication operators and traffic orchestration algorithm optimization techniques.
-- New transaction layer ordering and reliability techniques for bus memory transaction networking scenarios.
-- New memory semantic transport control techniques for super-node networks.
+- New transaction layer ordering and reliability techniques.
+- New memory semantic transport control techniques for SuperPoD.
 - Innovative adaptive routing, load balancing, congestion control, and QoS optimization algorithms.
 
 > This project provides pluggable "reference implementations" for strategies/algorithms not specified in the specification (such as switch modeling methods, routing selection, congestion marking, buffering and arbitration strategies, etc.). These implementations are not part of the UB Base Specification and serve only as examples/baselines that can be replaced or disabled.
@@ -38,7 +38,7 @@ The **typical simulation capabilities** supported by this project are shown in t
     <tr>
       <td align="center" rowspan="2">Function Layer</td>
       <td>Function Types</td>
-      <td>Ld/St interface, URMA interface</td>
+      <td>Load/Store interface, URMA interface</td>
       <td>URPC, Entity-related advanced features</td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@ The **typical simulation capabilities** supported by this project are shown in t
     </tr>
     <tr>
       <td>Transaction Ordering</td>
-      <td>NO / RO / SO equivalent functional implementation</td>
+      <td>NO / RO / SO</td>
       <td>—</td>
     </tr>
     <tr>
@@ -80,7 +80,7 @@ The **typical simulation capabilities** supported by this project are shown in t
     </tr>
     <tr>
       <td>Load Balancing</td>
-      <td>RTP load balancing: TPG mechanism, per-TP / per-packet load balancing, out-of-order reception</td>
+      <td>RTP load balancing: TPG mechanism, per-flow / per-packet load balancing, out-of-order reception</td>
       <td>CTP load balancing</td>
     </tr>
     <tr>
@@ -134,8 +134,9 @@ The **typical simulation capabilities** supported by this project are shown in t
 ├── README.md                   # Project documentation
 ├── scratch/                    # Simulation examples and test cases
 │   ├── ub-quick-example.cc     # Main simulation program
-│   ├── test_CLOS/              # CLOS topology test cases
-│   ├── 2dfm4_4*/               # 2D FullMesh 4x4 test case set
+│   ├── 2nodes*/             	# simple 2 nodes topology test cases
+│   ├── clos*/                	# CLOS topology test cases
+│   └── 2dfm4x4*/       		# 2D FullMesh 4x4 test case set
 │
 └── src/unified-bus/            # UB Base Specification-based simulation components
     ├── model/                  
