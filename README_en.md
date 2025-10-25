@@ -1,4 +1,4 @@
-# ns-3-UB: Unified-Bus Network Simulation Framework
+# ns-3-UB: UnifiedBus™ Network Simulation Framework
 
 **Language**: [English](README_en.md) | [中文](README.md)
 
@@ -7,6 +7,8 @@
 ## Project Overview
 
 `ns-3-UB` is an ns-3 simulation module built based on the [UnifiedBus™ (UB) Base Specification](https://www.unifiedbus.com/zh), implementing the protocol frameworks and supporting algorithms for the function layer, transaction layer, transport layer, network layer, and data link layer defined in the UB Base Specification. This project aims to provide a simulation platform for protocol innovation, network architecture exploration, and research on network algorithms such as congestion control, flow control, load balancing, and routing algorithms.
+
+> **Note**: The English version of the UB protocol specification is currently in "Coming Soon" status. The terminology used in this document may not be standardized. Please refer to the Chinese version of the protocol specification for authoritative reference, or wait for the official English version to be released.
 
 > Although every effort has been made to align with the UB Base Specification, differences still exist between the two. Please refer to the UB Base Specification as the authoritative guide.
 
@@ -223,7 +225,7 @@ This project follows the ns-3 license agreement, GPL v2. See the `LICENSE` file 
 ```bibtex
 @software{UBNetworkSimulator,
   month = {10},
-  title = {{ns-3-UB: Unified-Bus Network Simulation Framework}},
+  title = {{ns-3-UB: UnifiedBus Network Simulation Framework}},
   url = {https://gitcode.com/open-usim/ns-3-ub},
   version = {1.0.0},
   year = {2025}
