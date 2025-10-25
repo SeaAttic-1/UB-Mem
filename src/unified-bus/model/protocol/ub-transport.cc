@@ -145,7 +145,7 @@ Ptr<Packet> UbTransportChannel::GetNextPacket()
     }
 
     if (IsInflightLimited()) {
-        m_sendWindowFlag = true;
+        m_sendWindowLimited = true;
         NS_LOG_DEBUG("Full Send Window");
         return nullptr;
     }
@@ -335,8 +335,8 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
     // 拿到多个packet后组成taack发送
     if ((TpHeader.GetPsn() + 1) > m_psnSndUna) {
         m_psnSndUna = TpHeader.GetPsn() + 1;
-        if (m_sendWindowFlag && IsInflightLimited() == false) {
-            m_sendWindowFlag = false;
+        if (m_sendWindowLimited && IsInflightLimited() == false) {
+            m_sendWindowLimited = false;
             Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
             port->TriggerTransmit(); // 触发发送
         }
@@ -815,6 +815,11 @@ bool UbTransportChannel::IsEmpty()
 {
     if (!m_ackQ.empty()) {
         return false;
+    }
+    if (IsInflightLimited()) {
+        m_sendWindowLimited = true;
+        NS_LOG_DEBUG("Full Send Window");
+        return true;
     }
     if (m_congestionCtrl->GetCongestionAlgo() == CAQM) {
         if (m_congestionCtrl->GetRestCwnd() >= UB_MTU_BYTE && m_psnSndNxt < m_tpPsnCnt) {

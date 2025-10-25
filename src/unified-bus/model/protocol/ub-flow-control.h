@@ -33,7 +33,7 @@ class UbPfc;
 class UbPort;
 
 
-enum FcType {
+enum class FcType {
     CBFC,
     PFC,
     UBFC
@@ -47,17 +47,17 @@ public:
     static TypeId GetTypeId(void);
     UbFlowControl() {}
     virtual ~UbFlowControl() {}
-    virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ)
+    virtual bool IsFcLimited(Ptr<UbIngressQueue> ingressQ)
     {
         return false;
     }
-    virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node) {}
-    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node, Ptr<UbPort> port) {}
-    virtual void HandleReceivedPacket(UbPacketType_t packetType, Ptr<Packet> p,
-        Ptr<Node> node, uint32_t recvPortId, bool isSinkPacket) {}
+    virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p, uint32_t inPortId, uint32_t outPortId) {}
+    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) {}
+    virtual void HandleReceivedControlPacket(Ptr<Packet> p) {}
+    virtual void HandleReceivedPacket(Ptr<Packet> p) {}
     virtual FcType GetFcType()
     {
-        return UBFC;
+        return FcType::UBFC;
     }
 };
 
@@ -76,23 +76,24 @@ public:
 
     virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
-                                                  Ptr<UbIngressQueue> ingressQ, Ptr<Node> node) override;
-    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ,
-                                  Ptr<Node> node, Ptr<UbPort> port) override;
-    virtual void HandleReceivedPacket(UbPacketType_t packetType, Ptr<Packet> p,
-        Ptr<Node> node, uint32_t recvPortId, bool isSinkPacket) override;
+                                                  uint32_t inPortId, uint32_t outPortId) override;
+    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) override;
+    virtual void HandleReceivedControlPacket(Ptr<Packet> p) override;
+    virtual void HandleReceivedPacket(Ptr<Packet> p) override;
     // TODO 用于共享&独占未做
     int32_t GetCrdToReturn(uint8_t vlId);
     void SetCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> targetPort);
     void UpdateCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> targetPort);
-    bool CbfcConsumeCrd(Ptr<Packet> p, Ptr<UbPort> targetPort);
-    bool CbfcRestoreCrd(Ptr<Packet> p, Ptr<UbPort> targetPort);
-    void SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId, Ptr<Node> node);
-    Ptr<Packet> ReleaseOccupiedCrd(Ptr<Packet> p, uint32_t targetPortId, Ptr<Node> node);
+    bool CbfcConsumeCrd(Ptr<Packet> p);
+    bool CbfcRestoreCrd(Ptr<Packet> p);
+    void SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId);
+    Ptr<Packet> ReleaseOccupiedCrd(Ptr<Packet> p, uint32_t targetPortId);
 
 private:
-    FcType m_fcType { CBFC };
+    FcType m_fcType { FcType::CBFC };
     void DoDispose() override;
+    uint32_t m_portId;
+    uint32_t m_nodeId;
 
     /**
     * @brief cbfc相关参数配置
@@ -123,16 +124,17 @@ public:
     
     virtual bool IsFcLimited(Ptr<UbIngressQueue> igressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
-                                                  Ptr<UbIngressQueue> ingressQ, Ptr<Node> node) override;
-    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ,
-                                  Ptr<Node> node, Ptr<UbPort> port) override;
-    virtual void HandleReceivedPacket(UbPacketType_t packetType, Ptr<Packet> p,
-        Ptr<Node> node, uint32_t recvPortId, bool isSinkPacket) override;
-    bool UpdatePfcStatus(Ptr<Packet> p, Ptr<UbPort> port);
-    void SendPfc(Ptr<Packet> servicePacket, uint32_t portId, Ptr<Node> node);
-    Ptr<Packet> CheckPfcThreshold(Ptr<Packet> p, uint32_t portId, Ptr<Node> node);
+                                                  uint32_t inPortId, uint32_t outPortId) override;
+    virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) override;
+    virtual void HandleReceivedControlPacket(Ptr<Packet> p) override;
+    virtual void HandleReceivedPacket(Ptr<Packet> p) override;
+    bool UpdatePfcStatus(Ptr<Packet> p);
+    void SendPfc(Ptr<Packet> servicePacket, uint32_t targetPortId);
+    Ptr<Packet> CheckPfcThreshold(Ptr<Packet> p, uint32_t portId);
 private:
-    FcType m_fcType { PFC };
+    FcType m_fcType { FcType::PFC };
+    uint32_t m_portId;
+    uint32_t m_nodeId;
     void DoDispose() override;
 
     /**

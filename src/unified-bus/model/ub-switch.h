@@ -38,6 +38,7 @@ class UbSwitch : public Object {
 public:
     UbSwitch();
     ~UbSwitch();
+    void DoDispose() override;
     static TypeId GetTypeId (void);
 
     void SwitchHandlePacket(Ptr<UbPort> port, Ptr<Packet> packet);

@@ -45,36 +45,32 @@ TypeId UbEgressQueue::GetTypeId(void)
 
 UbEgressQueue::UbEgressQueue()
 {
-    m_rrLast = 0;
-    m_priLast = 0;
 }
 
-bool UbEgressQueue::DoEnqueue(Ptr<UbIngressQueue> igq)
+bool UbEgressQueue::DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packetPair)
 {
-    NS_LOG_FUNCTION (this << igq);
+    NS_LOG_FUNCTION (this);
 
     if (m_egressQ.size () >= m_maxIngressQueues) {
         NS_LOG_LOGIC ("Queue full (at max packets) -- droppping pkt");
         return false;
     }
+    m_egressQ.push(packetPair);
 
-    m_numsInQueue++;
-    m_egressQ.push(igq);
-
-    NS_LOG_LOGIC ("Number igqs " << m_egressQ.size ());
+    NS_LOG_LOGIC ("[UbEgressQueue DoEnqueue] Egress Queue size: " << m_egressQ.size ());
 
     return true;
 }
 
-Ptr<UbIngressQueue> UbEgressQueue::DoPeekqueue()
+std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::DoPeekqueue()
 {
     NS_LOG_FUNCTION (this);
     if (m_egressQ.empty()) {
         NS_LOG_LOGIC ("Queue empty");
-        return nullptr;
+        return std::make_tuple<0, 0, nullptr>;
     }
-    Ptr<UbIngressQueue> igq = m_egressQ.front();
-    return igq;
+    auto [inPortId, priority, pkt] = m_egressQ.front();
+    return std::make_tuple(inPortId, priority, pkt);
 }
 
 Ptr<UbIngressQueue> UbEgressQueue::DoDequeue()
@@ -83,18 +79,15 @@ Ptr<UbIngressQueue> UbEgressQueue::DoDequeue()
 
     if (m_egressQ.empty()) {
         NS_LOG_LOGIC ("Queue empty");
-        return nullptr;
+        return std::make_tuple<0, 0, nullptr>;
     }
 
-    Ptr<UbIngressQueue> igq = m_egressQ.front ();
+    auto packetPair = m_egressQ.front ();
     m_egressQ.pop();
-    m_numsInQueue--;
 
-    NS_LOG_LOGIC ("Popped " << igq);
+    NS_LOG_LOGIC ("[UbEgressQueue DoDequeue] Egress Queue size: " << m_egressQ.size ());
 
-    NS_LOG_LOGIC ("Number igqs " << m_egressQ.size ());
-
-    return igq;
+    return packetPair;
 }
 
 bool UbEgressQueue::IsEmpty()
@@ -221,7 +214,7 @@ void UbPort::CreateAndInitFc(const std::string& type)
         }
         auto flowControl = DynamicCast<UbCbfc>(m_flowControl);
         flowControl->Init(m_cbfcFlitLen, m_cbfcFlitsPerCell, m_cbfcRetCellGrainDataPacket,
-            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree);
+            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNdoe()->GetId(), m_portId);
         NS_LOG_DEBUG("[UbPort CreateAndInitFc] flowControl Cbfc Init");
     } else if (type == "PFC") {
         m_flowControl = CreateObject<UbPfc>();
@@ -230,7 +223,7 @@ void UbPort::CreateAndInitFc(const std::string& type)
             NS_LOG_WARN(this);
         }
         auto flowControl = DynamicCast<UbPfc>(m_flowControl);
-        flowControl->Init(m_pfcUpThld, m_pfcLowThld);
+        flowControl->Init(m_pfcUpThld, m_pfcLowThld, GetNdoe()->GetId(), m_portId);
         IntegerValue val;
         g_ub_vl_num.GetValue(val);
         int ubVlNum = val.Get();
@@ -257,13 +250,15 @@ void UbPort::TransmitComplete()
     NS_ASSERT_MSG(
         m_currentPkt != nullptr, "UbPort::TransmitComplete(): m_currentPkt zero");
 
-    if (GetNode()->GetObject<UbSwitch>()->GetNodeType() == UB_SWITCH) {
-        GetNode()->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentIgQ->GetIgqPriority(), m_currentPkt);
+    //转发时通知switch发送完成
+    if (m_currentInPortId != m_portId) {
+        GetNode()->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentPriority, m_currentPkt);
     }
-    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentIgQ, GetNode());
+    m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentInPortId, GetNode());
 
-    m_currentPkt = 0;
-    m_currentIgQ = 0;
+    m_currentPkt = nullptr;
+    m_currentInPortId = 0;
+    m_currentPriority = 0;
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, this);
 }
 
@@ -272,35 +267,21 @@ void UbPort::DequeuePacket(void)
     NS_ASSERT_MSG(!m_ubEQ->IsEmpty(), "No packets can be sent! NodeId: "<< GetNode()->GetId()
         << " PortId: " << m_portId);
     m_ubSendState = SendState::BUSY;
-    auto ingressQ = m_ubEQ->DoPeekqueue();
-    if (m_flowControl->IsFcLimited(ingressQ)) { // 未能发送，则直接结束
-        NS_LOG_DEBUG("PAUSE prohibits send at node " << GetNode()->GetId());
-        NS_LOG_DEBUG("[UbPort send] limit");
-        m_ubSendState = SendState::READY;
-        m_ubEQ->DoDequeue(); // Prevent data packets from blocking subsequent control frames
-        return;
-    }
 
-    Ptr<Packet> packet = ingressQ->GetNextPacket();
-    if (packet == nullptr) {
-        NS_LOG_DEBUG("PAUSE prohibits send at node " << GetNode()->GetId());
-        NS_LOG_DEBUG("[UbPort send] no pkt in ubeq");
-        m_ubSendState = SendState::READY;
-        return;
-    }
+    auto [inPortId, priority, packet] = m_ubEQ->DoDequeue();
     
     m_currentPkt = packet;
-    m_currentIgQ = ingressQ;
-    m_ubEQ->DoDequeue();
-    // Switch allocation when port sendding packet.
-    auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
-    Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
+    m_currentInPortId = inPortId;
+    m_currentPriority = priority;
+    if(m_ubEQ->IsEmpty()) {
+        // Switch allocation when port sendding packet.
+        auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
+        Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
+    }
     
     // switch节点, 通知switch发送了packet
-    if ((ingressQ->GetIqType() == IngressQueueType::VOQ) &&
-        (ingressQ->GetInPortId() != ingressQ->GetOutPortId())) { // 转发的报文
-        GetNode()->GetObject<UbSwitch>()->NotifySwitchDequeue(ingressQ->GetInPortId(), ingressQ->GetOutPortId(),
-            ingressQ->GetIgqPriority(), packet);
+    if (inPortId != m_portId) { // 转发的报文
+        GetNode()->GetObject<UbSwitch>()->NotifySwitchDequeue(inPortId, m_portId, priority, packet);
     }
 
     if (!m_faultCallBack.IsNull()) {
@@ -329,7 +310,6 @@ void UbPort::TransmitPacket(Ptr<Packet> packet, Time delay)
     Time txTime = m_bps.CalculateBytesTxTime(packet->GetSize()) + delay;
     Time txCompleteTime = txTime + m_tInterframeGap;
     TraComEventNotify(packet, txCompleteTime);
-    m_flowControl->HandleSentPacket(m_currentPkt, m_currentIgQ, GetNode(), this);
 
     Simulator::Schedule(txCompleteTime, &UbPort::TransmitComplete, this);
     bool result = m_channel->TransmitStart(packet, this, txTime);

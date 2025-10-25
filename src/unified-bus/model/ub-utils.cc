@@ -884,4 +884,4 @@ void UbUtils::InitFaultMoudle(const string &FaultConfigFile)
     ubFault->InitFault(FaultConfigFile);
 }
 
-}
+} // namespace utils
