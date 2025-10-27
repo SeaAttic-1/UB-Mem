@@ -1,17 +1,30 @@
-# Quick Start
+# 快速开始
 
-## Prerequisites
+## 环境要求
 
-- 操作系统：Ubuntu 20.04
-- 编译器：gcc 11.4.0+
-- 构建工具：CMake 3.12+
-- Python：3.10+
-- Python 第三方库：pandas、matplotlib、seaborn
-- ns-3：3.44
+核心构建依赖如下工具。代码下载可通过 Git，或通过浏览器 / wget / curl 下载源码压缩包（tar + bunzip2 解压）。
 
-说明：如使用 Conda/virtualenv，请确保后续运行的 `python3` 与安装依赖的解释器一致（见下文“Run a minimal example”）。
+| 目的       | 工具                          | 最低版本             |
+| ---------- | ----------------------------- | -------------------- |
+| 下载       | git（Git 下载）<br/>或：tar 与 bunzip2（Web 下载）               | 无最低版本要求       |
+| 编译器     | g++<br/>或：clang++           | >= 10<br/>>= 11      |
+| 配置       | python3                       | >= 3.8               |
+| 构建系统   | cmake<br/>以及 make / ninja / Xcode 其一 | cmake >= 3.13<br/>无最低版本要求 |
 
-## Get the code
+如使用 Conda/virtualenv，请确保后续运行的 `python3` 与安装依赖的解释器一致。
+
+### 快速检查版本
+
+可在命令行中按下列方式检查版本：
+
+| 工具    | 版本检查命令        |
+| ------- | ------------------- |
+| g++     | `g++ --version`     |
+| clang++ | `clang++ --version` |
+| python3 | `python3 -V`        |
+| cmake   | `cmake --version`   |
+
+## 获取代码
 
 ```bash
 # 克隆项目
@@ -34,7 +47,7 @@ git submodule status
 global UB_PYTHON_SCRIPT_PATH "scratch/ns-3-ub-tools/trace_analysis/parse_trace.py"
 ```
 
-## Python tools & dependencies
+## Python 工具与依赖
 
 项目的 Python 工具集位于 `scratch/ns-3-ub-tools/`：
 
@@ -56,7 +69,7 @@ conda install pandas matplotlib seaborn
 
 说明： 请在运行 `trace_analysis/parse_trace.py` 前通过 `requirements.txt` 预先安装所需第三方包。
 
-## Build
+## 配置与编译
 
 ```bash
 # 配置构建环境
@@ -66,7 +79,7 @@ conda install pandas matplotlib seaborn
 ./ns3 build
 ```
 
-## Run a minimal example
+## 运行简单示例
 
 ```bash
 # 如使用 Conda，请确保其 bin 在 PATH 前（或先激活环境）
@@ -85,7 +98,7 @@ ls scratch/2nodes_single-tp/output/
 
 如遇到 `ModuleNotFoundError: No module named 'pandas'`，说明运行时的 `python3` 与安装依赖所用解释器不一致；请检查 PATH，或使用 `python3 -m pip install --user ...` 在当前解释器中安装依赖。
 
-## Examples under scratch（可用用例列表）
+## scratch 目录下的示例
 
 以下为当前仓库中已提供的可用用例目录及对应运行命令：
 
@@ -121,7 +134,7 @@ ls scratch/2nodes_single-tp/output/
 
 说明：部分大型用例运行时间较长，请按需选择运行。
 
-## Full workflow example（完整工作流程验证）
+## 完整工作流程示例
 
 ```bash
 # 运行完整示例，包含 Python 后处理
@@ -144,7 +157,7 @@ ls scratch/2dfm4x4-multipath_a2a/output/
 # task_statistics.csv  throughput.csv
 ```
 
-## Config files（配置文件说明）
+## 配置文件说明
 
 每个用例目录通常包含如下文件（格式可参照现有样例）：
 
