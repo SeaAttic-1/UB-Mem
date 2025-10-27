@@ -81,7 +81,6 @@ public:
     virtual void HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReceivedControlPacket(Ptr<Packet> p) override;
     virtual void HandleReceivedPacket(Ptr<Packet> p) override;
-    // TODO 用于共享&独占未做
     int32_t GetCrdToReturn(uint8_t vlId);
     void SetCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> targetPort);
     void UpdateCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> targetPort);
