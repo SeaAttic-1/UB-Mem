@@ -36,26 +36,25 @@ class UbFlowControl;
 class UbCbfc;
 class UbPfc;
 
+// Egress queue enqueue item: (inPortId, priority, packet)
+using PacketEntry = std::tuple<uint32_t, uint32_t, Ptr<Packet>>;
+
 /**
  * \class UbEgressQueue
  * \brief Port Egress Queue Management
  */
 class UbEgressQueue : public Object {
 public:
-    static const uint32_t qCnt = 8;
-    uint32_t m_rrLast; // 上次优先级轮询的最后一个TP
-    uint32_t m_priLast; // 上次访问的最后一个优先级
-    std::queue<Ptr<UbIngressQueue>> m_egressQ; // 通过算法分配到的包
+    std::queue<PacketEntry> m_egressQ; // 通过算法分配到的包, inPortId, priority, packet
 
-    uint32_t m_numsInQueue;        // eq里面存储的包数量
     uint32_t m_maxIngressQueues;   // eq存储最大包数
 
     static TypeId GetTypeId(void);
     explicit UbEgressQueue();
 
-    bool DoEnqueue(Ptr<UbIngressQueue> igq);  // 向端口eq塞入队列
-    Ptr<UbIngressQueue> DoPeekqueue(void);    // 查看eq队列
-    Ptr<UbIngressQueue> DoDequeue(void);      // 端口从eq出队列
+    bool DoEnqueue(PacketEntry packetEntry);  // 向端口eq塞入包
+    PacketEntry Peekqueue(void);
+    PacketEntry DoDequeue(void);
     // 为报文添加UDP、IPV4、DL packet头
     void AddPacketHeader(Ptr<UbTransportChannel> tp, Ptr<Packet> p, bool credit, bool ack);
 
@@ -204,7 +203,8 @@ private:
     Time m_tInterframeGap;
 
     Ptr<Packet> m_currentPkt;
-    Ptr<UbIngressQueue> m_currentIgQ;
+    uint32_t m_currentInPortId;
+    uint32_t m_currentPriority;
 
     Ptr<UbDataLink> m_datalink;
 

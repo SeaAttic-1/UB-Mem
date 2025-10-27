@@ -33,6 +33,7 @@ public:
     void RegisterEgressStauts(uint32_t portsNum);
     void SetEgressStatus(uint32_t portId, bool status);
     bool GetEgressStatus(uint32_t portId);
+    void DoDispose() override;
 
 protected:
     Time m_allocationTime;
@@ -53,12 +54,13 @@ public:
 
     virtual void TriggerAllocator(Ptr<UbPort> outPort) override;
     virtual void Init() override;
-    Ptr<UbIngressQueue> DispatchPacket(uint32_t outPort);
+    Ptr<UbIngressQueue> SelectNextIngressQueue(Ptr<UbPort> outPort);
+    void AllocateNextPacket(Ptr<UbPort> outPort);
 
 private:
-    void AddPacketToEgressQueue(Ptr<UbPort> outPort, Ptr<UbIngressQueue> ingressQueue);
     std::vector<std::vector<uint32_t> > m_rrIdx;
     std::vector<bool> m_isRunning;
+    std::vector<bool> m_oneMoreRound;
 };
 
 } /* namespace ns3 */

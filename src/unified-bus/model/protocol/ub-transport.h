@@ -280,7 +280,7 @@ private:
     // Status flags
     bool m_isActive = true;
     bool m_tpFullFlag = false; // 记录tp队列状态是否满
-    bool m_sendWindowFlag = false; // 记录发送窗口是否满
+    bool m_sendWindowLimited = false; // 记录发送窗口是否满
     uint64_t m_defaultMaxWqeSegNum;
     uint64_t m_defaultMaxInflightPacketSize;
     bool m_usePacketSpray;

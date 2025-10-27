@@ -22,7 +22,8 @@ TypeId UbCbfc::GetTypeId(void)
 }
 
 void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDataPacket,
-                  uint8_t retCellGrainControlPacket, int32_t portTxfree)
+                  uint8_t retCellGrainControlPacket, int32_t portTxfree,
+                  uint32_t nodeId, uint32_t portId)
 {
     // 基础参数配置
     m_cbfcCfg = new cbfcCfg_t;
@@ -35,6 +36,9 @@ void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDat
     int ubVlNum = val.Get();
     m_crdTxfree.resize(ubVlNum, portTxfree);
     m_crdToReturn.resize(ubVlNum, 0);
+    m_nodeId = nodeId;
+    m_portId = portId;
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << "PortId: " << m_portId << "Init Cbfc");
 
     NS_LOG_DEBUG("m_crdTxfree[*]: " << m_crdTxfree[0]);
 }
@@ -47,75 +51,72 @@ void UbCbfc::DoDispose()
     Object::DoDispose();
 }
 
-bool UbCbfc::IsFcLimited(Ptr<UbIngressQueue> igressQ)
+bool UbCbfc::IsFcLimited(Ptr<UbIngressQueue> ingressQ)
 {
     uint32_t nextPktSize = 0;
-    if (igressQ->GetIqType() == IngressQueueType::VOQ) {
-        if (igressQ->GetInPortId() == igressQ->GetOutPortId()) {  // crd报文等控制报文，直接发出
+    if (ingressQ->GetIqType() == IngressQueueType::VOQ) {
+        if (ingressQ->GetInPortId() == ingressQ->GetOutPortId()) {  // crd报文等控制报文，直接发出
             NS_LOG_DEBUG("is crd pkt");
             return false;
         }
-        nextPktSize = igressQ->GetNextPacketSize();
+        nextPktSize = ingressQ->GetNextPacketSize();
         NS_LOG_DEBUG("is forward pkt nextPktSize: " << nextPktSize);
-    } else if (igressQ->GetIqType() == IngressQueueType::TPCHANNEL) {
-        nextPktSize = igressQ->GetNextPacketSize();
+    } else if (ingressQ->GetIqType() == IngressQueueType::TPCHANNEL) {
+        nextPktSize = ingressQ->GetNextPacketSize();
         NS_LOG_DEBUG("is tp pkt nextPktSize:" << nextPktSize);
     }
 
     int32_t consumeCellNum = ceil((float)nextPktSize / (m_cbfcCfg->m_flitLen * m_cbfcCfg->m_nFlitPerCell));
-    if (m_crdTxfree[igressQ->GetIgqPriority()] < consumeCellNum) {
-        NS_LOG_INFO("Flow Control Credit Limited,outPort:{" << igressQ->GetOutPortId() << "} VL:{"
-                                                            << igressQ->GetIgqPriority() << "}");
-        NS_LOG_DEBUG("m_crdTxfree[ " << igressQ->GetIgqPriority() << " ]: " << m_crdTxfree[igressQ->GetIgqPriority()]
+    if (m_crdTxfree[ingressQ->GetIgqPriority()] < consumeCellNum) {
+        NS_LOG_INFO("Flow Control Credit Limited,outPort:{" << ingressQ->GetOutPortId() << "} VL:{"
+                                                            << ingressQ->GetIgqPriority() << "}");
+        NS_LOG_DEBUG("m_crdTxfree[ " << ingressQ->GetIgqPriority() << " ]: " << m_crdTxfree[ingressQ->GetIgqPriority()]
                                      << "is insufficient");
         return true;
     }
-    NS_LOG_DEBUG("m_crdTxfree[ " << igressQ->GetIgqPriority() << " ]: " << m_crdTxfree[igressQ->GetIgqPriority()]
+    NS_LOG_DEBUG("m_crdTxfree[ " << ingressQ->GetIgqPriority() << " ]: " << m_crdTxfree[ingressQ->GetIgqPriority()]
                                  << "is enough");
 
     return false;
 }
 
-void UbCbfc::HandleReleaseOccupiedFlowControl(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node)
+void UbCbfc::HandleReleaseOccupiedFlowControl(Ptr<Packet> p, uint32_t inPortId, uint32_t outPortId)
 {
-    if ((ingressQ->GetIqType() == IngressQueueType::VOQ) &&
-        (ingressQ->GetInPortId() != ingressQ->GetOutPortId())) { // 转发的报文
-        Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p, ingressQ->GetInPortId(), node);
+    if (inPortId != outPortId) { // 转发的报文
+        Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p, inPortId);
         if (cbfcPkt != nullptr) {
-            SendCrdAck(cbfcPkt, ingressQ->GetInPortId(), node);
+            SendCrdAck(cbfcPkt, inPortId);
         }
     }
 }
 
-void UbCbfc::HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node, Ptr<UbPort> port)
+void UbCbfc::HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ)
 {
     if ((ingressQ->GetIqType() == IngressQueueType::VOQ) &&
         (ingressQ->GetInPortId() != ingressQ->GetOutPortId())) { // 转发的报文
-        CbfcConsumeCrd(p, port); // 计算消耗的信用证
+        CbfcConsumeCrd(p); // 计算消耗的信用证
     } else if ((ingressQ->GetIqType() == IngressQueueType::VOQ)
                 && (ingressQ->GetInPortId() == ingressQ->GetOutPortId())) { // crd报文等控制报文
         NS_LOG_DEBUG("is crd pkt");
     } else if (ingressQ->GetIqType() == IngressQueueType::TPCHANNEL) { // tp报文
         NS_LOG_DEBUG("is pkt from Transport");
-        CbfcConsumeCrd(p, port); // 计算消耗的信用证
+        CbfcConsumeCrd(p); // 计算消耗的信用证
     }
 }
 
-void UbCbfc::HandleReceivedPacket(UbPacketType_t packetType, Ptr<Packet> p,
-    Ptr<Node> node, uint32_t recvPortId, bool isSinkPacket)
+void UbCbfc::HandleReceivedControlPacket(Ptr<Packet> p)
 {
-    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(recvPortId));
-    auto flowControl = DynamicCast<UbCbfc>(port->m_flowControl);
-    // 帧类型判断
-    if (packetType == UB_CONTROL_FRAME) {
-        flowControl->CbfcRestoreCrd(p, port);
-    } else {
-        if (isSinkPacket) {
-            Ptr<Packet> cbfcPkt = flowControl->ReleaseOccupiedCrd(p, port->GetIfIndex(), node);
-            if (cbfcPkt != nullptr) {
-                flowControl->SendCrdAck(cbfcPkt, recvPortId, node);
-            }
-        }
+    CbfcRestoreCrd(p);
+}
+
+void UbCbfc::HandleReceivedPacket(Ptr<Packet> p)
+{
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
+
+    Ptr<Packet> cbfcPkt = ReleaseOccupiedCrd(p, m_portId);
+    if (cbfcPkt != nullptr) {
+        SendCrdAck(cbfcPkt, m_portId);
     }
 }
 
@@ -152,11 +153,10 @@ void UbCbfc::UpdateCrdToReturn(uint8_t vlId, int32_t consumeCell, Ptr<UbPort> ta
     }
 }
 
-bool UbCbfc::CbfcConsumeCrd(Ptr<Packet> p, Ptr<UbPort> targetPort)
+bool UbCbfc::CbfcConsumeCrd(Ptr<Packet> p)
 {
     uint32_t pktSize = p->GetSize();
-    NS_LOG_DEBUG("NodeId: " << targetPort->GetNode()->GetId() << " PortId: " << targetPort->GetIfIndex()
-                 << " pktSize: " << pktSize);
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << " PortId: " << m_portId << " pktSize: " << pktSize);
     UbDatalinkPacketHeader pktHeader;
     p->PeekHeader(pktHeader);
     uint8_t vlId = pktHeader.GetPacketVL();
@@ -171,11 +171,14 @@ bool UbCbfc::CbfcConsumeCrd(Ptr<Packet> p, Ptr<UbPort> targetPort)
     return false;
 }
 
-bool UbCbfc::CbfcRestoreCrd(Ptr<Packet> p, Ptr<UbPort> targetPort)
+bool UbCbfc::CbfcRestoreCrd(Ptr<Packet> p)
 {
-    NS_LOG_DEBUG("NodeId: " << targetPort->GetNode()->GetId() << " PortId: " << targetPort->GetIfIndex());
-    targetPort->ResetCredits();
-    UbDatalinkControlCreditHeader crdHeader = UbDataLink::ParseCreditHeader(p, targetPort);
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
+
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << " PortId: " << m_portId);
+    port->ResetCredits();
+    UbDatalinkControlCreditHeader crdHeader = UbDataLink::ParseCreditHeader(p, port);
 
     uint32_t ResumeCellGrainNum = 0;
     bool ret = false;
@@ -184,12 +187,12 @@ bool UbCbfc::CbfcRestoreCrd(Ptr<Packet> p, Ptr<UbPort> targetPort)
     int ubVlNum = val.Get();
 
     for (int index = 0; index < ubVlNum; index++) {
-        NS_LOG_DEBUG("port m_credits[ " << (uint32_t)index << " ]: " << (uint32_t)targetPort->m_credits[index]);
+        NS_LOG_DEBUG("port m_credits[ " << (uint32_t)index << " ]: " << (uint32_t)port->m_credits[index]);
     }
 
     for (int index = 0; index < ubVlNum; index++) {
-        if (targetPort->m_credits[index] > 0) {
-            ResumeCellGrainNum = targetPort->m_credits[index];
+        if (port->m_credits[index] > 0) {
+            ResumeCellGrainNum = port->m_credits[index];
             NS_LOG_DEBUG("before resume m_crdTxfree[ " << (uint32_t)index << " ]: " << m_crdTxfree[index]);
             m_crdTxfree[index] += ResumeCellGrainNum * m_cbfcCfg->m_retCellGrainControlPacket;  // 粒度数量 * 粒度大小
             NS_LOG_DEBUG("left m_crdTxfree[ " << (uint32_t)index << " ]: " << m_crdTxfree[index]);
@@ -197,12 +200,14 @@ bool UbCbfc::CbfcRestoreCrd(Ptr<Packet> p, Ptr<UbPort> targetPort)
         }
     }
 
-    Simulator::ScheduleNow(&UbPort::TriggerTransmit, targetPort);
+    Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
     return ret;
 }
 
-void UbCbfc::SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId, Ptr<Node> node)
+void UbCbfc::SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId)
 {
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
     node->GetObject<UbSwitch>()->AddPktToVoq(cbfcPkt, targetPortId, 0, targetPortId);
     NS_LOG_DEBUG("send crd pkt");
@@ -210,8 +215,10 @@ void UbCbfc::SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId, Ptr<Node> no
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
 }
 
-Ptr<Packet> UbCbfc::ReleaseOccupiedCrd(Ptr<Packet> p, uint32_t targetPortId, Ptr<Node> node)
+Ptr<Packet> UbCbfc::ReleaseOccupiedCrd(Ptr<Packet> p, uint32_t targetPortId)
 {
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    
     Ptr<Packet> cbfcPkt = nullptr;
     bool shouldReturnCredit = false;
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
@@ -274,7 +281,7 @@ FcType UbPfc::GetFcType()
     return m_fcType;
 }
 
-void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld)
+void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId)
 {
     IntegerValue val;
     g_ub_vl_num.GetValue(val);
@@ -284,6 +291,10 @@ void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld)
     m_pfcStatus = new pfcStatus_t(ubVlNum);
     m_pfcCfg->m_portpfcUpThld = portpfcUpThld;    // 0.3 * m_pfcPortTotThld
     m_pfcCfg->m_portpfcLowThld = portpfcLowThld;  // 0.8 * m_portpfcUpThld
+
+    m_nodeId = nodeId;
+    m_portId = portId;
+    NS_LOG_DEBUG("NodeId: " << m_nodeId << "PortId: " << m_portId << "Init Pfc");
 }
 
 void UbPfc::DoDispose()
@@ -294,111 +305,112 @@ void UbPfc::DoDispose()
     Object::DoDispose();
 }
 
-bool UbPfc::IsFcLimited(Ptr<UbIngressQueue> igressQ)
+bool UbPfc::IsFcLimited(Ptr<UbIngressQueue> ingressQ)
 {
-    if (igressQ->GetIqType() == IngressQueueType::VOQ) {
-        if (igressQ->GetInPortId() == igressQ->GetOutPortId()) { // crd报文等控制报文，直接发出
+    if (ingressQ->GetIqType() == IngressQueueType::VOQ) {
+        if (ingressQ->GetInPortId() == ingressQ->GetOutPortId()) { // crd报文等控制报文，直接发出
             NS_LOG_DEBUG("is Pfc pkt");
             return false;
         }
     }
-    if (m_pfcStatus->m_portCredits[igressQ->GetIgqPriority()] == 0) {
-        NS_LOG_INFO("Flow Control Pfc Limited,outPort:{" << igressQ->GetOutPortId() << "} VL:{"
-                    << igressQ->GetIgqPriority() << "}");
+    if (m_pfcStatus->m_portCredits[ingressQ->GetIgqPriority()] == 0) {
+        NS_LOG_INFO("Flow Control Pfc Limited! NodeId: " << m_nodeId << ",outPort:{" << ingressQ->GetOutPortId() << "} VL:{"
+                    << ingressQ->GetIgqPriority() << "}");
         return true;  // 不允许发送
     }
 
     return false;
 }
 
-void UbPfc::HandleReleaseOccupiedFlowControl(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node)
+void UbPfc::HandleReleaseOccupiedFlowControl(Ptr<Packet> p, uint32_t inPortId, uint32_t outPortId)
 {
-    if ((ingressQ->GetIqType() == IngressQueueType::VOQ) &&
-        (ingressQ->GetInPortId() != ingressQ->GetOutPortId())) { // 转发的报文
-        Ptr<Packet> pfcPkt = CheckPfcThreshold(p, ingressQ->GetInPortId(), node);
+    if (inPortId != outPortId) { // 转发的报文
+        Ptr<Packet> pfcPkt = CheckPfcThreshold(p, inPortId);
         if (pfcPkt != nullptr) {
-            SendPfc(pfcPkt, ingressQ->GetInPortId(), node);
+            SendPfc(pfcPkt, inPortId);
         }
     }
 }
 
-void UbPfc::HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ, Ptr<Node> node, Ptr<UbPort> port)
+void UbPfc::HandleSentPacket(Ptr<Packet> p, Ptr<UbIngressQueue> ingressQ)
 {
     // do nothing
 }
 
-void UbPfc::HandleReceivedPacket(UbPacketType_t packetType, Ptr<Packet> p,
-    Ptr<Node> node, uint32_t recvPortId, bool isSinkPacket)
+void UbPfc::HandleReceivedControlPacket(Ptr<Packet> p)
 {
-    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(recvPortId));
-    auto flowControl = DynamicCast<UbPfc>(port->m_flowControl);
-    if (!isSinkPacket) {
-        NS_LOG_DEBUG("recv forward pkt");
-        Ptr<Packet> pfcPkt = flowControl->CheckPfcThreshold(p, recvPortId, node);
-        if (pfcPkt != nullptr) {
-            flowControl->SendPfc(pfcPkt, recvPortId, node);
-        }
-        return;
-    }
-    // 帧类型判断
-    if (packetType == UB_CONTROL_FRAME) {
-        NS_LOG_DEBUG("recv flow control pkt");
-        flowControl->UpdatePfcStatus(p, port);
-    }
+    UpdatePfcStatus(p);
 }
 
-bool UbPfc::UpdatePfcStatus(Ptr<Packet> p, Ptr<UbPort> port)
+void UbPfc::HandleReceivedPacket(Ptr<Packet> p)
 {
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
+
+    Ptr<Packet> pfcPkt = CheckPfcThreshold(p, m_portId);
+    if (pfcPkt != nullptr) {
+        SendPfc(pfcPkt, m_portId);
+    }
+    return;
+}
+
+bool UbPfc::UpdatePfcStatus(Ptr<Packet> p)
+{
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(m_portId));
+
     UbDatalinkControlCreditHeader pfcHeader = UbDataLink::ParseCreditHeader(p, port);
-    auto flowControl = DynamicCast<UbPfc>(port->m_flowControl);
     bool ret = false;
     IntegerValue val;
     g_ub_vl_num.GetValue(val);
     int ubVlNum = val.Get();
     for (int index = 0; index < ubVlNum; index++) {
-        if (flowControl->m_pfcStatus->m_portCredits[index] != port->m_credits[index]) {
-            flowControl->m_pfcStatus->m_portCredits[index] = port->m_credits[index];
+        if (m_pfcStatus->m_portCredits[index] != port->m_credits[index]) {
+            m_pfcStatus->m_portCredits[index] = port->m_credits[index];
             ret = true;
         }
     }
 
     NS_LOG_DEBUG("Recv Pfc uid: " << p->GetUid() << " NodeId: " << port->GetNode()->GetId() << " PortId: "
                 << port->GetIfIndex() << " m_pfcStatus->m_portCredits:{"
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[0] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[1] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[2] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[3] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[4] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[5] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[6] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[7] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[8] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[9] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[10] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[11] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[12] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[13] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[14] << " "
-                << (uint32_t)flowControl->m_pfcStatus->m_portCredits[15] << "}");
+                << (uint32_t)m_pfcStatus->m_portCredits[0] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[1] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[2] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[3] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[4] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[5] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[6] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[7] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[8] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[9] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[10] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[11] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[12] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[13] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[14] << " "
+                << (uint32_t)m_pfcStatus->m_portCredits[15] << "}");
 
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
 
     return ret;
 }
 
-void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t portId, Ptr<Node> node)
+void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t targetPortId)
 {
-    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(portId));
-    node->GetObject<UbSwitch>()->AddPktToVoq(pfcPacket, portId, 0, portId);
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
+    Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
+
+    node->GetObject<UbSwitch>()->AddPktToVoq(pfcPacket, targetPortId, 0, targetPortId);
     auto flowControl = DynamicCast<UbPfc>(port->m_flowControl);
     flowControl->m_pfcStatus->m_pfcSndCnt++;
 
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
 }
 
-Ptr<Packet> UbPfc::CheckPfcThreshold(Ptr<Packet> p, uint32_t portId, Ptr<Node> node)
+Ptr<Packet> UbPfc::CheckPfcThreshold(Ptr<Packet> p, uint32_t portId)
 {
     Ptr<Packet> pfcPkt = nullptr;
+    Ptr<Node> node = NodeList::GetNode(m_nodeId);
 
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(portId));
     NS_LOG_DEBUG("NodeId: " << node->GetId() << " PortId: " << portId);

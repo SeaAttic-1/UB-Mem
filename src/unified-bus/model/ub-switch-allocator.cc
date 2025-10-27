@@ -30,6 +30,11 @@ UbSwitchAllocator::~UbSwitchAllocator()
 {
 }
 
+void UbSwitchAllocator::DoDispose()
+{
+    m_igsrc.clear();
+}
+
 void UbSwitchAllocator::TriggerAllocator(Ptr<UbPort> outPort)
 {
 }
@@ -77,6 +82,7 @@ void UbRoundRobinAllocator::Init()
     }
     m_igsrc.resize(portsNum);
     m_isRunning.resize(portsNum, false);
+    m_oneMoreRound.resize(portsNum, false);
     for (auto &i : m_igsrc) {
         i.resize(vlNum);
     }
@@ -84,44 +90,60 @@ void UbRoundRobinAllocator::Init()
 
 void UbRoundRobinAllocator::TriggerAllocator(Ptr<UbPort> outPort)
 {
+    NS_LOG_DEBUG("[UbRoundRobinAllocator TriggerAllocator] portId: " << outPort->GetIfIndex());
     auto outPortId = outPort->GetIfIndex();
     if (m_isRunning[outPortId]) {
-        Simulator::ScheduleNow(&UbPort::NotifyAllocationFinish, outPort);
+        // one more round flag
+        // 为了避免running过程中新生成的包：
+        // 1.无法被当前轮次调度
+        // 2.下一次trigger会被当前轮次的状态掩盖
+        m_oneMoreRound[outPortId] = true;
+        NS_LOG_DEBUG("[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.");
         return;
     }
+    m_isRunning[outPortId] = true;
+    Simulator::Schedule(m_allocationTime, &UbRoundRobinAllocator::AllocateNextPacket, this, outPort);
+}
+
+void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
+{
     // 轮询调度
-    auto ingressQueue = DispatchPacket(outPortId);
+    NS_LOG_DEBUG("[UbRoundRobinAllocator AllocateNextPacket] portId: " << outPort->GetIfIndex());
+    auto outPortId = outPort->GetIfIndex();
+    auto ingressQueue = SelectNextIngressQueue(outPort);
+    // 调度得到的ingressqueue加入egressqueue
     if (ingressQueue != nullptr) {
-        // 调度得到需要发送的包，则认为调度算法需要 m_allocationTime 时间才能得到结果
-        m_isRunning[outPortId] = true;
-        Simulator::Schedule(m_allocationTime, &UbRoundRobinAllocator::AddPacketToEgressQueue,
-                            this, outPort, ingressQueue);
-        Simulator::Schedule(m_allocationTime, &UbPort::NotifyAllocationFinish, outPort);
-    } else {
-        // 无包需发送，则认为调度算法不需要时间，解除port调度状态，防止调度状态下有新包
-        Simulator::ScheduleNow(&UbPort::NotifyAllocationFinish, outPort);
+        auto packet = ingressQueue->GetNextPacket();
+        auto inPortId = ingressQueue->GetInPortId();
+        auto priority = ingressQueue->GetIgqPriority();
+        auto packetEntry = std::make_tuple(inPortId, priority, packet);
+        outPort->GetFlowControl()->HandleSentPacket(packet, ingressQueue);
+        outPort->GetUbQueue()->DoEnqueue(packetEntry);
+    }
+    m_isRunning[outPortId] = false;
+    // 通知port发包
+    Simulator::ScheduleNow(&UbPort::NotifyAllocationFinish, outPort);
+    if (m_oneMoreRound[outPortId] == true) {
+        m_oneMoreRound[outPortId] = false;
+        Simulator::ScheduleNow(&UbRoundRobinAllocator::TriggerAllocator, this, outPort);
+        NS_LOG_DEBUG("[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: " << outPort->GetIfIndex());
+        return;
     }
 }
 
-void UbRoundRobinAllocator::AddPacketToEgressQueue(Ptr<UbPort> outPort, Ptr<UbIngressQueue> ingressQueue)
-{
-    auto outPortId = outPort->GetIfIndex();
-    m_isRunning[outPortId] = false;
-    outPort->GetUbQueue()->DoEnqueue(ingressQueue);
-}
-
-Ptr<UbIngressQueue> UbRoundRobinAllocator::DispatchPacket(uint32_t outPort)
+Ptr<UbIngressQueue> UbRoundRobinAllocator::SelectNextIngressQueue(Ptr<UbPort> outPort)
 {
     uint32_t idx;
     uint32_t pi;
-    uint32_t outPortId = outPort;
+    uint32_t outPortId = outPort->GetIfIndex();
     auto node = NodeList::GetNode(m_nodeId);
     auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
     for (pi = 0 ; pi < vlNum; pi++) {
         size_t qSize = m_igsrc[outPortId][pi].size();
         for (idx = 0; idx < qSize; idx++) {
             auto qidx = (idx + m_rrIdx[outPortId][pi]) % qSize;
-            if (!m_igsrc[outPortId][pi][qidx]->IsEmpty()) {
+            if (!m_igsrc[outPortId][pi][qidx]->IsEmpty() &&
+                !outPort->GetFlowControl()->IsFcLimited(m_igsrc[outPortId][pi][qidx])) {
                 m_rrIdx[outPortId][pi] = (qidx + 1) % qSize;
                 NS_LOG_DEBUG("[UbSwitchAllocator DispatchPacket] " << " NodeId: " << node->GetId()
                 << " PortId: " << outPortId <<" qidx: "<< qidx);
