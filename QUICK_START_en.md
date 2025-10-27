@@ -2,14 +2,27 @@
 
 ## Prerequisites
 
-- Operating System: Ubuntu 20.04
-- Compiler: gcc 11.4.0+
-- Build Tools: CMake 3.12+
-- Python: 3.10+
-- Python Third-party Libraries: pandas, matplotlib, seaborn
-- ns-3: 3.44
+The core build depends on the following tools. Download can be via either Git or source archive (via a web browser, wget, or curl).
 
-Note: If using Conda/virtualenv, please ensure that the `python3` used later is consistent with the interpreter used to install dependencies (see "Run a minimal example" below).
+| Purpose       | Tool                         | Minimum version        |
+| ------------- | ---------------------------- | ---------------------- |
+| Download      | git (for Git download) <br/>or: tar and bunzip2 (Web)      | No minimum version     |
+| Compiler      | g++<br/>or: clang++          | >= 10<br/>>= 11        |
+| Configuration | python3                      | >= 3.8                 |
+| Build system  | cmake<br/>plus one of make / ninja / Xcode | cmake >= 3.13<br/>No minimum version |
+
+If using Conda/virtualenv, please ensure that the `python3` used later matches the interpreter used to install dependencies.
+
+### Check versions quickly
+
+From the command line, you can check the versions as follows:
+
+| Tool    | Version check command |
+| ------- | --------------------- |
+| g++     | `g++ --version`       |
+| clang++ | `clang++ --version`   |
+| python3 | `python3 -V`          |
+| cmake   | `cmake --version`     |
 
 ## Get the Code
 

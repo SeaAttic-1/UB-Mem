@@ -2,14 +2,27 @@
 
 ## 环境要求
 
-- 操作系统：Ubuntu 20.04
-- 编译器：gcc 11.4.0+
-- 构建工具：CMake 3.12+
-- Python：3.10+
-- Python 第三方库：pandas、matplotlib、seaborn
-- ns-3：3.44
+核心构建依赖如下工具。代码下载可通过 Git，或通过浏览器 / wget / curl 下载源码压缩包（tar + bunzip2 解压）。
 
-说明：如使用 Conda/virtualenv，请确保后续运行的 `python3` 与安装依赖的解释器一致（见下文"运行简单示例"）。
+| 目的       | 工具                          | 最低版本             |
+| ---------- | ----------------------------- | -------------------- |
+| 下载       | git（Git 下载）<br/>或：tar 与 bunzip2（Web 下载）               | 无最低版本要求       |
+| 编译器     | g++<br/>或：clang++           | >= 10<br/>>= 11      |
+| 配置       | python3                       | >= 3.8               |
+| 构建系统   | cmake<br/>以及 make / ninja / Xcode 其一 | cmake >= 3.13<br/>无最低版本要求 |
+
+如使用 Conda/virtualenv，请确保后续运行的 `python3` 与安装依赖的解释器一致。
+
+### 快速检查版本
+
+可在命令行中按下列方式检查版本：
+
+| 工具    | 版本检查命令        |
+| ------- | ------------------- |
+| g++     | `g++ --version`     |
+| clang++ | `clang++ --version` |
+| python3 | `python3 -V`        |
+| cmake   | `cmake --version`   |
 
 ## 获取代码
 
