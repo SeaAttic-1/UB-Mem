@@ -36,22 +36,25 @@ class UbFlowControl;
 class UbCbfc;
 class UbPfc;
 
+// Egress queue enqueue item: (inPortId, priority, packet)
+using PacketEntry = std::tuple<uint32_t, uint32_t, Ptr<Packet>>;
+
 /**
  * \class UbEgressQueue
  * \brief Port Egress Queue Management
  */
 class UbEgressQueue : public Object {
 public:
-    std::queue<std::tuple<uint32_t, uint32_t, Ptr<Packet>>> m_egressQ; // 通过算法分配到的包, inPortId, priority, packet
+    std::queue<PacketEntry> m_egressQ; // 通过算法分配到的包, inPortId, priority, packet
 
     uint32_t m_maxIngressQueues;   // eq存储最大包数
 
     static TypeId GetTypeId(void);
     explicit UbEgressQueue();
 
-    bool DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packetPair);  // 向端口eq塞入包
-    std::tuple<uint32_t, uint32_t, Ptr<Packet>> Peekqueue(void);
-    std::tuple<uint32_t, uint32_t, Ptr<Packet>> DoDequeue(void);
+    bool DoEnqueue(PacketEntry packetEntry);  // 向端口eq塞入包
+    PacketEntry Peekqueue(void);
+    PacketEntry DoDequeue(void);
     // 为报文添加UDP、IPV4、DL packet头
     void AddPacketHeader(Ptr<UbTransportChannel> tp, Ptr<Packet> p, bool credit, bool ack);
 

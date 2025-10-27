@@ -116,9 +116,9 @@ void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
         auto packet = ingressQueue->GetNextPacket();
         auto inPortId = ingressQueue->GetInPortId();
         auto priority = ingressQueue->GetIgqPriority();
-        auto packetPair = std::make_tuple(inPortId, priority, packet);
+        auto packetEntry = std::make_tuple(inPortId, priority, packet);
         outPort->GetFlowControl()->HandleSentPacket(packet, ingressQueue);
-        outPort->GetUbQueue()->DoEnqueue(packetPair);
+        outPort->GetUbQueue()->DoEnqueue(packetEntry);
     }
     m_isRunning[outPortId] = false;
     // 通知port发包

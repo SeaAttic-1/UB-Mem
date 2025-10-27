@@ -47,7 +47,7 @@ UbEgressQueue::UbEgressQueue()
 {
 }
 
-bool UbEgressQueue::DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packetPair)
+bool UbEgressQueue::DoEnqueue(PacketEntry packetEntry)
 {
     NS_LOG_FUNCTION (this);
 
@@ -55,14 +55,14 @@ bool UbEgressQueue::DoEnqueue(std::tuple<uint32_t, uint32_t, Ptr<Packet>> packet
         NS_LOG_LOGIC ("Queue full (at max packets) -- droppping pkt");
         return false;
     }
-    m_egressQ.push(packetPair);
+    m_egressQ.push(packetEntry);
 
     NS_LOG_LOGIC ("[UbEgressQueue DoEnqueue] Egress Queue size: " << m_egressQ.size ());
 
     return true;
 }
 
-std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::Peekqueue()
+PacketEntry UbEgressQueue::Peekqueue()
 {
     NS_LOG_FUNCTION (this);
     if (m_egressQ.empty()) {
@@ -73,7 +73,7 @@ std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::Peekqueue()
     return std::make_tuple(inPortId, priority, pkt);
 }
 
-std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::DoDequeue()
+PacketEntry UbEgressQueue::DoDequeue()
 {
     NS_LOG_FUNCTION (this);
 
@@ -82,12 +82,12 @@ std::tuple<uint32_t, uint32_t, Ptr<Packet>> UbEgressQueue::DoDequeue()
         return std::make_tuple(0, 0, nullptr);
     }
 
-    auto packetPair = m_egressQ.front ();
+    auto packetEntry = m_egressQ.front ();
     m_egressQ.pop();
 
     NS_LOG_LOGIC ("[UbEgressQueue DoDequeue] Egress Queue size: " << m_egressQ.size ());
 
-    return packetPair;
+    return packetEntry;
 }
 
 bool UbEgressQueue::IsEmpty()
