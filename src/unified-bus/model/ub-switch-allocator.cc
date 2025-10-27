@@ -115,7 +115,7 @@ void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
     if (ingressQueue != nullptr) {
         auto packet = ingressQueue->GetNextPacket();
         auto inPortId = ingressQueue->GetInPortId();
-        auto priority = ingressQ->GetIgqPriority();
+        auto priority = ingressQueue->GetIgqPriority();
         auto packetPair = std::make_tuple(inPortId, priority, packet);
         outPort->GetFlowControl()->HandleSentPacket(packet, ingressQueue);
         outPort->GetUbQueue()->DoEnqueue(packetPair);
@@ -126,7 +126,7 @@ void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
     if (m_oneMoreRound[outPortId] == true) {
         m_oneMoreRound[outPortId] = false;
         Simulator::ScheduleNow(&UbRoundRobinAllocator::TriggerAllocator, this, outPort);
-        NS_LOG_DEBUG("[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: " << outPort->GetIfIndex();)
+        NS_LOG_DEBUG("[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: " << outPort->GetIfIndex());
         return;
     }
 }
