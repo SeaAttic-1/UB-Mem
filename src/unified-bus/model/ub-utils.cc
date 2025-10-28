@@ -14,7 +14,7 @@ void UbUtils::PrintTimestamp(const std::string &message)
     // 转换为本地时间结构
     std::tm localTime = *std::localtime(&nowTime);
 
-    NS_LOG_UNCOND("[" << std::put_time(&localTime, "%H:%M:%S") << "]:" << message);
+    NS_LOG_UNCOND("[" << std::put_time(&localTime, "%H:%M:%S") << "] " << message);
 }
 
 void UbUtils::ParseTrace(bool isTest)

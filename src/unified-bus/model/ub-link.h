@@ -35,6 +35,9 @@ class UbLink : public PointToPointChannel {
 public:
     static TypeId GetTypeId(void);
 
+    // Bring base-class overloads of TransmitStart into scope to avoid hiding warnings
+    using PointToPointChannel::TransmitStart;
+
     /**
      * @brief Create a UbLink
      *
