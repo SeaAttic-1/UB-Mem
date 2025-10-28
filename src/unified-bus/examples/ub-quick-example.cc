@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbTransaction", LOG_LEVEL_ALL);
 
     // 配置文件路径
-    string configPath = "scratch/test_CLOS";
+    string configPath = "scratch/2nodes_single-tp";
     if (argc > 1)
     {
         configPath = string(argv[1]);
