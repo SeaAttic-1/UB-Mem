@@ -167,3 +167,5 @@ ls scratch/2dfm4x4-multipath_a2a/output/
 - `routing_table.csv` - 路由表
 - `transport_channel.csv` - 传输通道
 - `traffic.csv` - 流量定义
+
+更多配置细节与场景文件格式说明，请参见：[scratch/README.md](scratch/README.md)。

@@ -167,3 +167,5 @@ Each use case directory typically contains the following files (format can refer
 - `routing_table.csv` - Routing table
 - `transport_channel.csv` - Transport channels
 - `traffic.csv` - Traffic definitions
+
+For detailed scenario configuration and file formats, see: [scratch/README.md](scratch/README.md).
