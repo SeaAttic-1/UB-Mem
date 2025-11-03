@@ -92,7 +92,7 @@ const std::vector<uint16_t> UbRoutingProcess::GetAllOutPorts(const uint32_t dest
         res.insert(res.end(), (*(it->second)).begin(), (*(it->second)).end());
     }
     it = m_rtShortest.find(destIP);
-    if (it != m_rtOther.end()) {
+    if (it != m_rtShortest.end()) {
         res.insert(res.end(), (*(it->second)).begin(), (*(it->second)).end());
     }
     return res;
