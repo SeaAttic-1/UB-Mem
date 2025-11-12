@@ -10,7 +10,7 @@
 #include "ns3/ub-datatype.h"
 #include "ns3/ub-network-address.h"
 #include "ns3/random-variable-stream.h"
-#include "ub-api-ldst.h"
+#include "ub-ldst-api.h"
 #include "ub-transaction.h"
 
 namespace ns3 {
@@ -25,7 +25,7 @@ namespace ns3 {
 
         UbFunction();
         virtual ~UbFunction();
-        Ptr<UbApiLdst> GetUbLdst();
+        Ptr<UbLdstApi> GetUbLdstApi();
 
         // Jetty management
         /**
@@ -37,7 +37,7 @@ namespace ns3 {
          */
         void CreateJetty(uint32_t src, uint32_t dest, uint32_t jettyNum);
 
-        void SetUbFunction(uint32_t nodeId);
+        void Init(uint32_t nodeId);
 
         Ptr<UbTransaction> GetUbTransaction();
 
@@ -45,15 +45,11 @@ namespace ns3 {
 
         Ptr<UbJetty> GetJetty(uint32_t jettyNum);
 
-        std::vector<Ptr<UbTransportChannel>> GetTransportChannelVec(uint32_t jettyNum);
-
         /**
          * @brief Destroy jetty by parameters
          * @param jettyNum Jetty identifier
          */
         void DestroyJetty(uint32_t jettyNum);
-
-        bool jettyBindTp(uint32_t src, uint32_t dest, uint32_t jettyNum, bool multiPath, std::vector<uint32_t> tpns);
 
         /**
          * @brief Assemble wqe
@@ -66,21 +62,14 @@ namespace ns3 {
          * @param Client传入URMA任务
          */
         void PushWqeToJetty(Ptr<UbWqe> wqe, uint32_t jettyNum);
-
-        /**
-         * @brief push mem load or store task
-         * @param Client传入内存语义任务
-         */
-        void PushLdstTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
-                           UbMemOperationType type, uint32_t threadId);
     private:
         void DoDispose() override;
-        Ptr<UbApiLdst> m_apiLdst;
+        Ptr<UbTransaction> GetTransaction();
+        Ptr<UbLdstApi> m_ldstApi;
         std::vector<Ptr<UbJetty>> m_jettyVector;
         uint32_t m_nodeId;
         std::map<uint32_t, Ptr<UbJetty>> m_numToJetty;
-        std::map<uint32_t, std::vector<Ptr<UbTransportChannel>>> m_jettyTpGroup;
-        Ptr<UniformRandomVariable> m_random;        // 随机数产生工具，伪随机，多次仿真可复现
+    
     };
 
     /**
@@ -174,8 +163,6 @@ namespace ns3 {
         void SetClientCallback(Callback<void, uint32_t, uint32_t> cb);
         Callback<void, uint32_t, uint32_t> FinishCallback;
 
-        Ptr<UbTransaction> GetTransaction() { return m_transaction; }
-
         void SetNodeId(uint32_t nodeId) {m_nodeId = nodeId; }
 
         uint32_t GetNodeId() { return m_nodeId; }
@@ -183,7 +170,6 @@ namespace ns3 {
     private:
         void DoDispose() override;
         std::vector<Ptr<UbWqe>> m_wqeVector;
-        Ptr<UbTransaction> m_transaction;
         // ========== Jetty标识信息 ==========
         uint32_t m_jettyNum; // JettyNum UB协议报文头携带（24位）用于标识
 

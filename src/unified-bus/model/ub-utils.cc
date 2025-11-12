@@ -2,7 +2,7 @@
 #include "ub-utils.h"
 
 namespace utils {
-    
+
 void UbUtils::PrintTimestamp(const std::string &message)
 {
     // 获取当前系统时间点
@@ -24,12 +24,12 @@ void UbUtils::ParseTrace(bool isTest)
     bool ParseEnable = val.Get();
     if (ParseEnable) {
         PrintTimestamp("Start Parse Trace File.");
-        
+
         // 从GlobalValue获取路径
         StringValue scriptPathValue;
         g_python_script_path.GetValue(scriptPathValue);
         string python_script_path = scriptPathValue.Get();
-        
+
         string cmd = "python3 " + python_script_path + " " + trace_path;
         if (isTest) {
             cmd += " true";
@@ -180,8 +180,8 @@ inline string UbUtils::Among(string s, string ts)
     return res;
 }
 
-void UbUtils::TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn, uint32_t dstTpn,
-    PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag)
+void UbUtils::TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn,
+                           uint32_t dstTpn, PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag)
 {
     std::map<PacketType, std::string> typeMap = {
     {PacketType::PACKET, "PKT"}, {PacketType::ACK, "ACK"}, {PacketType::CONTROL_FRAME, "CONTROL"}};
@@ -189,6 +189,52 @@ void UbUtils::TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint3
     std::ostringstream oss;
     oss << "Uid:" << packetUid << " Psn:" << psn << " Src:" << src << " Dst:" << dst << " SrcTpn:" << srcTpn
         << " DstTpn:" << dstTpn << " Type:" << typeMap[type] << " Size:" << size << " TaskId:" << taskId;
+    oss << std::endl;
+    for (uint32_t i = 0; i < traceTag.GetTraceLenth(); i++) {
+        uint32_t node = traceTag.GetNodeTrace(i);
+        PortTrace trace = traceTag.GetPortTrace(node);
+        if (i == 0) {
+            oss << "[" << node << "][" << Among(std::to_string(trace.sendPort), std::to_string(trace.sendTime)) << "]"
+                << "--->";
+        } else if (i == traceTag.GetTraceLenth() - 1) {
+            oss << "[" << Among(std::to_string(trace.recvPort), std::to_string(trace.recvTime)) << "][" << node << "]"
+                << std::endl;
+        } else {
+            oss << "[" << Among(std::to_string(trace.recvPort), std::to_string(trace.recvTime)) << "]"
+                << "[" << node << "]"
+                << "[" << Among(std::to_string(trace.sendPort), std::to_string(trace.sendTime)) << "]"
+                << "--->";
+        }
+    }
+    for (uint32_t i = 0; i < traceTag.GetTraceLenth(); i++) {
+        uint32_t node = traceTag.GetNodeTrace(i);
+        PortTrace trace = traceTag.GetPortTrace(node);
+        if (i == 0) {
+            oss << std::string(std::to_string(node).size() + 2, ' ') << "["
+                << Among(std::to_string(trace.sendTime), std::to_string(trace.sendTime)) << "]" << std::string(4, ' ');
+        } else if (i == traceTag.GetTraceLenth() - 1) {
+            oss << "[" << Among(std::to_string(trace.recvTime), std::to_string(trace.recvTime)) << "]" << std::endl;
+        } else {
+            oss << "[" << Among(std::to_string(trace.recvTime), std::to_string(trace.recvTime)) << "]"
+                << std::string(std::to_string(node).size() + 2, ' ') << "["
+                << Among(std::to_string(trace.sendTime), std::to_string(trace.sendTime)) << "]" << std::string(4, ' ');
+        }
+    }
+    string info = oss.str();
+    string pktType = typeMap[type];
+    string fileName = trace_path + "runlog/AllPacketTrace_" + pktType + "_node_" + to_string(src) + ".tr";
+    PrintTraceInfoNoTs(fileName, info);
+}
+
+void UbUtils::LdstRecvNotify(uint32_t packetUid, uint32_t src, uint32_t dst, PacketType type,
+                             uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag)
+{
+    std::map<PacketType, std::string> typeMap = {
+    {PacketType::PACKET, "PKT"}, {PacketType::ACK, "ACK"}, {PacketType::CONTROL_FRAME, "CONTROL"}};
+
+    std::ostringstream oss;
+    oss << "Uid:" << packetUid << " Src:" << src << " Dst:" << dst
+        << " Type:" << typeMap[type] << " Size:" << size << " TaskId:" << taskId;
     oss << std::endl;
     for (uint32_t i = 0; i < traceTag.GetTraceLenth(); i++) {
         uint32_t node = traceTag.GetNodeTrace(i);
@@ -463,10 +509,14 @@ void UbUtils::CreateNode(const string &filename)
         Ptr<Node> node = CreateObject<Node>();
         Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
         node->AggregateObject(sw);
+        Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
+        node->AggregateObject(ldst);
+        ldst->Init(node->GetId());
         if (nodeTypeStr == "DEVICE") {
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
             node->AggregateObject(ubCtrl);
             ubCtrl->CreateUbFunction();
+            ubCtrl->CreateUbTransaction();
             sw->SetNodeType(UB_DEVICE);
         } else if (nodeTypeStr == "SWITCH") {
             sw->SetNodeType(UB_SWITCH);
@@ -786,22 +836,22 @@ void UbUtils::TopoTraceConnect()
                     NS_ASSERT_MSG(0, "TP is null");
                 }
             }
-            Ptr<UbApiLdst> UbApiLdst = ubCtrl->GetUbFunction()->GetUbLdst();
-            if (UbApiLdst != nullptr) {
-                UbApiLdst->TraceConnectWithoutContext(
+            Ptr<UbLdstInstance> ldstInstance = node->GetObject<UbLdstInstance>();
+            if (ldstInstance != nullptr) {
+                ldstInstance->TraceConnectWithoutContext(
                     "MemTaskCompletesNotify", MakeCallback(LdstMemTaskCompletesNotify));
-                UbApiLdst->TraceConnectWithoutContext("LastPacketACKsNotify", MakeCallback(LdstLastPacketACKsNotify));
-                UbApiLdst->TraceConnectWithoutContext(
-                    "PeerSendFirstPacketACKsNotify", MakeCallback(LdstPeerSendFirstPacketACKsNotify));
-                std::vector<Ptr<UbApiLdstThread>> ldstThreadsVector = UbApiLdst->GetLdstThreads();
-                for (size_t i = 0; i < ldstThreadsVector.size(); i++) {
-                    ldstThreadsVector[i]->TraceConnectWithoutContext(
-                        "MemTaskStartsNotify", MakeCallback(LdstThreadMemTaskStartsNotify));
-                    ldstThreadsVector[i]->TraceConnectWithoutContext(
-                        "FirstPacketSendsNotify", MakeCallback(LdstThreadFirstPacketSendsNotify));
-                    ldstThreadsVector[i]->TraceConnectWithoutContext(
-                        "LastPacketSendsNotify", MakeCallback(LdstThreadLastPacketSendsNotify));
-                }
+                ldstInstance->TraceConnectWithoutContext("LastPacketACKsNotify",
+                    MakeCallback(LdstLastPacketACKsNotify));
+                ldstInstance->TraceConnectWithoutContext(
+                    "MemTaskStartsNotify", MakeCallback(LdstThreadMemTaskStartsNotify));
+                ldstInstance->TraceConnectWithoutContext(
+                    "FirstPacketSendsNotify", MakeCallback(LdstThreadFirstPacketSendsNotify));
+                ldstInstance->TraceConnectWithoutContext(
+                    "LastPacketSendsNotify", MakeCallback(LdstThreadLastPacketSendsNotify));
+            }
+            if (recordTraceEnabled) {
+                auto ldstApi = ubCtrl->GetUbFunction()->GetUbLdstApi();
+                ldstApi->TraceConnectWithoutContext("LdstRecvNotify", MakeCallback(LdstRecvNotify));
             }
         }
 

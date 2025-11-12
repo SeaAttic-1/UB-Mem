@@ -38,11 +38,11 @@ TypeId UbWqeSegment::GetTypeId(void)
 }
 
 /*********************
- * UbMemTask
+ * UbLdstTaskSegment
  ********************/
-TypeId UbMemTask::GetTypeId(void)
+TypeId UbLdstTaskSegment::GetTypeId(void)
 {
-    static TypeId tid = TypeId("ns3::UbMemTask")
+    static TypeId tid = TypeId("ns3::UbLdstTaskSegment")
                             .SetParent<Object>()
                             .SetGroupName("UnifiedBus");
     return tid;

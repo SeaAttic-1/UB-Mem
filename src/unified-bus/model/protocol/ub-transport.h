@@ -15,6 +15,7 @@
 namespace ns3 {
 
 class UbFunction;
+class UbTransaction;
 class UbController;
 class UbPort;
 class UbWqe;
@@ -69,7 +70,7 @@ public:
 
      * @return UbWqeSegment if succeed, nullptr otherwise
      */
-    void GetWqeSegmentFromRelatedJetty();
+    void GetNextWqeSegment();
 
     /**
      * @brief Send packet through specified port
@@ -106,8 +107,13 @@ public:
      * @param tpack Transport acknowledgment message to process
      */
     void RecvDataPacket(Ptr<Packet> p);
+    
+    /**
+     * @brief apply ta for next wqesegment
+     */
+    void ApplyNextWqeSegment();
 
-    void TriggerTransmit(); // 在GetWqeSegmentFromRelatedJetty外面包一层
+    void WqeSegmentTriggerPortTransmit(Ptr<UbWqeSegment> segment);
 
     void ReTxTimeout(); // Retransmit timeout
 
@@ -123,6 +129,7 @@ public:
     */
     bool IsWqeSegmentLimited() const;
 
+    void SetTpFullStatus(bool status) { m_tpFullFlag = status; }
     /**
     * @brief Check if inflight packets exceed maximum limit
     * @return True if inflight packets exceed maximum limit
@@ -214,8 +221,21 @@ public:
 
     uint32_t GetSrc() { return m_src; }
     uint32_t GetDest() { return m_dest; }
+
+    uint32_t GetMsnCnt() { return m_tpMsnCnt; }
+
+    void UpDateMsnCnt(uint32_t num) { m_tpMsnCnt += num; }
+
+    uint32_t GetPsnCnt() { return m_tpPsnCnt; }
+
+    void UpDatePsnCnt(uint32_t num) { m_tpPsnCnt += num; }
+    void PushWqeSegment(Ptr<UbWqeSegment> segment) { m_wqeSegmentVector.push_back(segment); }
+
+    uint32_t GetWqeSegmentVecSize() { return m_wqeSegmentVector.size(); }
 private:
     void DoDispose() override;
+
+    Ptr<UbTransaction> GetTransaction();
 
     TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> m_traceFirstPacketSendsNotify;
     TracedCallback<uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> m_traceLastPacketSendsNotify;
@@ -255,9 +275,7 @@ private:
     Ipv4Address m_sip;        // Source IP address
     Ipv4Address m_dip;        // Destination IP address
 
-    // Related Jetty management
-    std::vector<Ptr<UbJetty>> m_relatedJettys; // 与本TP建立连接的Jetty，TP在所有Jetty间轮询请求WQE Segment
-    uint32_t m_rrLast = 0;
+    std::vector<Ptr<UbWqeSegment>> m_remoteRequest; // FIFO
 
     // Queue parameters
     uint32_t m_maxQueueSize;

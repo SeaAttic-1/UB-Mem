@@ -37,8 +37,7 @@ const uint32_t UB_MTU_BYTE = 4 * 1024;              // 最大传输单元（TP�
 const uint8_t UB_CREDIT_MAX_VALUE = 63;             // CREDIT最大值
 
 // 操作类型枚举
-enum class UbOperationType : uint8_t
-{
+enum class UbOperationType : uint8_t {
     WRITE = 0, // 写操作
     READ = 1   // 读操作
 };
@@ -155,12 +154,12 @@ inline bool IsValidPriority(UbPriority priority)
  *
  * 表示一个完整的内存语义任务，包含任务描述信息、网络信息。
  */
-class UbMemTask : public Object {
+class UbLdstTaskSegment : public Object {
 public:
     static TypeId GetTypeId(void);
 
     // ========== 构造函数 ==========
-    UbMemTask()
+    UbLdstTaskSegment()
         : m_src(0),
           m_dest(0),
           m_type(UbMemOperationType::STORE),
@@ -169,7 +168,7 @@ public:
     {
     }
 
-    UbMemTask(uint32_t src,
+    UbLdstTaskSegment(uint32_t src,
               uint32_t dest,
               UbMemOperationType type,
               uint32_t size,
@@ -183,17 +182,37 @@ public:
     {
     }
 
-    ~UbMemTask() = default;
+    ~UbLdstTaskSegment() = default;
 
     // ========== 仿真全局信息 ==========
-    uint32_t GetMemTaskId() const
+    uint32_t GetTaskId() const
     {
-        return m_memTaskId;
+        return m_taskId;
     }
 
-    void SetMemTaskId(uint32_t memTaskId)
+    void SetTaskId(uint32_t taskId)
     {
-        m_memTaskId = memTaskId;
+        m_taskId = taskId;
+    }
+
+    uint32_t GetTaskSegmentId() const
+    {
+        return m_taskSegmentId;
+    }
+
+    void SetTaskSegmentId(uint32_t taskSegmentId)
+    {
+        m_taskSegmentId = taskSegmentId;
+    }
+
+    uint32_t GetThreadId() const
+    {
+        return m_threadId;
+    }
+
+    void SetThreadId(uint32_t threadId)
+    {
+        m_threadId = threadId;
     }
 
     // ========== 任务描述信息 ==========
@@ -242,13 +261,34 @@ public:
         m_type = type;
     }
 
-    void SetSize(uint32_t size, uint32_t packetSize)
+    void SetSize(uint32_t size)
     {
         m_size = size;
-        m_packetSize = packetSize;
         m_bytesLeft = size;
+    }
+
+    void SetPacketInfo(uint32_t packetSize, uint32_t length)
+    {
+        m_length = length;
+        m_dataSize = 64 * (1 << length);
+        m_packetSize = packetSize;
         // 计算要发的packet数目
-        m_psnCnt = (m_size + m_packetSize - 1) / m_packetSize;
+        m_psnCnt = (m_size + m_dataSize - 1) / m_dataSize;
+    }
+
+    uint32_t GetLength()
+    {
+        return m_length;
+    }
+
+    uint32_t GetDataSize()
+    {
+        return m_dataSize;
+    }
+
+    uint32_t GetPacketSize()
+    {
+        return m_packetSize;
     }
 
     void SetPriority(UbPriority priority)
@@ -279,23 +319,12 @@ public:
     }
 
     /**
-     * @brief 获取下一个Packet大小，并更新MEM剩余字节数
-     * @return 对应分段的大小
-     */
-    uint32_t GetNextPacketSize()
-    {
-        uint32_t actualSent = PeekNextPacketSize();
-        m_bytesLeft -= actualSent;
-        return actualSent;
-    }
-
-    /**
      * @brief 查看下一个packet的大小
      * @return 对应分段的大小
      */
-    uint32_t PeekNextPacketSize() const
+    uint32_t PeekNextDataSize() const
     {
-        return std::min(m_packetSize, m_bytesLeft);
+        return std::min(m_dataSize, m_bytesLeft);
     }
 
     /**
@@ -321,7 +350,9 @@ public:
 
 private:
     // ========== 全局信息 ==========
-    uint32_t m_memTaskId;           // MemTask标识符（Node范围内唯一）。仅用于数据收集。
+    uint32_t m_taskId;
+    uint32_t m_threadId;
+    uint32_t m_taskSegmentId;       // 用于识别tasksegment
     // ========== 任务描述信息 ==========
     uint32_t m_src;                 // 源节点标识符
     uint32_t m_dest;                // 目的节点标识符
@@ -329,10 +360,13 @@ private:
     uint32_t m_size = 0;                                     // MemTask数据大小 (字节)
     UbPriority m_priority = UB_PRIORITY_DEFAULT;             // MemTask优先级 (0-15, 0最高)
 
+    uint64_t m_address = 0;    // 待访问的内存起始地址
+    uint32_t m_length = 0;     // 单个切片要访问的内存段数据长度， 64 * (2 ^ length)
+    uint32_t m_dataSize = 0;   // 单个切片要访问的内存段数据长度
     uint32_t m_psnCnt = 0;          // 总计获取的数据包个数计数
     uint32_t m_bytesLeft = 0;       // 剩余的字节数
     uint32_t m_msn = 0;
-    uint32_t m_packetSize = 512;
+    uint32_t m_packetSize = 0; // 请求包的payload size
 };
 
 // ============================================================================
@@ -950,6 +984,10 @@ public:
     void SetOrderType(OrderType type) { m_orderType = type; }
 
     OrderType GetOrderType() { return m_orderType; }
+
+    void SetTpn(uint32_t tpn) { m_tpn = tpn; }
+
+    uint32_t GetTpn() { return m_tpn; }
 private:
     // ========== 任务描述信息 ==========
     uint32_t m_src{0};                              // 源节点标识符
@@ -962,6 +1000,7 @@ private:
     uint32_t m_taskId{0};                           // 流的任务ID
     uint32_t m_wqeSize{0};                          // 所属WQE的size
     OrderType m_orderType{OrderType::ORDER_NO};     // 所属WQE的order类型
+    uint32_t m_tpn; // 当前WqeSegment由哪一个TP进行传输
 
     // ========== 网络层信息 ==========
     Ipv4Address m_sip; // 源IP地址

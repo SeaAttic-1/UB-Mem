@@ -14,8 +14,9 @@
 
 namespace ns3 {
 
-class UbApiLdst;
+class UbLdstApi;
 class UbFunction;
+class UbTransaction;
 class UbTransportChannel;
 class UbTransportGroup;
 class UbDataLink;
@@ -111,10 +112,17 @@ public:
 
     Ptr<UbFunction> GetUbFunction();
 
+    Ptr<UbTransaction> GetUbTransaction();
+
     /**
      * @brief 1.每个controller创建一个Function
      */
     void CreateUbFunction();
+
+    /**
+     * @brief 2.每个controller创建一个Transaction
+     */
+    void CreateUbTransaction();
 
     std::unordered_map<uint32_t, Ptr<UbTransportChannel>> m_tpsMapInIngressSource; // 统一存到voq队列中，tps的位置
 
@@ -132,6 +140,7 @@ public:
 
 private:
     Ptr<UbFunction> m_function; // 功能层
+    Ptr<UbTransaction> m_transaction; // 事务层
     // Resource storage
     std::map<uint32_t, Ptr<UbTransportChannel>> m_numToTp{};   // 协议规定TPH中的TP number，在生成TP时，赋值为m_transports_count
     uint32_t m_transportsCount{0}; // increment only，用于标识tpn

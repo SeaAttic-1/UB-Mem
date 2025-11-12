@@ -111,8 +111,9 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLink", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiLdstThread", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApiLdst", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
     // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);
     // LogComponentEnable("UbSwitch", LOG_LEVEL_ALL);
