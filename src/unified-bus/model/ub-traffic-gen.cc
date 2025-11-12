@@ -128,7 +128,11 @@ void UbTrafficGen::ScheduleNextTasks()
             auto taskIt = m_tasks.find(taskId);
             if (taskIt != m_tasks.end()) {
                 auto app = DynamicCast<UbApp>(NodeList::GetNode(taskIt->second.sourceNode)->GetApplication(0));
-                app->SendTraffic(taskIt->second);
+                Time taskDelay = Time(0);
+                if (!taskIt->second.delay.empty()) {
+                    taskDelay = Time(taskIt->second.delay);
+                }
+                Simulator::Schedule(taskDelay, &UbApp::SendTraffic, app, taskIt->second);
                 NS_LOG_DEBUG("Scheduled task " << taskId);
             }
         }

@@ -62,9 +62,9 @@ void UbApp::SetFinishCallback(Callback<void, uint32_t, uint32_t> cb, Ptr<UbJetty
     jetty->SetClientCallback(cb);
 }
 
-void UbApp::SetFinishCallback(Callback<void, uint32_t> cb, Ptr<UbApiLdst> ubApiLdst)
+void UbApp::SetFinishCallback(Callback<void, uint32_t> cb, Ptr<UbLdstInstance> ubLdstInstance)
 {
-    ubApiLdst->SetClientCallback(cb);
+    ubLdstInstance->SetClientCallback(cb);
 }
 
 void UbApp::DoDispose(void)
@@ -86,20 +86,18 @@ void UbApp::SendTraffic(TrafficRecord record)
         } else if (record.opType == "MEM_LOAD") {
             type = UbMemOperationType::LOAD;
         }
+        auto ldstInstance = GetNode()->GetObject<UbLdstInstance>();
         Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
-        Ptr<UbApiLdst> ldst = ubFunc->GetUbLdst();
-        SetFinishCallback(MakeCallback(&UbApp::OnMemTaskCompleted, this), ldst);
+        SetFinishCallback(MakeCallback(&UbApp::OnMemTaskCompleted, this), ldstInstance);
         NS_LOG_INFO("MEM Task Starts, taskId: " << record.taskId);
         MemTaskStartsNotify(GetNode()->GetId(), record.taskId);
-        ubFunc->PushLdstTask(record.sourceNode, record.destNode, record.dataSize,
-                          record.taskId, type, threadId);
-        threadId++;
-        if (threadId >= ldst->GetThreadNum()) {
-            threadId = threadId % ldst->GetThreadNum();
-        }
+        std::vector<uint32_t> threadIds = {0, 1};
+        ldstInstance->HandleLdstTask(record.sourceNode, record.destNode, record.dataSize,
+                          record.taskId, type, threadIds, 0);
     } else if (record.opType == "URMA_WRITE") {
         // URMA发送
         Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
+        Ptr<UbTransaction> ubTa = GetNode()->GetObject<UbController>()->GetUbTransaction();
         bool jettyExist = ubFunc->IsJettyExists(m_jettyNum);
         if (jettyExist) {
             NS_LOG_ERROR("Jetty already exists");
@@ -110,14 +108,14 @@ void UbApp::SendTraffic(TrafficRecord record)
             m_getTpnRule, m_useShortestPath, record.sourceNode,
             record.destNode, UINT32_MAX, UINT32_MAX, record.priority);
         NS_ASSERT_MSG(m_tpns.empty() == false, "Tpns Not Exist");
-        bool bindRst = ubFunc->jettyBindTp(record.sourceNode, record.destNode,
+        bool bindRst = ubTa->JettyBindTp(record.sourceNode, record.destNode,
                                         m_jettyNum, m_multiPathEnable, m_tpns);
         if (bindRst) {
             Ptr<UbJetty> curr_jetty = ubFunc->GetJetty(m_jettyNum);
             SetFinishCallback(MakeCallback(&UbApp::OnTaskCompleted, this), curr_jetty);
             NS_LOG_INFO("WQE Starts, jettyNum: " << m_jettyNum << " taskId: " << record.taskId);
             WqeTaskStartsNotify(GetNode()->GetId(), m_jettyNum, record.taskId);
-            NS_LOG_INFO("[APPLICATION INFO] taskId: " << record.taskId << ",start time:" << 
+            NS_LOG_INFO("[APPLICATION INFO] taskId: " << record.taskId << ",start time:" <<
                 Simulator::Now().GetNanoSeconds() << "ns");
             Ptr<UbWqe> wqe = ubFunc->CreateWqe(record.sourceNode, record.destNode, record.dataSize, record.taskId);
             ubFunc->PushWqeToJetty(wqe, m_jettyNum);
@@ -134,8 +132,6 @@ void UbApp::OnTaskCompleted(uint32_t taskId, uint32_t jettyNum)
     NS_LOG_INFO("WQE Completes, jettyNum: " << jettyNum << " taskId: " << taskId);
     WqeTaskCompletesNotify(GetNode()->GetId(), jettyNum, taskId);
     NS_LOG_INFO("[APPLICATION INFO] taskId: " << taskId << ",finish time:" << Simulator::Now().GetNanoSeconds() << "ns");
-    Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();
-    ubFunc->DestroyJetty(jettyNum);
     UbTrafficGen::Get()->OnTaskCompleted(taskId);
 }
 

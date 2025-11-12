@@ -180,8 +180,12 @@ UbPort::UbPort()
     m_ubSendState = SendState::READY;
     m_txBytes = 0;
     BooleanValue val;
-    GlobalValue::GetValueByName("UB_RECORD_PKT_TRACE", val);
-    m_pktTraceEnabled = val.Get();
+    if (GlobalValue::GetValueByNameFailSafe("UB_RECORD_PKT_TRACE", val)) {
+        GlobalValue::GetValueByName("UB_RECORD_PKT_TRACE", val);
+        m_pktTraceEnabled = val.Get();
+    } else {
+        m_pktTraceEnabled = false;
+    }
 }
 
 UbPort::~UbPort()
@@ -269,7 +273,7 @@ void UbPort::DequeuePacket(void)
     m_ubSendState = SendState::BUSY;
 
     auto [inPortId, priority, packet] = m_ubEQ->DoDequeue();
-    
+
     m_currentPkt = packet;
     m_currentInPortId = inPortId;
     m_currentPriority = priority;
@@ -278,7 +282,7 @@ void UbPort::DequeuePacket(void)
         auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
     }
-    
+
     // switch节点, 通知switch发送了packet
     if (inPortId != m_portId) { // 转发的报文
         GetNode()->GetObject<UbSwitch>()->NotifySwitchDequeue(inPortId, m_portId, priority, packet);

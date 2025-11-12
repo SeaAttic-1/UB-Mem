@@ -320,16 +320,16 @@ bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
         port->m_flowControl->HandleReceivedPacket(packet);
     }
 
-    auto UbApiLdst = GetObject<Node>()->GetObject<UbController>()->GetUbFunction()->GetUbLdst();
-    NS_ASSERT_MSG(UbApiLdst != nullptr, "UbApiLdst can not be nullptr!");
+    auto ldstApi = GetObject<Node>()->GetObject<UbController>()->GetUbFunction()->GetUbLdstApi();
+    NS_ASSERT_MSG(ldstApi != nullptr, "UbLdstApi can not be nullptr!");
 
     uint8_t type = m_dummyTaHeader.GetTaOpcode();
     // 数据包
     if (type == (uint8_t)TaOpcode::TA_OPCODE_WRITE || type == (uint8_t)TaOpcode::TA_OPCODE_READ) {
-        UbApiLdst->RecvDataPacket(packet, m_datalinkHeader.GetCreditTargetVL(), m_datalinkHeader.GetPacketVL(), type);
+        ldstApi->RecvDataPacket(packet);
     } else if (type == (uint8_t)TaOpcode::TA_OPCODE_TRANSACTION_ACK ||
                type == (uint8_t)TaOpcode::TA_OPCODE_READ_RESPONSE) {
-        UbApiLdst->RecvResponse(packet);
+        ldstApi->RecvResponse(packet);
         NS_LOG_DEBUG("mem packet is ack!");
     } else {
         NS_ASSERT_MSG(0, "packet Ta Op code is wrong!");

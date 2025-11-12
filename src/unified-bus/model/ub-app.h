@@ -10,7 +10,7 @@
 #include "ns3/ipv4-address.h"
 #include "ns3/ub-datatype.h"
 #include "ns3/ub-controller.h"
-#include "ns3/ub-api-ldst.h"
+#include "ns3/ub-ldst-api.h"
 #include "ub-tp-connection-manager.h"
 #include "ub-network-address.h"
 
@@ -52,7 +52,7 @@ public:
 
     // ========== 回调函数 ==========
     void SetFinishCallback(Callback<void, uint32_t, uint32_t> cb, Ptr<UbJetty> jetty);
-    void SetFinishCallback(Callback<void, uint32_t> cb, Ptr<UbApiLdst> UbApiLdst);
+    void SetFinishCallback(Callback<void, uint32_t> cb, Ptr<UbLdstInstance> ubLdstInstance);
 
 protected:
     void DoDispose(void) override;
@@ -83,7 +83,6 @@ private:
     Ptr<Node> m_node;              // 当前节点
     TpConnectionManager m_tpnConn; // 当前节点维护的tpnConn
     uint32_t m_jettyNum = 0;       // 当前节点维护的jettynum,不会重复
-    uint32_t threadId = 0;         // 当前节点维护的threadId,不会重复
 };
 
 } // namespace ns3

@@ -29,7 +29,12 @@ UbController::UbController()
 void UbController::CreateUbFunction()
 {
     m_function = CreateObject<UbFunction>();
-    m_function->SetUbFunction(GetObject<Node>()->GetId());
+    m_function->Init(GetObject<Node>()->GetId());
+}
+
+void UbController::CreateUbTransaction()
+{
+    m_transaction = CreateObject<UbTransaction>(GetObject<Node>());
 }
 
 UbController::~UbController()
@@ -78,6 +83,7 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     Ptr<UbTransportChannel> tp = CreateObject<UbTransportChannel>();
     tp->SetUbTransport(currentNode->GetId(), src, dest, srcTpn, dstTpn, 0, static_cast<uint8_t>(priority),
                        static_cast<uint16_t>(sport), static_cast<uint16_t>(dport), sip, dip, congestionCtrl);
+    m_transaction->TpInit(tp);
     m_numToTp[srcTpn] = tp;
     m_transportsCount++;
     currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
@@ -224,6 +230,11 @@ std::vector<Ptr<UbPort>> UbController::GetAvailablePorts(uint32_t destination) c
 Ptr<UbFunction> UbController::GetUbFunction()
 {
     return m_function;
+}
+
+Ptr<UbTransaction> UbController::GetUbTransaction()
+{
+    return m_transaction;
 }
 
 std::map<uint32_t, Ptr<UbTransportChannel>> UbController::GetTpnMap() const

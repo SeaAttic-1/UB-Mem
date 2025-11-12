@@ -36,12 +36,10 @@ using namespace std;
 using namespace ns3;
 
 namespace utils {
-
 /**
  *  @brief UbUtils单例类
  */
 class UbUtils : public ns3::Singleton<UbUtils> {
-
 public:
     // 保存node
     inline static string trace_path;
@@ -123,9 +121,9 @@ private:
     GlobalValue g_record_pkt_trace_enable = GlobalValue("UB_RECORD_PKT_TRACE", "enable record all packet trace", BooleanValue(false), MakeBooleanChecker());
 
     GlobalValue g_python_script_path = 
-    GlobalValue("UB_PYTHON_SCRIPT_PATH", 
-                "Path to parse_trace.py script (REQUIRED - must be set by user)", 
-                StringValue("/path/to/ns-3-ub-tools/trace_analysis/parse_trace.py"), 
+    GlobalValue("UB_PYTHON_SCRIPT_PATH",
+                "Path to parse_trace.py script (REQUIRED - must be set by user)",
+                StringValue("/path/to/ns-3-ub-tools/trace_analysis/parse_trace.py"),
                 MakeStringChecker());
     
     static string Among(string s, string ts);
@@ -136,19 +134,28 @@ private:
 
     static void PrintTraceInfoNoTs(string fileName, string info);
 
-    static void TpFirstPacketSendsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn, uint32_t tpMsn, uint32_t psnSndNxt, uint32_t sPort);
+    static void TpFirstPacketSendsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn,
+                                         uint32_t tpMsn, uint32_t psnSndNxt, uint32_t sPort);
     
-    static void TpLastPacketSendsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn, uint32_t tpMsn, uint32_t psnSndNxt, uint32_t sPort);
+    static void TpLastPacketSendsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn,
+                                        uint32_t tpMsn, uint32_t psnSndNxt, uint32_t sPort);
 
-    static void TpLastPacketACKsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn, uint32_t tpMsn, uint32_t psn, uint32_t sPort);
+    static void TpLastPacketACKsNotify(uint32_t nodeId, uint32_t taskId, uint32_t tpn, uint32_t dstTpn,
+                                       uint32_t tpMsn, uint32_t psn, uint32_t sPort);
 
-    static void TpLastPacketReceivesNotify(uint32_t nodeId, uint32_t srcTpn, uint32_t dstTpn, uint32_t tpMsn, uint32_t psn, uint32_t dPort);
+    static void TpLastPacketReceivesNotify(uint32_t nodeId, uint32_t srcTpn, uint32_t dstTpn,
+                                           uint32_t tpMsn, uint32_t psn, uint32_t dPort);
 
     static void TpWqeSegmentSendsNotify(uint32_t nodeId, uint32_t taskId, uint32_t taSsn);
 
     static void TpWqeSegmentCompletesNotify(uint32_t nodeId, uint32_t taskId, uint32_t taSsn);
 
-    static void TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn, uint32_t dstTpn, PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
+    static void TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t src, uint32_t dst, uint32_t srcTpn,
+                             uint32_t dstTpn, PacketType type, uint32_t size, uint32_t taskId,
+                             UbPacketTraceTag traceTag);
+    
+    static void LdstRecvNotify(uint32_t packetUid, uint32_t src, uint32_t dst, PacketType type,
+                               uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
 
     static void LdstFirstPacketSendsNotify(uint32_t nodeId, uint32_t taskId);
 

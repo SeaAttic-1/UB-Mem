@@ -105,8 +105,12 @@ TypeId UbTransportChannel::GetTypeId(void)
 UbTransportChannel::UbTransportChannel()
 {
     BooleanValue val;
-    GlobalValue::GetValueByName("UB_RECORD_PKT_TRACE", val);
-    m_pktTraceEnabled = val.Get();
+    if (GlobalValue::GetValueByNameFailSafe("UB_RECORD_PKT_TRACE", val)) {
+        GlobalValue::GetValueByName("UB_RECORD_PKT_TRACE", val);
+        m_pktTraceEnabled = val.Get();
+    } else {
+        m_pktTraceEnabled = false;
+    }
 }
 
 UbTransportChannel::~UbTransportChannel()
@@ -120,7 +124,6 @@ void UbTransportChannel::DoDispose()
 {
     NS_LOG_FUNCTION(this);
     m_ackQ = queue<Ptr<Packet>>();
-    m_relatedJettys.clear();
     m_wqeSegmentVector.clear();
     m_congestionCtrl = nullptr;
     m_recvPsnBitset.clear();
@@ -211,7 +214,7 @@ Ptr<Packet> UbTransportChannel::GetNextPacket()
         }
         // 属于本tp的这一轮wqe segment都发完了，继续向TA要
         if (m_psnSndNxt == m_tpPsnCnt) {
-            TriggerTransmit();
+            ApplyNextWqeSegment();
         }
         return p;
     }
@@ -375,12 +378,15 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
                 LastPacketACKsNotify(m_nodeId, m_wqeSegmentVector[i]->GetTaskId(), m_tpn, m_dstTpn,
                     TpHeader.GetTpMsn(), TpHeader.GetPsn(), m_sport);
             }
-            auto UbFunc = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbFunction();
-            Ptr<UbJetty> curr_jetty = UbFunc->GetJetty(m_wqeSegmentVector[i]->GetJettyNum());
-            if (curr_jetty->ProcessWqeSegmentComplete(m_wqeSegmentVector[i]->GetTaSsn())) {
+            auto ubTa = GetTransaction();
+            if (ubTa->ProcessWqeSegmentComplete(m_wqeSegmentVector[i])) {
                 WqeSegmentCompletesNotify(m_nodeId, m_wqeSegmentVector[i]->GetTaskId(),
                     m_wqeSegmentVector[i]->GetTaSsn());
                 m_wqeSegmentVector.erase(m_wqeSegmentVector.begin() + i);
+                // 当前vector中的segment数量小于2时申请调度Segment
+                if (m_wqeSegmentVector.size() < 2) {
+                    ApplyNextWqeSegment();
+                }
             } else {
                 ++i;
             }
@@ -391,7 +397,7 @@ void UbTransportChannel::RecvTpAck(Ptr<Packet> p)
     // tp从超过缓存限制的状态中恢复
     if (m_tpFullFlag && IsWqeSegmentLimited() == false) {
         m_tpFullFlag = false;
-        TriggerTransmit();
+        ApplyNextWqeSegment();
     }
     if (m_isRetransEnable) {
         if (m_wqeSegmentVector.size() == 0) {
@@ -629,34 +635,6 @@ uint32_t UbTransportChannel::GetCurrentSqSize() const
     return m_wqeSegmentVector.size();
 }
 
-
-/**
- * @brief Create jetty and tp relationship
- * @return
- */
-void UbTransportChannel::CreateTpJettyRelationship(Ptr<UbJetty> ubJetty)
-{
-    NS_LOG_FUNCTION(this << ubJetty);
-    if (std::find(m_relatedJettys.begin(), m_relatedJettys.end(), ubJetty) == m_relatedJettys.end()) {
-        m_relatedJettys.push_back(ubJetty);
-    }
-    NS_LOG_FUNCTION(m_relatedJettys.size());
-}
-
-/**
- * @brief Delete jetty and tp relationship
- * @return
- */
-void UbTransportChannel::DeleteTpJettyRelationship(uint32_t jettyNum)
-{
-    NS_LOG_FUNCTION(this << std::to_string(jettyNum));
-    for (size_t i = 0; i < m_relatedJettys.size(); i++) {
-        if (m_relatedJettys[i]->GetJettyNum() == jettyNum) {
-            m_relatedJettys.erase(m_relatedJettys.begin() + i);
-        }
-    }
-}
-
 bool UbTransportChannel::IsWqeSegmentLimited() const
 {
     if (GetCurrentSqSize() >= m_maxQueueSize) {
@@ -724,91 +702,21 @@ bool UbTransportChannel::IsRepeatPacket(uint64_t psn)
     return m_recvPsnBitset[static_cast<int64_t>(psn) - static_cast<int64_t>(m_psnRecvNxt)];
 }
 
-void UbTransportChannel::TriggerTransmit()
+void UbTransportChannel::WqeSegmentTriggerPortTransmit(Ptr<UbWqeSegment> segment)
 {
-    Simulator::ScheduleNow(&UbTransportChannel::GetWqeSegmentFromRelatedJetty, this);
-}
-// ========================================================================
-// UbTransportGroup Implementation
-// ========================================================================
-
-TypeId UbTransportGroup::GetTypeId(void)
-{
-    static TypeId tid = TypeId("ns3::UbTransportGroup")
-        .SetParent<Object>()
-        .SetGroupName("UnifiedBus")
-        .AddConstructor<UbTransportGroup>();
-    return tid;
+    WqeSegmentSendsNotify(m_nodeId, segment->GetTaskId(), segment->GetTaSsn());
+    Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
+    port->TriggerTransmit(); // 触发发送
 }
 
-UbTransportGroup::UbTransportGroup()
+Ptr<UbTransaction> UbTransportChannel::GetTransaction()
 {
+    return NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbTransaction();
 }
 
-UbTransportGroup::~UbTransportGroup()
+void UbTransportChannel::ApplyNextWqeSegment()
 {
-}
-
-void UbTransportChannel::GetWqeSegmentFromRelatedJetty()
-{
-    // 检查是否有相关的Jetty
-    if (m_relatedJettys.size() > 0) {
-        NS_LOG_DEBUG("m_relatedJettys.size(): " << std::to_string(m_relatedJettys.size()));
-    }
-    // 检查当前TP是否队列满
-    if (IsWqeSegmentLimited()) {
-        m_tpFullFlag = true;
-        NS_LOG_DEBUG("Full TP ");
-        return;
-    }
-
-    // 记录开始轮询的位置，避免无限循环
-    uint32_t jettyCount = m_relatedJettys.size();
-    bool wqeSegmentFlag = false;
-    uint32_t startRR = m_rrLast;
-    // 轮询所有相关的Jetty，寻找可用的WQE Segment
-    for (uint32_t i = 0; i < jettyCount; ++i) {
-        // 计算当前要检查的Jetty索引
-        uint32_t currentIndex = (startRR + i) % jettyCount;
-
-        // 获取当前Jetty
-        Ptr<UbJetty> currentJetty = m_relatedJettys[currentIndex];
-
-        // 检查Jetty是否有效
-        if (currentJetty == nullptr) {
-            NS_LOG_WARN("Found null Jetty at index " << currentIndex);
-            continue;
-        }
-
-        // 尝试从当前Jetty获取WQE Segment
-        Ptr<UbWqeSegment> wqeSegment = currentJetty->GetNextWqeSegment();
-
-        if (wqeSegment != nullptr) {
-            // 成功获取到WQE Segment，更新轮询位置到下一个Jetty
-            m_rrLast = (currentIndex + 1) % jettyCount;
-
-            NS_LOG_INFO("Successfully got WQE Segment from Jetty " << currentIndex
-                        << ", next round robin position: " << m_rrLast);
-
-            wqeSegment->SetTpMsn(m_tpMsnCnt);
-            wqeSegment->SetPsnStart(m_tpPsnCnt);
-            m_tpPsnCnt += wqeSegment->GetPsnSize();
-            m_tpMsnCnt += 1;
-
-            m_wqeSegmentVector.push_back(wqeSegment);
-            NS_LOG_INFO("WQE Segment Sends,taskId: "  << wqeSegment->GetTaskId()
-                << " TASSN: " << wqeSegment->GetTaSsn());
-            WqeSegmentSendsNotify(m_nodeId, wqeSegment->GetTaskId(), wqeSegment->GetTaSsn());
-            Ptr<UbPort> port = DynamicCast<UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(m_sport));
-            port->TriggerTransmit(); // 触发发送
-            wqeSegmentFlag = true;
-        }
-    }
-
-    // 所有Jetty都没有可用的WQE Segment
-    if (!wqeSegmentFlag) {
-        NS_LOG_DEBUG("No WQE Segment available from any related Jetty");
-    }
+    GetTransaction()->ApplyScheduleWqeSegment(this);
 }
 
 bool UbTransportChannel::IsEmpty()
@@ -877,4 +785,26 @@ void UbTransportChannel::TpRecvNotify(uint32_t packetUid, uint32_t psn, uint32_t
 {
     m_tpRecvNotify(packetUid, psn, src, dst, srcTpn, dstTpn, type, size, taskId, traceTag);
 }
+
+// ==========================================================================
+// UbTransportGroup Implementation
+// ==========================================================================
+
+TypeId UbTransportGroup::GetTypeId(void)
+{
+    static TypeId tid = TypeId("ns3::UbTransportGroup")
+        .SetParent<Object>()
+        .SetGroupName("UnifiedBus")
+        .AddConstructor<UbTransportGroup>();
+    return tid;
+}
+
+UbTransportGroup::UbTransportGroup()
+{
+}
+
+UbTransportGroup::~UbTransportGroup()
+{
+}
+
 } // namespace ns3

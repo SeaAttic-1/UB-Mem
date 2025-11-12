@@ -11,7 +11,7 @@
 #include "ns3/ipv4-address.h"
 #include "ns3/ub-datatype.h"
 #include "ns3/ub-controller.h"
-#include "ns3/ub-api-ldst.h"
+#include "ns3/ub-ldst-api.h"
 #include "ub-tp-connection-manager.h"
 #include "ub-network-address.h"
 
@@ -22,7 +22,7 @@ namespace ns3 {
 /**
  * @brief 任务图应用,管理多个WQE任务及依赖关系
  */
-class UbTrafficGen : public Object , public Singleton<UbTrafficGen> {
+class UbTrafficGen : public Object, public Singleton<UbTrafficGen> {
 public:
     static UbTrafficGen& GetInstance() {
         static UbTrafficGen instance;
