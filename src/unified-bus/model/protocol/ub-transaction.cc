@@ -76,7 +76,7 @@ bool UbTransaction::JettyBindTp(uint32_t src, uint32_t dest, uint32_t jettyNum,
         }
     }
     // 在事务层模式为ROL时只能开启单路径模式
-    if (m_serviceMode == TransactionServiceMode::ROL) {
+    if (m_serviceMode[jettyNum] == TransactionServiceMode::ROL) {
         NS_LOG_WARN("ROL, set to single path forced.");
         multiPath = false;
     }
@@ -106,22 +106,6 @@ bool UbTransaction::JettyBindTp(uint32_t src, uint32_t dest, uint32_t jettyNum,
     }
 
     m_jettyTpGroup[jettyNum] = ubTransportGroup;
-
-    NS_LOG_DEBUG("jetty bind tp:");
-    for (auto it = m_jettyTpGroup.begin(); it != m_jettyTpGroup.end(); it++) {
-        NS_LOG_DEBUG("jettyNum:" << it->first);
-        for (uint32_t i = 0; i < it->second.size(); i++) {
-            NS_LOG_DEBUG("tpn:" << it->second[i]->GetTpn());
-        }
-    }
-
-    NS_LOG_DEBUG("tp related jetty:");
-    for (auto it = m_tpRelatedJetties.begin(); it != m_tpRelatedJetties.end(); it++) {
-        NS_LOG_DEBUG("tpn: " << it->first);
-        for (uint32_t i = 0; i < it->second.size(); i++) {
-            NS_LOG_DEBUG("jettyNum:" << it->second[i]->GetJettyNum());
-        }
-    }
     return true;
 }
 
@@ -190,12 +174,10 @@ void UbTransaction::ScheduleWqeSegment(Ptr<UbTransportChannel> tp)
     // 若当前TP正处于调度状态，则结束，否则继续进行，并将状态设置为true
     if (m_tpSchedulingStatus[tpn]) {
         return;
-    } else {
-        m_tpSchedulingStatus[tpn] = true;
     }
+    m_tpSchedulingStatus[tpn] = true;
     // 找到tp相关的Jetty
     auto tpRelatedJetties = GetTpRelatedJettyVec(tpn);
-    // 找到tp相关的remoteRequest
     std::map<uint32_t, std::vector<Ptr<UbWqeSegment>>> remoteRequestSegMap;
     // 找到tp相关的remoteRequest
     if (m_tpRelatedRemoteRequests.find(tpn) != m_tpRelatedRemoteRequests.end()) {
@@ -206,13 +188,14 @@ void UbTransaction::ScheduleWqeSegment(Ptr<UbTransportChannel> tp)
     uint32_t jettyCount = tpRelatedJetties.size();
     uint32_t rrCount = jettyCount + remoteRequestSegMap.size();
 
+    // 该TP无对应jetty，不进行调度，状态重置
     if (rrCount == 0) {
-        // 该TP无对应jetty，不进行调度，状态重置
         m_tpSchedulingStatus[tpn] = false;
         return;
     }
-    // 检查当前TP是否队列满，以及待发送的wqesegment队列长度是否小于2
-    if (tp->IsWqeSegmentLimited() || tp->GetWqeSegmentVecSize() > 1) {
+
+    // 当前TP队列满，不进行调度，状态重置
+    if (tp->IsWqeSegmentLimited() ) {
         tp->SetTpFullStatus(true);
         NS_LOG_DEBUG("Full TP");
         // 满队列或满segment
@@ -220,54 +203,63 @@ void UbTransaction::ScheduleWqeSegment(Ptr<UbTransportChannel> tp)
         return;
     }
 
+    // tp的wqesegment队列长度大于2，不进行调度，状态重置
+    if (tp->GetWqeSegmentVecSize() > 1) {
+        NS_LOG_DEBUG("tp wqe segment vector size > 1");
+        m_tpSchedulingStatus[tpn] = false;
+    }
     // m_tpRRIndex每次更新时都会进行取余操作，不会大于rrCount
     // 只有某个jetty完成后删除，导致rrCount变小时才会出现这种情况。此时重置轮询位置
     if (m_tpRRIndex[tpn] > rrCount) {
         m_tpRRIndex[tpn] = 0;
     }
 
-    uint32_t rrIndex = m_tpRRIndex[tpn] % rrCount;
-    NS_LOG_DEBUG("This tp relatedJettys.size(): " << std::to_string(tpRelatedJetties.size()));
-    NS_LOG_DEBUG("This tp RelatedRemoteRequests.size(): " << std::to_string(remoteRequestSegMap.size()));
-    if (rrIndex < jettyCount) { // 轮询本地jetty
-        // 获取当前jetty
-        Ptr<UbJetty> currentJetty = tpRelatedJetties[rrIndex];
-        // 检查jetty是否有效
-        if (currentJetty == nullptr) { // 当前jetty无效，轮询下一个
-            NS_LOG_WARN("Found null Jetty at index" << rrIndex);
-            m_tpRRIndex[tpn] = (rrIndex + 1) % rrCount;
-            ScheduleWqeSegment(tp);
-        }
-        // 尝试从当前Jetty获取WQE Segment
-        Ptr<UbWqeSegment> wqeSegment = currentJetty->GetNextWqeSegment();
-        if (wqeSegment != nullptr) {
-            NS_LOG_INFO("Successfully got WQE Segment from Jetty: " << rrIndex);
-            // 设置wqesegment所属tpn
-            wqeSegment->SetTpn(tpn);
-            // 更新下一次轮询的位置
-            m_tpRRIndex[tpn] = (rrIndex + 1) % rrCount;
-            // 此处暂时以schedule形式模拟内存调度是时延，当前视为0
-            Simulator::ScheduleNow(&UbTransaction::OnScheduleWqeSegmentFinish, this, wqeSegment);
-        }
-    } else { // 轮询RemoteRequest
-        uint32_t remoteIndex = rrIndex - jettyCount;
-        auto it = remoteRequestSegMap.begin();
-        // it地址只想第index个位置
-        std::advance(it, remoteIndex);
-        std::vector<Ptr<UbWqeSegment>> segVec = it->second;
-        // 取出该vec的第一个WqeSegment
-        if (segVec.size() > 0) {
-            Ptr<UbWqeSegment> wqeSegment = segVec[0];
-            if (wqeSegment != nullptr) {
-                NS_LOG_INFO("Successfully got WQE Segment from RemoteRequests, " << remoteIndex);
-                // 更新下一次轮询的位置
-                m_tpRRIndex[tpn] = (rrIndex + 1) % rrCount;
-                // 此处暂时以schedule形式模拟内存调度的时延
-                Simulator::ScheduleNow(&UbTransaction::OnScheduleWqeSegmentFinish, this, wqeSegment);
+    Ptr<UbWqeSegment> wqeSegment = nullptr;
+    // 从tpRRIndex开始轮询，找到第一个非空且可以拿到wqesegment的jetty，获取wqesegment
+    for (uint32_t i = 0; i < rrCount; i++) {
+        uint32_t rrIndex = (m_tpRRIndex[tpn] + i) % rrCount;
+        if (rrIndex < jettyCount) { // 轮询本地jetty
+            // 获取当前jetty
+            Ptr<UbJetty> currentJetty = tpRelatedJetties[rrIndex];
+            if (currentJetty == nullptr) {
+                continue;
             }
-            it->second.erase(it->second.begin());
+            wqeSegment = currentJetty->GetNextWqeSegment();
+            if (wqeSegment == nullptr) {
+                continue;
+            }
+        } else { // 轮询remoteRequest
+            uint32_t remoteIndex = rrIndex - jettyCount;
+            auto it = remoteRequestSegMap.begin();
+            std::advance(it, remoteIndex);
+            if (it->second.size() == 0) {
+                continue;
+            }
+
+            for (auto vecIt = it->second.begin(); vecIt != it->second.end();) {
+                if (*vecIt == nullptr) {
+                    vecIt = it->second.erase(vecIt);
+                } else {
+                    wqeSegment = *vecIt;
+                    break;
+                }
+            }
+            if (wqeSegment == nullptr) {
+                continue;
+            }
+        }
+        if (wqeSegment != nullptr) {
+            m_tpRRIndex[tpn] = (rrIndex + 1) % rrCount;
+            break;
         }
     }
+    if (wqeSegment != nullptr) {
+        wqeSegment->SetTpn(tpn);
+        Simulator::ScheduleNow(&UbTransaction::OnScheduleWqeSegmentFinish, this, wqeSegment);
+    } else {
+        m_tpSchedulingStatus[tpn] = false;
+    }
+
 }
 
 void UbTransaction::OnScheduleWqeSegmentFinish(Ptr<UbWqeSegment> segment)
@@ -300,32 +292,53 @@ void UbTransaction::TriggerTpTransmit(uint32_t jettyNum)
     }
 }
 
-
-// 用于判断某个wqe是否order
-bool UbTransaction::IsOrderedByInitiator(Ptr<UbWqe> wqe)
+bool UbTransaction::IsOrderedByInitiator(uint32_t jettyNum, Ptr<UbWqe> wqe)
 {
-    // ROI
-    bool res;
-    if (m_serviceMode == TransactionServiceMode::ROI) {
-        // 判断NO/RO/SO关系
-        switch (wqe->GetOrderType()) {
-            case OrderType::ORDER_NO:
-            case OrderType::ORDER_RELAX:
-                res = true;
-                break;
-            case OrderType::ORDER_STRONG:
-                res = (m_wqeVector[0] == wqe->GetWqeId());
-                break;
-            case OrderType::ORDER_RESERVED:
-                res = true;
-            default:
-                res = true;
-        }
-    } else { // 不是ROI，直接返回true
-        res = true;
+    if (m_serviceMode.find(jettyNum) == m_serviceMode.end()) {
+        return false;
+    }
+    if (m_serviceMode[jettyNum] != TransactionServiceMode::ROI) { // 不是ROI，直接返回true
+        return true;
+    }
+    bool res = false;
+    bool orderedEmpty = m_jettyOrderedWqe[jettyNum].empty();
+    switch (wqe->GetOrderType()) {
+        case OrderType::ORDER_NO:
+        case OrderType::ORDER_RESERVED:
+            res = true;
+            break;
+        case OrderType::ORDER_RELAX:
+            NS_ASSERT_MSG(!orderedEmpty, "RO/SO Wqe should in Ordered vector!");
+            res = true;
+            break;
+        case OrderType::ORDER_STRONG:
+            NS_ASSERT_MSG(!orderedEmpty, "RO/SO Wqe should in Ordered vector!");
+            res = (m_jettyOrderedWqe[jettyNum].front() == wqe->GetWqeId());
+            break;
+        default:
+            NS_ASSERT_MSG(0, "Invalid Transaction Order Type!");
     }
     return res;
 }
+
+void UbTransaction::SetTransactionServiceMode(uint32_t jettyNum, TransactionServiceMode mode)
+{
+    m_serviceMode[jettyNum] = mode;
+    // ROI模式下且wqeVector中尚无该jetty的记录，则新建
+    if (mode == TransactionServiceMode::ROI && m_jettyOrderedWqe.find(jettyNum) == m_jettyOrderedWqe.end()) {
+        m_jettyOrderedWqe[jettyNum] = std::vector<uint32_t>();
+    }
+}
+
+TransactionServiceMode UbTransaction::GetTransactionServiceMode(uint32_t jettyNum)
+{
+    if (m_serviceMode.find(jettyNum) != m_serviceMode.end()) {
+        return m_serviceMode[jettyNum];
+    } else { //默认为ROI
+        return TransactionServiceMode::ROI;
+    }
+}
+
 
 bool UbTransaction::IsOrderedByTarget(Ptr<UbWqe> wqe)
 {
@@ -343,36 +356,65 @@ bool UbTransaction::IsUnreliable(Ptr<UbWqe> wqe)
     return false;
 }
 
-void UbTransaction::AddWqe(Ptr<UbWqe> wqe)
+void UbTransaction::AddWqe(uint32_t jettyNum, Ptr<UbWqe> wqe)
 {
-    if (m_serviceMode == TransactionServiceMode::ROI
-        && (wqe->GetOrderType() == OrderType::ORDER_RELAX || wqe->GetOrderType() == OrderType::ORDER_STRONG)) {
-        m_wqeVector.push_back(wqe->GetWqeId());
+    if (m_serviceMode.find(jettyNum) != m_serviceMode.end()) {
+        // ROI模式且wqe是RO或SO
+        if (m_serviceMode[jettyNum] == TransactionServiceMode::ROI
+            && (wqe->GetOrderType() == OrderType::ORDER_RELAX || wqe->GetOrderType() == OrderType::ORDER_STRONG)) {
+            m_jettyOrderedWqe[jettyNum].push_back(wqe->GetWqeId());
+        }
+    } else {
+        SetTransactionServiceMode(jettyNum, TransactionServiceMode::ROI);
+        AddWqe(jettyNum, wqe);
     }
 }
 
-void UbTransaction::WqeFinish(Ptr<UbWqe> wqe)
+void UbTransaction::WqeFinish(uint32_t jettyNum, Ptr<UbWqe> wqe)
 {
-    if (m_serviceMode == TransactionServiceMode::ROI) {
-        // 从vector中寻找该wqe并删除
-        auto it = std::find(m_wqeVector.begin(), m_wqeVector.end(), wqe->GetWqeId());
-        if (it != m_wqeVector.end()) {
-            m_wqeVector.erase(it);
-        }
+    if (m_serviceMode.find(jettyNum) == m_serviceMode.end() || m_serviceMode[jettyNum] != TransactionServiceMode::ROI) {
+        return;
+    }
+    // 从vector中寻找该wqe并删除
+    auto it = std::find(m_jettyOrderedWqe[jettyNum].begin(), m_jettyOrderedWqe[jettyNum].end(), wqe->GetWqeId());
+    if (it != m_jettyOrderedWqe[jettyNum].end()) {
+        m_jettyOrderedWqe[jettyNum].erase(it);
     }
 }
 
 void UbTransaction::DoDispose()
 {
     NS_LOG_FUNCTION(this);
-    m_wqeVector.clear();
+    m_tpnMap.clear();
+    m_jettyOrderedWqe.clear();
     for (auto &it : m_jettyTpGroup) {
         for (auto tp : it.second) {
             tp = nullptr;
         }
     }
     m_jettyTpGroup.clear();
+    for (auto &it : m_tpRelatedJetties) {
+        for(auto jetty : it.second) {
+            jetty = nullptr;
+        }
+    }
+    m_tpRelatedJetties.clear();
+    for (auto &it : m_tpRelatedRemoteRequests) {
+        for (auto &remoteMap : it.second) {
+            for (auto segment : remoteMap.second) {
+                segment = nullptr;
+            }
+        }
+    }
+    m_tpRelatedRemoteRequests.clear();
+    m_tpRRIndex.clear();
+    m_tpSchedulingStatus.clear();
     m_random = nullptr;
+    m_serviceMode.clear();
+    for (auto &it : m_jettyOrderedWqe) {
+        it.second.clear();
+    }
+    m_jettyOrderedWqe.clear(); 
     Object::DoDispose();
 }
 

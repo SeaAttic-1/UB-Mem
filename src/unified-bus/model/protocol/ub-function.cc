@@ -123,7 +123,7 @@ void UbFunction::PushWqeToJetty(Ptr<UbWqe> wqe, uint32_t jettyNum)
     ubJetty->SetNodeId(m_nodeId);
     // 将 WQE 添加到 Jetty
     ubJetty->PushWqe(wqe);
-
+    GetTransaction()->AddWqe(jettyNum, wqe);
     GetTransaction()->TriggerScheduleWqeSegment(jettyNum);
 }
 
@@ -178,6 +178,11 @@ void UbJetty::SetClientCallback(Callback<void, uint32_t, uint32_t> cb)
 // ============================================================================
 // UbJetty 实现
 // ============================================================================
+Ptr<UbTransaction> UbJetty::GetTransaction()
+{
+    return NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbTransaction();
+}
+
 Ptr<UbWqeSegment> UbJetty::GetNextWqeSegment()
 {
     NS_LOG_FUNCTION(this);
@@ -197,12 +202,16 @@ Ptr<UbWqeSegment> UbJetty::GetNextWqeSegment()
     for (auto it = m_wqeVector.begin(); it != m_wqeVector.end(); ++it) {
         if (*it && !(*it)->IsSentCompleted()) {
             currentWqe = *it;
-            if (currentWqe->GetSendStatus()) {
+            // WQE初始发送状态为False，当TA根据事务序判断当前WQE可以发送后，修改为True，即可发送。
+            if (currentWqe->CanSend()) {
                 break;
             } else {
                 // 调用TA，判断currentWqe是否允许发送
-                currentWqe->UpdateSendStatus(true);
-                break;
+                auto ubTa = GetTransaction();
+                if (ubTa->IsOrderedByInitiator(m_jettyNum, currentWqe)) {
+                    currentWqe->SetCanSend(true);
+                    break;
+                }
             }
         }
     }
@@ -212,7 +221,7 @@ Ptr<UbWqeSegment> UbJetty::GetNextWqeSegment()
         return nullptr;
     }
 
-    if (!currentWqe->GetSendStatus()) {
+    if (!currentWqe->CanSend()) {
         NS_LOG_DEBUG("No unfinished WQE available to send");
         return nullptr;
     }
@@ -328,8 +337,7 @@ bool UbJetty::ProcessWqeSegmentComplete(uint32_t taSsnAck)
     }
 
     if (IsLimited()) {
-        auto ubTa = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbTransaction();
-        ubTa->TriggerTpTransmit(m_jettyNum);
+        GetTransaction()->TriggerTpTransmit(m_jettyNum);
     }
 
     // 计算在 bitset 中的相对位置
@@ -401,11 +409,12 @@ void UbJetty::CheckAndRemoveCompletedWqe()
         uint32_t wqeId = wqe->GetWqeId();
         if (wqe && IsWqeCompleted(wqe)) {
             NS_LOG_INFO("WQE Finishes, jettyNum: {" << m_jettyNum  << "} taskId:{ " << std::to_string(wqeId) <<"}");
+            auto ubTa = GetTransaction();
+            ubTa->WqeFinish(m_jettyNum, *it);
             // 从vector中移除已完成的WQE
             it = m_wqeVector.erase(it);
             FinishCallback(wqeId, m_jettyNum); // 调用应用层的回调
             // trigger tp
-            auto ubTa = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbTransaction();
             ubTa->TriggerTpTransmit(m_jettyNum);
         } else {
             ++it;

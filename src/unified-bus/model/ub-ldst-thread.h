@@ -13,6 +13,7 @@ public:
     static TypeId GetTypeId(void);
     UbLdstThread();
     virtual ~UbLdstThread();
+    void Init();
     void PushTaskSegment(Ptr<UbLdstTaskSegment> taskSegment);
     void HandleTaskSegment();
     void SetNode(uint32_t nodeId);
@@ -24,11 +25,14 @@ public:
     void SetStoreReqLength(uint32_t length);
     void SetLoadRspLength(uint32_t length);
 private:
+    uint32_t CalcLength(uint32_t size);
     uint32_t m_nodeId;
     uint32_t m_threadId;
     std::queue<Ptr<UbLdstTaskSegment>> m_loadQueue;
     std::queue<Ptr<UbLdstTaskSegment>> m_storeQueue;
-    
+
+    uint32_t m_loadRspSize = 0;
+    uint32_t m_storeReqSize = 0;
     uint32_t m_loadReqSize = 0;
     uint32_t m_loadRspLength = 0;
     uint32_t m_storeReqLength = 0;

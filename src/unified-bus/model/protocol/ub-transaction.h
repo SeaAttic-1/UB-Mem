@@ -49,8 +49,10 @@ namespace ns3 {
 
         std::vector<Ptr<UbJetty>> GetTpRelatedJettyVec(uint32_t tpn);
 
+        // function层调用
         void TriggerScheduleWqeSegment(uint32_t jettyNum);
 
+        // tp调用
         void ApplyScheduleWqeSegment(Ptr<UbTransportChannel> tp);
 
         bool ProcessWqeSegmentComplete(Ptr<UbWqeSegment> wqeSegment);
@@ -60,19 +62,21 @@ namespace ns3 {
         void TpInit(Ptr<UbTransportChannel> tp);
 
         // 判断wqe是否能发送
-        bool IsOrderedByInitiator(Ptr<UbWqe> wqe);
+        bool IsOrderedByInitiator(uint32_t jettyNum, Ptr<UbWqe> wqe);
+        // TODO: support ROT
         bool IsOrderedByTarget(Ptr<UbWqe> wqe);
+        // TODO: support Reliable
         bool IsReliable(Ptr<UbWqe> wqe);
         bool IsUnreliable(Ptr<UbWqe> wqe);
 
-        void SetTransactionServiceMode(TransactionServiceMode mode) { m_serviceMode = mode; }
-        TransactionServiceMode GetTransactionServiceMode() { return m_serviceMode; }
+        void SetTransactionServiceMode(uint32_t jettyNum, TransactionServiceMode mode);
+        TransactionServiceMode GetTransactionServiceMode(uint32_t jettyNum);
 
         // 新增wqe任务
-        void AddWqe(Ptr<UbWqe> wqe);
+        void AddWqe(uint32_t jettyNum, Ptr<UbWqe> wqe);
 
         // 某个wqe完成，刷新状态
-        void WqeFinish(Ptr<UbWqe> wqe);
+        void WqeFinish(uint32_t jettyNum, Ptr<UbWqe> wqe);
 
     private:
 
@@ -83,7 +87,7 @@ namespace ns3 {
         void OnScheduleWqeSegmentFinish(Ptr<UbWqeSegment> segment);
 
         uint32_t m_nodeId;
-        
+
         // Tpn和Tp的对应map
         std::map<uint32_t, Ptr<UbTransportChannel>> m_tpnMap;
         // Jetty和TP的绑定关系
@@ -104,9 +108,10 @@ namespace ns3 {
         Ptr<UniformRandomVariable> m_random;        //随机数产生工具，伪随机，多次仿真可复现
 
         Callback<void, Ptr<UbWqeSegment>> m_pushWqeSegmentToTpCb;
-        TransactionServiceMode m_serviceMode = TransactionServiceMode::ROI;
-        // 记录wqe的Order序列
-        std::vector<uint32_t> m_wqeVector;
+        // 记录每个jetty对应的serviceMode
+        std::map<uint32_t, TransactionServiceMode> m_serviceMode;
+        // 每个jetty存储wqe的id顺序
+        std::map<uint32_t, std::vector<uint32_t>> m_jettyOrderedWqe;
     };
 
 } // namespace ns3

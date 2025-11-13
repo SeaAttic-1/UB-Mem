@@ -35,8 +35,8 @@ build_lib(
 	model/ub-switch-allocator.cc
 	model/ub-utils.cc
 	model/protocol/ub-ldst-api.cc
-	model/protocol/ub-ldst-thread.cc
-	model/protocol/ub-ldst-instance.cc
+	model/ub-ldst-thread.cc
+	model/ub-ldst-instance.cc
 	model/protocol/ub-congestion-control.cc
 	model/protocol/ub-caqm.cc
 	model/protocol/ub-flow-control.cc
@@ -62,8 +62,8 @@ build_lib(
 	model/ub-network-address.h
 	model/ub-tp-connection-manager.h
 	model/protocol/ub-ldst-api.h
-	model/protocol/ub-ldst-thread.h
-	model/protocol/ub-ldst-instance.h
+	model/ub-ldst-thread.h
+	model/ub-ldst-instance.h
 	model/protocol/ub-congestion-control.h
 	model/protocol/ub-caqm.h
 	model/protocol/ub-flow-control.h
