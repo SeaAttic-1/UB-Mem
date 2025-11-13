@@ -168,6 +168,7 @@ namespace ns3 {
         uint32_t GetNodeId() { return m_nodeId; }
 
     private:
+        Ptr<UbTransaction> GetTransaction();
         void DoDispose() override;
         std::vector<Ptr<UbWqe>> m_wqeVector;
         // ========== Jetty标识信息 ==========

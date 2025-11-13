@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
-#include "ub-ldst-thread.h"
-#include "ub-ldst-api.h"
+#include "ns3/ub-ldst-thread.h"
+#include "ns3/ub-ldst-api.h"
 
 #include "ns3/ub-queue-manager.h"
 #include "ns3/ub-routing-process.h"
@@ -30,16 +30,16 @@ TypeId UbLdstThread::GetTypeId(void)
                                           UintegerValue(64),
                                           MakeUintegerAccessor(&UbLdstThread::m_loadOutstanding),
                                           MakeUintegerChecker<uint32_t>())
-                            .AddAttribute("LoadResponseLength",
+                            .AddAttribute("LoadResponseSize",
                                           "The payload size for a LOAD response is calculated as 64B * (2^length).",
                                           UintegerValue(3),
-                                          MakeUintegerAccessor(&UbLdstThread::m_loadRspLength),
-                                          MakeUintegerChecker<uint32_t>(0, 7))
-                            .AddAttribute("StoreRequestLength",
+                                          MakeUintegerAccessor(&UbLdstThread::m_loadRspSize),
+                                          MakeUintegerChecker<uint32_t>(0, 8192))
+                            .AddAttribute("StoreRequestSize",
                                           "The payload size for a STORE request is calculated as 64B * (2^length).",
                                           UintegerValue(3),
-                                          MakeUintegerAccessor(&UbLdstThread::m_storeReqLength),
-                                          MakeUintegerChecker<uint32_t>(0, 7))
+                                          MakeUintegerAccessor(&UbLdstThread::m_storeReqSize),
+                                          MakeUintegerChecker<uint32_t>(0, 8192))
                             .AddAttribute("LoadRequestSize",
                                           "Payload size (bytes) for each LOAD request.",
                                           UintegerValue(64),
@@ -57,6 +57,28 @@ UbLdstThread::~UbLdstThread()
 {
 }
 
+uint32_t UbLdstThread::CalcLength(uint32_t size)
+{
+    // size = 64B * (2 ^ length)
+    if (size <= 64) return 0;
+    size = (size - 1) / 64;
+    int length = 0;
+    while (size  > 0) {
+        size = size >> 1;
+        length++;
+    }
+    return length;
+}
+
+void UbLdstThread::Init()
+{
+    m_loadRspLength = CalcLength(m_storeReqSize);
+    m_storeReqLength = CalcLength(m_loadRspSize);
+    // Reset Size
+    m_loadRspSize = 64 * (1 << m_loadRspLength);
+    m_storeReqSize = 64 * (1 << m_storeReqLength);
+}
+
 void UbLdstThread::SetLoadReqSize(uint32_t size)
 {
     m_loadReqSize = size;
@@ -65,11 +87,13 @@ void UbLdstThread::SetLoadReqSize(uint32_t size)
 void UbLdstThread::SetStoreReqLength(uint32_t length)
 {
     m_storeReqLength = length;
+    m_storeReqSize = 64 * (1 << m_storeReqLength);
 }
 
 void UbLdstThread::SetLoadRspLength(uint32_t length)
 {
     m_loadRspLength = length;
+    m_loadRspSize = 64 * (1 << m_loadRspLength);
 }
 
 void UbLdstThread::PushTaskSegment(Ptr<UbLdstTaskSegment> taskSegment)

@@ -631,14 +631,14 @@ public:
         return m_size > 0 && IsValidPriority(m_priority) && m_src != m_dest;
     }
 
-    bool GetSendStatus() const
+    bool CanSend() const
     {
-        return m_canBeSent;
+        return m_canSend;
     }
 
-    void UpdateSendStatus(bool status)
+    void SetCanSend(bool status)
     {
-        m_canBeSent = status;
+        m_canSend = status;
     }
 
     /**
@@ -672,7 +672,7 @@ private:
     Ipv4Address m_dip = Ipv4Address("0.0.0.0"); // 目的IP地址
 
     // ========== TA层静态信息 (调度时设置，之后不变) ==========
-    bool m_canBeSent = false;
+    bool m_canSend = false;
     uint32_t m_jettyNum;
     uint16_t m_taMsn;      // TA层消息序号 (Message Sequence Number)
     uint32_t m_taSsnStart; // TA层起始分段序号 (Segment Sequence Number)
