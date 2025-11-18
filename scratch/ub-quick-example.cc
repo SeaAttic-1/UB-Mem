@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-utils.h"
+#include "ns3/hbm-bank.h"
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -115,6 +116,7 @@ int main(int argc, char* argv[])
     LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
+    LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
     // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);
     // LogComponentEnable("UbSwitch", LOG_LEVEL_ALL);

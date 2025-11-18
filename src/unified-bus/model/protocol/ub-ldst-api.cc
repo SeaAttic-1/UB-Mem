@@ -159,14 +159,11 @@ void UbLdstApi::OnHBMComplete(void* arg) {
 
     delete arg_new;
 
-    NS_LOG_INFO("Got all info");
-
     Ptr<Packet> ackp;
     uint32_t payloadSize = 0;
     // 收到store数据包
     // Implement HBM related stuff here:
     if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_WRITE)) {
-        NS_LOG_DEBUG("This is a write");
         // Logic for handling store simulation here:
         ackp = Create<Packet>(0);
         caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_TRANSACTION_ACK);
@@ -177,40 +174,17 @@ void UbLdstApi::OnHBMComplete(void* arg) {
         ackp = Create<Packet>(payloadSize);
     }
 
-    NS_LOG_INFO("Header ready");
     uint16_t tassn = cTaHeader.GetIniTaSsn();
-
-    NS_LOG_INFO("Header ready 1");
-
     caTaHeader.SetIniTaSsn(tassn);
-
-    NS_LOG_INFO("Header ready 2");
-
     uint16_t tmp = memHeader.GetScna();
-
-    NS_LOG_INFO("Header ready 3");
-
     memHeader.SetScna(memHeader.GetDcna());
-
-    NS_LOG_INFO("Header ready 4");
-
     memHeader.SetDcna(tmp);
-
-    NS_LOG_INFO("Header ready 5");
-
     ackp->AddHeader(caTaHeader);
-
-    NS_LOG_INFO("Header ready 6");
-
     ackp->AddHeader(memHeader);
-
-    NS_LOG_INFO("Header ready 7");
 
     UbDataLink::GenPacketHeader(ackp, false, true, linkPacketHeader.GetCreditTargetVL(), linkPacketHeader.GetPacketVL(),
                                 linkPacketHeader.GetLoadBalanceMode(), linkPacketHeader.GetRoutingPolicy(),
                                 UbDatalinkHeaderConfig::PACKET_UB_MEM);
-
-    NS_LOG_INFO("Gened header");
 
     RoutingKey rtKey;
     rtKey.sip = utils::Cna16ToIp(memHeader.GetScna()).Get();
@@ -221,20 +195,14 @@ void UbLdstApi::OnHBMComplete(void* arg) {
     rtKey.useShortestPath = linkPacketHeader.GetRoutingPolicy();
     rtKey.usePacketSpray = linkPacketHeader.GetLoadBalanceMode();
 
-    NS_LOG_INFO("got routing key");
-    
     auto node = NodeList::GetNode(m_nodeId);
     auto sw = node->GetObject<UbSwitch>();
-
-    NS_LOG_INFO("Got switch");
 
     int destPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
     if (destPort < 0) {
         // Route failed
         NS_ASSERT_MSG(0, "The route cannot be found");
     }
-
-    NS_LOG_INFO("got routing info");
 
     sw->AddPktToVoq(ackp, destPort, linkPacketHeader.GetPacketVL(), destPort);
 
@@ -280,10 +248,12 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     uint32_t payloadSize = 0;
     bool isWrite = false;
     if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_WRITE)) {
-        NS_LOG_DEBUG("This is a write 1");
         // Logic for handling store simulation here:
         packet->RemoveHeader(cMAETah);
         payloadSize = packet->GetSize(); // Total bytes to store as data
+
+        NS_LOG_DEBUG("Received " << payloadSize << " bytes to store");
+
         isWrite = true;
         // ackp = Create<Packet>(0);
         caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_TRANSACTION_ACK);
@@ -317,7 +287,6 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     } // For all the previous tasks, do nothing.
 
     hbm_controller->SendRequest(num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
-    NS_LOG_INFO("Sent a packet");
     // Only when processing the final segments, pass in real callback func as well as arg ptr;
     /*
     uint16_t tassn = cTaHeader.GetIniTaSsn();

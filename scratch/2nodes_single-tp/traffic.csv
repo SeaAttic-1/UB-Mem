@@ -1,3 +1,3 @@
 taskId,sourceNode,destNode,dataSize(Byte),opType,priority,delay,phaseId,dependOnPhases
-0,0,1,128,MEM_STORE,7,10ns,0,
+0,0,1,1024,MEM_STORE,7,10ns,0,
 
