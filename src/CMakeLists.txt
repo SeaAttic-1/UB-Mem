@@ -13,7 +13,11 @@ endif()
 foreach(libname ${libs})
   if(EXISTS ${PROJECT_SOURCE_DIR}/src/${libname}/CMakeLists.txt)
     message(STATUS "Processing src/${libname}")
-    add_subdirectory(${libname})
+    if (${libname} STREQUAL "unified-bus-mem")
+      message("skipped mem for now")
+    else()
+      add_subdirectory(${libname})
+    endif()
   else()
     message(${HIGHLIGHTED_STATUS}
             "Skipping src/${libname}: it does not contain a CMakeLists.txt file"
