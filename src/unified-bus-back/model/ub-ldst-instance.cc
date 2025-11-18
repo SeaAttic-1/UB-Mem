@@ -5,6 +5,8 @@
 #include "ns3/hbm-helper.h"
 #include "ub-ldst-instance.h"
 
+#include <random>
+
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
 

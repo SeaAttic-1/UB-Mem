@@ -18,7 +18,7 @@ public:
   virtual ~HBMController();
 
   void InitializeBanks(uint32_t numBanks);
-  void SendRequest(uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void> cb);
+  void SendRequest(uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg);
 
 private:
   std::vector<Ptr<HBMBank>> m_banks;

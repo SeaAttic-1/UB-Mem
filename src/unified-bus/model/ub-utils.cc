@@ -679,8 +679,8 @@ TpConnectionManager UbUtils::CreateTp(const string &filename)
         }
         Connection conn;
         ParseLine(line, conn);
-        Ptr<Node> sN = NodeList::GetNode(conn.node1);
-        Ptr<Node> rN = NodeList::GetNode(conn.node2);
+        Ptr<Node> sN = NodeList::GetNode(conn.node1); //source node
+        Ptr<Node> rN = NodeList::GetNode(conn.node2);// remote node
 
         Ptr<ns3::UbController> sendCtrl = sN->GetObject<ns3::UbController>();
         Ptr<ns3::UbController> receiveCtrl = rN->GetObject<ns3::UbController>();

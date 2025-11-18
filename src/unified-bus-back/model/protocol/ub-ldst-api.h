@@ -18,6 +18,16 @@ public:
     UbLdstApi();
     virtual ~UbLdstApi();
 
+private:
+    class PacketContext { //context for holding internal states
+        uint32_t count;
+        UbDatalinkPacketHeader linkPacketHeader;
+        UbCompactAckTransactionHeader caTaHeader;
+        UbCna16NetworkHeader memHeader;
+        UbCompactTransactionHeader cTaHeader;
+        UbCompactMAExtTah cMAETah;
+    };
+
 public:
     void SetNodeId(uint32_t nodeId);
     void RecvResponse(Ptr<Packet> packet);
@@ -25,6 +35,7 @@ public:
     void SetUseShortestPaths(bool useShortestPaths);
     void RecvDataPacket(Ptr<Packet> packet);
     void LdstProcess(Ptr<UbLdstTaskSegment> taskSegment);
+    void OnHBMComplete(UbLdstApi::PacketContext* arg);
 
 private:
     void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet);
@@ -38,6 +49,8 @@ private:
                         PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
     TracedCallback<uint32_t, uint32_t, uint32_t,
                    PacketType, uint32_t, uint32_t, UbPacketTraceTag> m_ldstRecvNotify;
+
+    
 };
 } // namespace ns3
 

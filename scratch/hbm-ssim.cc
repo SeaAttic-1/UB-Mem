@@ -15,9 +15,9 @@ main(int argc, char** argv)
   HBMHelper helper;
   Ptr<HBMController> controller = helper.Create(4);
 
-  controller->SendRequest(1, 0x1000, 128, 1, true, [](){});
-  controller->SendRequest(2, 0x1000, 256, 1, false, [](){});
-  controller->SendRequest(3, 0x2000, 64, 2, true, [](){});
+  controller->SendRequest(1, 0x1000, 128, 1, true, [](void* p){}, nullptr);
+  controller->SendRequest(2, 0x1000, 256, 1, false, [](void* p){}, nullptr);
+  controller->SendRequest(3, 0x2000, 64, 2, true, [](void* p){}, nullptr);
 
   Simulator::Run();
   Simulator::Destroy();

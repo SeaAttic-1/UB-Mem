@@ -7,6 +7,7 @@
 #include "ns3/event-id.h"
 #include "ns3/log.h"
 #include "ns3/nstime.h"
+#include "ns3/callback.h"
 #include <queue>
 
 namespace ns3 {
@@ -16,7 +17,9 @@ struct MemoryRequest {
     uint32_t size;     // Size of the request (in bytes)  
     uint32_t bankId;   // The bank that the request is intended for
     bool isWrite;// Whether it's a write request or a read request
-    uint32_t requestId;
+    uint32_t requestId; // An unused field
+    Callback<void, void*> cb; // Callback function used to notify the receiver
+    void* arg; // argument for the Callback func
 };
 
 class HBMBank : public Object
@@ -27,7 +30,7 @@ public:
   HBMBank();
   virtual ~HBMBank();
 
-  void ReceiveRequest(MemoryRequest request, Callback<void> cb);
+  void ReceiveRequest(MemoryRequest request);
   void ProcessNext();
 
 private:
@@ -36,7 +39,7 @@ private:
   EventId m_processEvent;
   Time m_processDelay;
 
-  void FinishProcessing(MemoryRequest request, Callback<void> cb);
+  void FinishProcessing(MemoryRequest request);
 };
 
 } // namespace ns3

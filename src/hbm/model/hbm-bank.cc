@@ -35,7 +35,7 @@ HBMBank::~HBMBank()
 }
 
 void
-HBMBank::ReceiveRequest(MemoryRequest request, Callback<void> cb)
+HBMBank::ReceiveRequest(MemoryRequest request)
 {
   NS_LOG_FUNCTION(this << request.requestId);
 
@@ -44,26 +44,27 @@ HBMBank::ReceiveRequest(MemoryRequest request, Callback<void> cb)
       m_busy = true;
       m_processEvent = Simulator::Schedule(m_processDelay,
                                            &HBMBank::FinishProcessing,
-                                           this, request, cb);
+                                           this, request);
     }
   else
     {
       request_q.push(request);
       NS_LOG_INFO("Request " << request.requestId << " queued at " << Simulator::Now().GetNanoSeconds() << " ns");
+      NS_LOG_INFO("Congestion at Bank " << request.bankId << ", Queue length " << request_q.size() );
     }
 }
 
 void
-HBMBank::FinishProcessing(MemoryRequest request, Callback<void> cb)
+HBMBank::FinishProcessing(MemoryRequest request)
 {
   NS_LOG_INFO("HBM Bank processed request " << request.requestId
               << " at " << Simulator::Now().GetNanoSeconds() << " ns");
   m_busy = false;
-  cb();
+  request.cb(request.arg);
   if (!request_q.empty()) {
     MemoryRequest next_request = request_q.front();
     request_q.pop();
-    Simulator::Schedule(m_processDelay, &HBMBank::FinishProcessing, this, next_request, cb);
+    Simulator::Schedule(m_processDelay, &HBMBank::FinishProcessing, this, next_request);
   }
   	
 }

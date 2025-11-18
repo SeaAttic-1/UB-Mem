@@ -140,6 +140,77 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
 /**
  * 接收到一个数据包，调用此函数处理，产生ack
  */
+
+void UbLdstApi::OnHBMComplete(UbLdstApi::PacketContext* arg) {
+    UbDatalinkPacketHeader linkPacketHeader = arg->linkPacketHeader;
+    UbCompactAckTransactionHeader caTaHeader = arg->caTaHeader;
+    UbCna16NetworkHeader memHeader = arg->memHeader;
+    UbCompactTransactionHeader cTaHeader = arg->cTaHeader;
+    UbCompactMAExtTah cMAETah = arg->cMAETah;
+
+     Ptr<Packet> ackp;
+     uint32_t payloadSize = 0;
+    // 收到store数据包
+    // Implement HBM related stuff here:
+    if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_WRITE)) {
+        
+        // Logic for handling store simulation here:
+        ackp = Create<Packet>(0);
+        caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_TRANSACTION_ACK);
+    } else if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_READ)) {
+        caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_READ_RESPONSE);
+        payloadSize = 64 * (1 << (uint32_t)(arg->cMAETah.GetLength()));
+        NS_LOG_DEBUG("[UbLdstApi RecvDataPacket] Load payloadSize: " << payloadSize);
+        ackp = Create<Packet>(payloadSize);
+    }
+    uint16_t tassn = arg->cTaHeader.GetIniTaSsn();
+    arg->caTaHeader.SetIniTaSsn(tassn);
+
+    uint16_t tmp = memHeader.GetScna();
+    memHeader.SetScna(memHeader.GetDcna());
+    memHeader.SetDcna(tmp);
+
+    ackp->AddHeader(caTaHeader);
+    ackp->AddHeader(memHeader);
+    UbDataLink::GenPacketHeader(ackp, false, true, linkPacketHeader.GetCreditTargetVL(), linkPacketHeader.GetPacketVL(),
+                                linkPacketHeader.GetLoadBalanceMode(), linkPacketHeader.GetRoutingPolicy(),
+                                UbDatalinkHeaderConfig::PACKET_UB_MEM);
+
+    RoutingKey rtKey;
+    rtKey.sip = utils::Cna16ToIp(memHeader.GetScna()).Get();
+    rtKey.dip = utils::Cna16ToIp(memHeader.GetDcna()).Get();
+    rtKey.sport = memHeader.GetLb();
+    rtKey.dport = 0;
+    rtKey.priority = linkPacketHeader.GetPacketVL();
+    rtKey.useShortestPath = linkPacketHeader.GetRoutingPolicy();
+    rtKey.usePacketSpray = linkPacketHeader.GetLoadBalanceMode();
+    
+    auto node = NodeList::GetNode(m_nodeId);
+    auto sw = node->GetObject<UbSwitch>();
+
+    int destPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
+    if (destPort < 0) {
+        // Route failed
+        NS_ASSERT_MSG(0, "The route cannot be found");
+    }
+
+    sw->AddPktToVoq(ackp, destPort, linkPacketHeader.GetPacketVL(), destPort);
+
+    NS_LOG_DEBUG("[UbLdstApi RecvDataPacket] Send Ack. NodeId: " << m_nodeId << " PacketUid: "
+                  << ackp->GetUid() << " packetSize: " << ackp->GetSize() << " destPort: " << destPort);
+    if (m_pktTraceEnabled) {
+        UbFlowTag flowTag;
+        packet->PeekPacketTag(flowTag);
+        UbPacketTraceTag traceTag;
+        packet->PeekPacketTag(traceTag);
+        LdstRecvNotify(packet->GetUid(), utils::Cna16ToNodeId(memHeader.GetDcna()),
+                       utils::Cna16ToNodeId(memHeader.GetScna()),
+                       PacketType::PACKET, packet->GetSize(), flowTag.GetFlowId(), traceTag);
+    }
+    Ptr<UbPort> triggerPort = DynamicCast<UbPort>(node->GetDevice(destPort));
+    triggerPort->TriggerTransmit(); // 触发发送
+}
+
 void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
 {
     // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
@@ -161,39 +232,46 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     packet->RemoveHeader(cTaHeader);
     packet->PeekHeader(cMAETah);
 
-    Ptr<Packet> ackp;
+    // Ptr<Packet> ackp;
     // 收到store数据包
     // Implement HBM related stuff here:
+    uint32_t payloadSize = 0;
+    bool isWrite = false;
     if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_WRITE)) {
         
         // Logic for handling store simulation here:
         packet->RemoveHeader(cTaHeader);
-        uint32_t payloadSize = packet->GetSize(); // The total bytes to store
-
-        uint32_t num_of_atmoic = payloadSize / HBM_BANK_ATOMIC_SIZE;
-        if (num_of_atomic == 0) num_of_atomic  = 1;
-        if (num_of_atomic > 32) num_of_atomic = 32; // This just ensures it doesn't hog it too long.
-        
-        auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
-        auto hbm_controller = ldstInst->GetHBMController();
-
-        auto random_bank = ldstInst->GetRandomNumber();
-
-
-        for(int iter = 0; iter < num_of_atomics; iter++)
-        {
-            hbm_controller->SendRequest(iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, true);
-        }
-
-
-        ackp = Create<Packet>(0);
-        caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_TRANSACTION_ACK);
+        payloadSize = packet->GetSize(); // Total bytes to store as data
+        isWrite = true;
+        // ackp = Create<Packet>(0);
+        // caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_TRANSACTION_ACK);
     } else if (cTaHeader.GetTaOpcode() == static_cast<uint8_t>(TaOpcode::TA_OPCODE_READ)) {
-        caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_READ_RESPONSE);
-        uint32_t payloadSize = 64 * (1 << (uint32_t)cMAETah.GetLength());
+        // caTaHeader.SetTaOpcode(TaOpcode::TA_OPCODE_READ_RESPONSE);
+        payloadSize = 64 * (1 << (uint32_t)cMAETah.GetLength());
         NS_LOG_DEBUG("[UbLdstApi RecvDataPacket] Load payloadSize: " << payloadSize);
-        ackp = Create<Packet>(payloadSize);
+        // ackp = Create<Packet>(payloadSize);
     }
+
+    uint32_t num_of_atmoics = payloadSize / HBM_BANK_ATOMIC_SIZE;
+    if (num_of_atomics == 0) num_of_atomic  = 1;
+    if (num_of_atomics > 32) num_of_atomic = 32; // This just ensures it doesn't hog it too long.
+    
+    void* context_ptr = static_cast<void*>(new UbLdstApi::PacketContext() : count(num_of_atmoics), linkPacketHeader(linkPacketHeader), 
+    caTaHeader(caTaHeader), memHeader(memHeader), cTaHeader(cTaHeader), cMAETah(cMAETah));
+
+    auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
+    auto hbm_controller = ldstInst->GetHBMController();
+
+    auto random_bank = ldstInst->GetRandomNumber();
+
+    for(int iter = 0; iter < num_of_atomics-1; iter++)
+    {
+        hbm_controller->SendRequest(iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
+    } // For all the previous tasks, do nothing.
+
+    hbm_controller->SendRequest(num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallBack(&UbLdstApi::OnHBMComplete, this), context_ptr)
+    // Only when processing the final segments, pass in real callback func as well as arg ptr;
+    /*
     uint16_t tassn = cTaHeader.GetIniTaSsn();
     caTaHeader.SetIniTaSsn(tassn);
 
@@ -240,6 +318,9 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     }
     Ptr<UbPort> triggerPort = DynamicCast<UbPort>(node->GetDevice(destPort));
     triggerPort->TriggerTransmit(); // 触发发送
+    */
+
+    
 }
 
 void UbLdstApi::RecvResponse(Ptr<Packet> packet)

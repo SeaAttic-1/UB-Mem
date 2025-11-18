@@ -40,11 +40,11 @@ private:
     std::vector<Ptr<UbLdstThread>> m_threads;
     std::unordered_map<uint32_t, uint32_t> m_taskSegmentCompletedNum;
     std::unordered_map<uint32_t, Ptr<UbLdstTaskSegment>> m_taskSegmentsMap;
-    Ptr<HBMController> m_hbm_controller; // This implements the HBM model
+     // This implements the HBM model
 
     std::mt19937 rng;
     std::uniform_int_distribution<double> dist;
-
+    
     uint32_t m_currentTaskId = 0;
     uint32_t m_threadNum = 0;
     uint32_t m_queuePriority = 0;
@@ -55,6 +55,8 @@ private:
     TracedCallback<uint32_t, uint32_t> m_traceMemTaskStartsNotify;
     TracedCallback<uint32_t, uint32_t> m_traceFirstPacketSendsNotify;
     TracedCallback<uint32_t, uint32_t> m_traceLastPacketSendsNotify;
+
+    Ptr<HBMController> m_hbm_controller;
 }; 
 } 
 

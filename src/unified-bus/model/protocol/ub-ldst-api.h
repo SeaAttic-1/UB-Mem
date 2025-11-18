@@ -8,15 +8,33 @@
 #include "ns3/ub-network-address.h"
 #include "ns3/node-list.h"
 #include "ns3/ub-tag.h"
+#include "ns3/ub-header.h"
+
 namespace ns3 {
 constexpr int MAX_LB = 255;
 constexpr int MIN_LB = 0;
 class UbController;
+class UbCna16NetworkHeader;
+class UbDatalinkPacketHeader;
+class UbCompactAckTransactionHeader;
+class UbCompactTransactionHeader;
+class UbCompactMAExtTah;
+
 class UbLdstApi : public Object {
+
 public:
     static TypeId GetTypeId(void);
     UbLdstApi();
     virtual ~UbLdstApi();
+
+private:
+    struct PacketContext { //context for holding internal states
+        UbDatalinkPacketHeader linkPacketHeader;
+        UbCompactAckTransactionHeader caTaHeader;
+        UbCna16NetworkHeader memHeader;
+        UbCompactTransactionHeader cTaHeader;
+        UbCompactMAExtTah cMAETah;
+    };
 
 public:
     void SetNodeId(uint32_t nodeId);
@@ -25,6 +43,7 @@ public:
     void SetUseShortestPaths(bool useShortestPaths);
     void RecvDataPacket(Ptr<Packet> packet);
     void LdstProcess(Ptr<UbLdstTaskSegment> taskSegment);
+    void OnHBMComplete(void* arg);
 
 private:
     void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet);
@@ -38,6 +57,8 @@ private:
                         PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
     TracedCallback<uint32_t, uint32_t, uint32_t,
                    PacketType, uint32_t, uint32_t, UbPacketTraceTag> m_ldstRecvNotify;
+
+    
 };
 } // namespace ns3
 

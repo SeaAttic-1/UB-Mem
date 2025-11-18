@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-ldst-instance.h"
 #include "ns3/ub-ldst-thread.h"
+#include "ns3/hbm-bank.h"
+#include "ns3/hbm-helper.h"
+#include "ub-ldst-instance.h"
+
+#include <random>
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
@@ -45,7 +50,7 @@ TypeId UbLdstInstance::GetTypeId(void)
     return tid;
 }
 
-UbLdstInstance::UbLdstInstance()
+UbLdstInstance::UbLdstInstance() : rng(std::random_device()()), dist(0, 7) // HBM with 1 die and 8 banks
 {
 }
 
@@ -132,6 +137,15 @@ Ptr<UbLdstThread> UbLdstInstance::GetLdstThread(uint32_t threadId)
         NS_ASSERT_MSG(0, "Invalid threadId! Cannot Get Ldst Thread.");
     }
     return m_threads[threadId];
+}
+
+Ptr<HBMController> UbLdstInstance::GetHBMController() {
+    return m_hbm_controller;
+}
+
+uint32_t UbLdstInstance::GetRandomNumber()
+{
+    return dist(rng);
 }
 
 void UbLdstInstance::LastPacketACKsNotify(uint32_t nodeId, uint32_t taskId)
