@@ -17,7 +17,21 @@ The same requirements as the original UnifiedBus simulator
 
 ## Running Tests
 
-Please refer to the original UB quick-start doc. All the provided examples can be used.  
+Before testing, remember to first configure and build the project:
+
+```
+git submodule update --init --recursive
+./ns3 configure
+./ns3 build
+```
+
+Then you can run the simple test case hbm-ssim to test out the HBM model:
+
+```
+./ns3 run scratch/hbm-ssim
+```
+
+For running the network simulation, please refer to the original UB quick-start doc. All the provided examples can be used.  
 Please note that the traffic type should not be URMA_WRITE or URMA_READ, because the above modifications are only for ld/st simulations;
 
 ## Remarks
