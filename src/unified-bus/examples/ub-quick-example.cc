@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include "ns3/ub-utils.h"
+#include "ns3/hbm-controller.h"
+#include "ns3/hbm-bank.h"
+#include "ns3/hbm-helper.h"
 #include <chrono>
 
 using namespace utils;
