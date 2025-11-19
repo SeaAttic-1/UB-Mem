@@ -2,7 +2,7 @@
 
 ## Requirements
 
-The same requirements as the original UnifiedBus simulator
+The same requirements as the original UnifiedBus simulator. It is recommended to open up a python virtual environment, and clone the repo into it. Make sure to install all the python dependencies by following the original UnifiedBus quick start guide.   
 
 ## Functionalities Added
 
