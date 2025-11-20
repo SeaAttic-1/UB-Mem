@@ -73,6 +73,7 @@ build_lib(
   LIBRARIES_TO_LINK ${libnetwork}
                     ${libinternet}
                     ${mpi_libraries}
+					hbm
   TEST_SOURCES test/ub-test.cc
 )
 

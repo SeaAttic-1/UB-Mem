@@ -4,8 +4,9 @@
 #include "ns3/hbm-bank.h"
 #include "ns3/hbm-helper.h"
 #include "ub-ldst-instance.h"
+#include "ns3/random-variable-stream.h"
 
-#include <random>
+//#define SIM_HBM_INTERNAL
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
@@ -50,7 +51,7 @@ TypeId UbLdstInstance::GetTypeId(void)
     return tid;
 }
 
-UbLdstInstance::UbLdstInstance() : rng(std::random_device()()), dist(0, 7) // HBM with 1 die and 8 banks
+UbLdstInstance::UbLdstInstance() 
 {
 }
 
@@ -62,6 +63,10 @@ void UbLdstInstance::Init(uint32_t nodeId)
 {
     for (uint32_t threadId = 0; threadId < m_threadNum; threadId++) {
         auto ldstThread = CreateObject<UbLdstThread>();
+        
+        #ifdef SIM_HBM_INTERNAL
+            ldstThread->DoInitialize();
+        #endif
         ldstThread->SetNode(nodeId);
         ldstThread->SetThreadId(threadId);
         m_threads.push_back(ldstThread);
@@ -137,15 +142,6 @@ Ptr<UbLdstThread> UbLdstInstance::GetLdstThread(uint32_t threadId)
         NS_ASSERT_MSG(0, "Invalid threadId! Cannot Get Ldst Thread.");
     }
     return m_threads[threadId];
-}
-
-Ptr<HBMController> UbLdstInstance::GetHBMController() {
-    return m_hbm_controller;
-}
-
-uint32_t UbLdstInstance::GetRandomNumber()
-{
-    return dist(rng);
 }
 
 void UbLdstInstance::LastPacketACKsNotify(uint32_t nodeId, uint32_t taskId)

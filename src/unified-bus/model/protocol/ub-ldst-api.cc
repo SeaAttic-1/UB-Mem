@@ -6,7 +6,6 @@
 #include "ns3/ub-controller.h"
 #include "ns3/ub-ldst-api.h"
 #include "ns3/hbm-bank.h"
-#include <random>
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstApi");
@@ -77,6 +76,18 @@ void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packe
 
     auto node = NodeList::GetNode(m_nodeId);
     auto sw = node->GetObject<UbSwitch>();
+
+    // Please note that although sw and the class name UbSwitch seem to indicate this is a
+    // router or switch, it is not
+
+    // A UbSwitch object is internal to every node. It handles packet transport, forwarding, etc...
+    // It also maintains multiple ports
+    // In the figures of the official UB document, an XPU connects to the fabric using a UB Switch
+    // In this sense, A UB Switch is akin to an I/O Die.
+    // Instantiating multiple UB Switch objects for a single node is therefore good for modeling multiple I/O Dies
+    // Of course, the scheduling algorithm must be carefully implemented
+
+
     int outPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
     if (outPort < 0) {
         // Route failed
@@ -144,7 +155,6 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
 
 void UbLdstApi::OnHBMComplete(void* arg) {
     
-    NS_LOG_INFO("Processing new packet after HBM");
     if (arg == nullptr) {
         NS_LOG_ERROR("Error: got nullptr");
     }
@@ -277,9 +287,9 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     void* context_ptr = static_cast<void*>(temp_ptr);
 
     auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
-    auto hbm_controller = ldstInst->GetHBMController();
-
-    auto random_bank = ldstInst->GetRandomNumber();
+    auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<HBMController>();
+    auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+    auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
 
     for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
     {

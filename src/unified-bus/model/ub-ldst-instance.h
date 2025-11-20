@@ -8,7 +8,7 @@
 #include "ns3/node.h"
 #include "ns3/hbm-helper.h"
 #include "ns3/hbm-controller.h"
-#include <random>
+
 namespace ns3 {
 class UbLdstThread;
 class HBMController;
@@ -23,11 +23,8 @@ public:
     void HandleLdstTask(uint32_t src, uint32_t dest, uint32_t size, uint32_t taskId,
                         UbMemOperationType type, const std::vector<uint32_t> &threadIds, uint64_t address);
 
-
-    uint32_t GetRandomNumber(); // This is for simulating a random bank being selected
     void SetClientCallback(Callback<void, uint32_t> cb);
     Ptr<UbLdstThread> GetLdstThread(uint32_t threadId);
-    Ptr<HBMController> GetHBMController();
     Callback<void, uint32_t> FinishCallback;
     void OnRecvAck(uint32_t taskSegmentId);
     void OnTaskSegmentCompleted(uint32_t taskId);
@@ -45,9 +42,6 @@ private:
      
     Ptr<HBMController> m_hbm_controller = HBMHelper().Create(8);
     // This implements the HBM model
-
-    std::mt19937 rng ;
-    std::uniform_int_distribution<int> dist;
     
     uint32_t m_currentTaskId = 0;
     uint32_t m_threadNum = 0;

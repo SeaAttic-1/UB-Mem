@@ -9,6 +9,8 @@
 #include "ns3/simulator.h"
 #include "ns3/ub-controller.h"
 #include "ns3/ub-datatype.h"
+#include "ns3/hbm-controller.h"
+#include "ns3/hbm-bank.h"
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstThread");
@@ -55,6 +57,11 @@ UbLdstThread::UbLdstThread()
 
 UbLdstThread::~UbLdstThread()
 {
+}
+
+void UbLdstThread::DoInitialize(void) {
+    Simulator::ScheduleNow(&UbLdstThread::InternalHBMAccess, this);
+    Object::DoInitialize();
 }
 
 uint32_t UbLdstThread::CalcLength(uint32_t size)
@@ -164,6 +171,37 @@ void UbLdstThread::HandleStoreTask()
         m_storeOutstanding--;
         ldstapi->LdstProcess(taskSegment);
     }
+}
+
+uint32_t UbLdstThread::GetHBMIntensity(void) {
+    return this->m_hbm_intensity;
+}
+
+void UbLdstThread::InternalHBMAccess(void) {
+    
+    auto node = NodeList::GetNode(m_nodeId);
+    if (node->GetObject<UbSwitch>()->GetNodeType() != UB_DEVICE)
+        return;
+
+    NS_LOG_DEBUG("Node " << m_nodeId << " makes 2 HBM access at " << Simulator::Now().GetNanoSeconds());
+
+    
+    auto rng = node->GetObject<UniformRandomVariable>();
+    auto hbm = node->GetObject<HBMController>();
+
+    auto jitter = rng->GetInteger(0, 10);
+    bool positive = rng->GetInteger(0, 1) == 0;
+
+    auto hbm_intensity = this->GetHBMIntensity();
+
+    // Very simple logic here, can expand to get more realistic internal traffic patterns
+    for(uint32_t i = 0; i < hbm_intensity; i++) {
+        auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
+        hbm->SendRequest(i, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, false, [](void* p){}, nullptr);
+    }
+
+    Simulator::Schedule(NanoSeconds(positive ? this->m_fire_period + jitter : this->m_fire_period - jitter),
+    &UbLdstThread::InternalHBMAccess, this);
 }
 
 void UbLdstThread::SetNode(uint32_t nodeId)

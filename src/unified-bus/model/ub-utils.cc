@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include "ub-utils.h"
+#include "ns3/hbm-helper.h"
+#include "ns3/random-variable-stream.h"
 
 namespace utils {
 
@@ -508,6 +510,7 @@ void UbUtils::CreateNode(const string &filename)
         int portNum = stoi(portNumStr);
         Ptr<Node> node = CreateObject<Node>();
         Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
+
         node->AggregateObject(sw);
         Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
         node->AggregateObject(ldst);
@@ -518,6 +521,12 @@ void UbUtils::CreateNode(const string &filename)
             ubCtrl->CreateUbFunction();
             ubCtrl->CreateUbTransaction();
             sw->SetNodeType(UB_DEVICE);
+
+            Ptr<HBMController> hbm = HBMHelper().Create(8);
+            Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
+            node->AggregateObject(rng);
+            node->AggregateObject(hbm);
+            
         } else if (nodeTypeStr == "SWITCH") {
             sw->SetNodeType(UB_SWITCH);
         } else {

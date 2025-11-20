@@ -57,7 +57,7 @@ HBMBank::ReceiveRequest(MemoryRequest request)
 void
 HBMBank::FinishProcessing(MemoryRequest request)
 {
-  NS_LOG_INFO("HBM Bank processed request " << request.requestId
+  NS_LOG_INFO("HBM Bank " << request.bankId << " processed request " << request.requestId
               << " at " << Simulator::Now().GetNanoSeconds() << " ns");
   m_busy = false;
   request.cb(request.arg);

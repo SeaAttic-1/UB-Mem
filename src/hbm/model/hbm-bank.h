@@ -1,7 +1,8 @@
 #ifndef HBM_BANK_H
 #define HBM_BANK_H
 
-#define HBM_BANK_ATOMIC_SIZE 64
+#define HBM_BANK_ATOMIC_SIZE 32
+#define HBM_BANK_PER_DIE 8
 
 #include "ns3/object.h"
 #include "ns3/event-id.h"
