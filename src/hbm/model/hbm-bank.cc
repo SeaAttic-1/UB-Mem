@@ -41,8 +41,9 @@ HBMBank::ReceiveRequest(MemoryRequest request)
 
   if (!m_busy)
     {
+      uint32_t bus_delay = request.size / HBM_BUS_BANK_BANDWIDTH;
       m_busy = true;
-      m_processEvent = Simulator::Schedule(m_processDelay,
+      m_processEvent = Simulator::Schedule(m_processDelay + bus_delay,
                                            &HBMBank::FinishProcessing,
                                            this, request);
     }
@@ -64,7 +65,8 @@ HBMBank::FinishProcessing(MemoryRequest request)
   if (!request_q.empty()) {
     MemoryRequest next_request = request_q.front();
     request_q.pop();
-    Simulator::Schedule(m_processDelay, &HBMBank::FinishProcessing, this, next_request);
+    uint32_t bus_delay = request.size / HBM_BUS_BANK_BANDWIDTH;
+    Simulator::Schedule(m_processDelay + bus_delay, &HBMBank::FinishProcessing, this, next_request);
   }
   	
 }

@@ -3,6 +3,12 @@
 
 #define HBM_BANK_ATOMIC_SIZE 32
 #define HBM_BANK_PER_DIE 8
+#define HBM_BUS_BANDWIDTH_BITS 256 * 1000 * 1000 * 1000
+#define HBM_BUS_BANDWIDTH HBM_BUS_BANDWIDTH_BITS / 8
+#define HBM_BUS_BANK_BANDWIDTH HBM_BUS_BANDWIDTH / HBM_BANK_PER_DIE
+// Usually bus transfer takes less than 1 nanoseconds, so doesn't quite matter.
+// The major latencies are brought by mem row access 
+// The macros are still defined if you need to tweak it though
 
 #include "ns3/object.h"
 #include "ns3/event-id.h"
