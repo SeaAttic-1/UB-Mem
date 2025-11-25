@@ -6,6 +6,7 @@
 #include "ns3/ub-controller.h"
 #include "ns3/ub-ldst-api.h"
 #include "ns3/hbm-bank.h"
+#include "ns3/IO_die_manager.h"
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstApi");
@@ -63,7 +64,7 @@ void UbLdstApi::InitializeLbSalts(uint32_t die_count) {
 void UbLdstApi::LdstProcess(Ptr<UbLdstTaskSegment> taskSegment)
 {
     // Select an IO Die for sending this task segment
-    auto sw_info = NodeList::GetNode()->GetObject<IO_Die_Manager>()->GetIODie();
+    auto sw_info = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetIODie();
     uint32_t io_die_id = sw_info.io_die_id;
     // genpacket
     auto packet = GenDataPacket(taskSegment, io_die_id);

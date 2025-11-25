@@ -434,7 +434,7 @@ void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die
     if (m_congestionCtrlEnabled) {
         // Modified uint32_t ndevice = node->GetNDevices();
         // uint32_t ndevice = sw->GetIfIndex();
-        uint32_t ndevice = node->Get
+        uint32_t ndevice = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
         for (uint32_t i = 0; i < ndevice; i++) {
             m_txSize.push_back(0);
             m_cc.push_back(0);

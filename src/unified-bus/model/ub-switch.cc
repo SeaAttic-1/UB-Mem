@@ -8,6 +8,10 @@
 #include "ns3/ub-port.h"
 #include "ns3/ub-switch.h"
 
+// Modified:
+// Other files may also contain this additional header
+#include "ns3/IO_die_manager.h"
+
 namespace ns3 {
 NS_OBJECT_ENSURE_REGISTERED(UbSwitch);
 NS_LOG_COMPONENT_DEFINE("UbSwitch");
@@ -51,6 +55,7 @@ void UbSwitch::Init()
     // alg init
     m_allocator = CreateObject<UbRoundRobinAllocator>();
     m_allocator->SetNodeId(node->GetId());
+    m_allocator->SetIODieId(m_io_die_id);
     m_allocator->Init();
     VoqInit();
     AddVoqIntoAlgroithm();

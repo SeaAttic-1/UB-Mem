@@ -42,6 +42,7 @@ build_lib(
 	model/protocol/ub-flow-control.cc
 	model/ub-queue-manager.cc
 	model/ub-fault.cc
+	model/IO_die_manager.cc
   HEADER_FILES
     ${mpi_headers}
 	model/ub-traffic-gen.h
@@ -70,6 +71,7 @@ build_lib(
 	model/ub-queue-manager.h
 	model/ub-tag.h
 	model/ub-fault.h
+	model/IO_die_manager.h
   LIBRARIES_TO_LINK ${libnetwork}
                     ${libinternet}
                     ${mpi_libraries}

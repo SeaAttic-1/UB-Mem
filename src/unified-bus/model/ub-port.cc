@@ -5,6 +5,7 @@
 #include "ns3/ub-network-address.h"
 #include "ns3/ub-caqm.h"
 #include "ns3/ub-tag.h"
+#include "ns3/IO_die_manager.h"
 using namespace utils;
 
 namespace ns3 {
@@ -219,10 +220,10 @@ void UbPort::CreateAndInitFc(const std::string& type)
         auto flowControl = DynamicCast<UbCbfc>(m_flowControl);
 
         //Modified:
-        uint32_t io_die_id = 
 
         flowControl->Init(m_cbfcFlitLen, m_cbfcFlitsPerCell, m_cbfcRetCellGrainDataPacket,
-            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNode()->GetId(), m_portId);
+            m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNode()->GetId(), m_portId, m_io_die_id);
+
         NS_LOG_DEBUG("[UbPort CreateAndInitFc] flowControl Cbfc Init");
     } else if (type == "PFC") {
         m_flowControl = CreateObject<UbPfc>();
@@ -231,7 +232,7 @@ void UbPort::CreateAndInitFc(const std::string& type)
             NS_LOG_WARN(this);
         }
         auto flowControl = DynamicCast<UbPfc>(m_flowControl);
-        flowControl->Init(m_pfcUpThld, m_pfcLowThld, GetNode()->GetId(), m_portId);
+        flowControl->Init(m_pfcUpThld, m_pfcLowThld, GetNode()->GetId(), m_portId, m_io_die_id);
         IntegerValue val;
         g_ub_vl_num.GetValue(val);
         int ubVlNum = val.Get();
@@ -271,6 +272,14 @@ void UbPort::TransmitComplete()
     m_currentInPortId = 0;
     m_currentPriority = 0;
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, this);
+}
+
+void UbPort::SetIODieId(uint32_t io_die_id) {
+    m_io_die_id = io_die_id;
+}
+
+uint32_t UbPort::GetIODieId(void) {
+    return m_io_die_id;
 }
 
 void UbPort::DequeuePacket(void)

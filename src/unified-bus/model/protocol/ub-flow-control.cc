@@ -3,6 +3,7 @@
 #include "ns3/ub-link.h"
 #include "ns3/log.h"
 #include "ns3/ub-network-address.h"
+#include "ns3/IO_die_manager.h"
 using namespace utils;
 
 namespace ns3 {
@@ -406,7 +407,11 @@ void UbPfc::SendPfc(Ptr<Packet> pfcPacket, uint32_t targetPortId)
     Ptr<Node> node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
 
-    node->GetObject<UbSwitch>()->AddPktToVoq(pfcPacket, targetPortId, 0, targetPortId);
+    // Modified:
+    //node->GetObject<UbSwitch>()->AddPktToVoq(pfcPacket, targetPortId, 0, targetPortId);
+    auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
+    sw->AddPktToVoq(pfcPacket, targetPortId, 0, targetPortId);
+
     auto flowControl = DynamicCast<UbPfc>(port->m_flowControl);
     flowControl->m_pfcStatus->m_pfcSndCnt++;
 
@@ -429,7 +434,10 @@ Ptr<Packet> UbPfc::CheckPfcThreshold(Ptr<Packet> p, uint32_t portId)
     g_ub_vl_num.GetValue(val);
     int ubVlNum = val.Get();
     for (int pri = 0; pri < ubVlNum; pri++) {
-        auto queueManager = node->GetObject<UbSwitch>()->GetQueueManager();
+        // Modified:
+        // auto queueManager = node->GetObject<UbSwitch>()->GetQueueManager();
+        auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
+        auto queueManager = sw->GetQueueManager();
         if (queueManager->GetIngressUsed(portId, pri) < lo_thresh) {
             NS_LOG_DEBUG("ingressBuf[ " << pri << " ]: " << queueManager->GetIngressUsed(portId, pri)
                          << " < lo_thresh: " << lo_thresh << " m_pfcSndCredits: "

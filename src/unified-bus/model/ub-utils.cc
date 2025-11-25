@@ -438,12 +438,18 @@ void UbUtils::CreateTopo(const string &filename)
     }
 
     for (auto it = NodeList::Begin(); it != NodeList::End(); ++it) {
+        // Modified:
+        /*
         Ptr<Node> node = *it;
         Ptr<UbCongestionControl> congestionCtrl = node->GetObject<ns3::UbSwitch>()->GetCongestionCtrl();
         if (congestionCtrl->GetCongestionAlgo() == CAQM) {
             Ptr<UbSwitchCaqm> swCaqm = DynamicCast<UbSwitchCaqm>(congestionCtrl);
             swCaqm->ResetLocalCc();
         }
+        */
+        Ptr<Node> node = *it;
+        node->GetObject<IO_Die_Manager>()->StartCongestionControl();
+        
     }
     file.close();
 }
@@ -496,7 +502,7 @@ void UbUtils::CreateNode(const string &filename)
         // Modified:
         // getline(ss, forwardDelay);
         getline(ss, forwardDelay, ',');
-        getline(ss, IODieCount)
+        getline(ss, IODieCount);
 
         NodeEle nodeEle = {};
         nodeEle.nodeIdStr = nodeIdStr;
@@ -520,7 +526,7 @@ void UbUtils::CreateNode(const string &filename)
         //Modified:
         string IODieCountStr = it.second.IODieCountStr;
         uint32_t io_die_count = IO_DIE_PER_NODE; 
-        if (!IODieCountStr)
+        if (!IODieCountStr.empty())
             io_die_count = static_cast<uint32_t>(stoi(IODieCountStr));
 
         int portNum = stoi(portNumStr);
@@ -639,6 +645,7 @@ void UbUtils::AddRoutingTable(const string &filename)
             rtTable[node_id][ip_nodePort.Get()][metrics[i]].push_back(outports[i]);
         }
     }
+    /*
     for (auto &nodert : rtTable) {
         auto rt = NodeList::GetNode(nodert.first)->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
         for (auto &destiprow : nodert.second) {
@@ -654,6 +661,7 @@ void UbUtils::AddRoutingTable(const string &filename)
             }
         }
     }
+    */
     file.close();
 }
 
@@ -856,8 +864,16 @@ void UbUtils::TopoTraceConnect()
 
         Ptr<Node> node = NodeList::GetNode(i);
         Ptr<UbController> ubCtrl = node->GetObject<ns3::UbController>();
-        Ptr<UbSwitch> sw = node->GetObject<ns3::UbSwitch>();
-        sw->TraceConnectWithoutContext("LastPacketTraversesNotify", MakeCallback(SwitchLastPacketTraversesNotify));
+
+        // Modified: 
+        // Ptr<UbSwitch> sw = node->GetObject<ns3::UbSwitch>();
+        // sw->TraceConnectWithoutContext("LastPacketTraversesNotify", MakeCallback(SwitchLastPacketTraversesNotify));
+
+        for(uint32_t i = 0; i < node->GetObject<IO_Die_Manager>()->GetIODieCount(); i++) {
+            Ptr<UbSwitch> sw = node->GetObject<IO_Die_Manager>()->GetIODieById(i);
+            sw->TraceConnectWithoutContext("LastPacketTraversesNotify", MakeCallback(SwitchLastPacketTraversesNotify));
+        }
+
         std::map<uint32_t, Ptr<UbTransportChannel>> tpnMap;
         if (ubCtrl) {
             tpnMap = ubCtrl->GetTpnMap();

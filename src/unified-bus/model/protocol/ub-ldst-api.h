@@ -47,7 +47,7 @@ public:
     void InitializeLbSalts(uint32_t die_count);
 
 private:
-    void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet);
+    void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet, uint32_t io_die_id);
     Ptr<Packet> GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_t io_die_id);
     uint32_t m_nodeId = 0;
     std::vector<uint32_t> m_lbHashSalts;

@@ -2,6 +2,7 @@
 #include "ns3/ub-fault.h"
 #include "ns3/node-list.h"
 #include "ns3/node.h"
+#include "ns3/IO_die_manager.h"
 using namespace std;
 using namespace utils;
 namespace ns3 {
@@ -306,7 +307,12 @@ int UbFault::FaultDiagnosis(Ptr<Packet> packet, uint32_t nodeId, uint32_t portId
 {
     uint64_t packetSize = GetPacketSize(packet);
     Ptr<Node> node = NodeList::GetNode(nodeId);
-    Ptr<UbSwitch> retrieved_sw = node->GetObject<UbSwitch>();
+    // Modified:
+    // Ptr<UbSwitch> retrieved_sw = node->GetObject<UbSwitch>();
+    uint32_t port_per_io_die = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+    uint32_t io_die_id = portId % port_per_io_die;
+    Ptr<UbSwitch> retrieved_sw = node->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id);
+
     UbFlowTag flowTag;
     packet->PeekPacketTag(flowTag);
     uint32_t taskId = flowTag.GetFlowId();

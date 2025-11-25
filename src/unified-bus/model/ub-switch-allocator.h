@@ -29,6 +29,8 @@ public:
     virtual void TriggerAllocator(Ptr<UbPort> outPort);
     virtual void Init();
     void SetNodeId(uint32_t nodeId) {m_nodeId = nodeId;}
+    void SetIODieId(uint32_t io_die_id) {m_io_die_id = io_die_id;}
+    uint32_t GetIODieId(void) {return m_io_die_id;}
     void RegisterUbIngressQueue(Ptr<UbIngressQueue> ingressQueue, uint32_t outPort, uint32_t priority);
     void RegisterEgressStauts(uint32_t portsNum);
     void SetEgressStatus(uint32_t portId, bool status);
@@ -38,6 +40,7 @@ public:
 protected:
     Time m_allocationTime;
     uint32_t m_nodeId;
+    uint32_t m_io_die_id;
     IngressSource_t m_igsrc;
     EgressStatus_t m_egStatus;
 };

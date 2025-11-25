@@ -4,6 +4,7 @@
 #include "ns3/ub-port.h"
 #include "protocol/ub-routing-process.h"
 #include "ub-queue-manager.h"
+#include "ns3/IO_die_manager.h"
 
 namespace ns3 {
 
@@ -76,8 +77,10 @@ void UbRoundRobinAllocator::Init()
     auto node = NodeList::GetNode(m_nodeId);
     // Modified:
     // uint32_t portsNum = node->GetNDevices();
+    // auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
     uint32_t portsNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
-    auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
+    auto vlNum = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetVLNum();
+
     m_rrIdx.resize(portsNum);
     for (auto &v: m_rrIdx) {
         v.resize(vlNum, 0);
@@ -139,7 +142,11 @@ Ptr<UbIngressQueue> UbRoundRobinAllocator::SelectNextIngressQueue(Ptr<UbPort> ou
     uint32_t pi;
     uint32_t outPortId = outPort->GetIfIndex();
     auto node = NodeList::GetNode(m_nodeId);
-    auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
+
+    // Modified:
+    // auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
+    auto vlNum = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetVLNum();
+
     for (pi = 0 ; pi < vlNum; pi++) {
         size_t qSize = m_igsrc[outPortId][pi].size();
         for (idx = 0; idx < qSize; idx++) {

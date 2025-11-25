@@ -136,7 +136,7 @@ public:
     FcType m_fcType { FcType::PFC };
     uint32_t m_portId;
     uint32_t m_nodeId;
-    uint32_t io_die_id;
+    uint32_t m_io_die_id;
 
     void DoDispose() override;
 

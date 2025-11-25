@@ -6,6 +6,7 @@
 #include "protocol/ub-datalink.h"
 #include "protocol/ub-transaction.h"
 #include "ns3/ub-network-address.h"
+#include "ns3/IO_die_manager.h"
 using namespace utils;
 namespace ns3 {
 
@@ -86,7 +87,12 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     m_transaction->TpInit(tp);
     m_numToTp[srcTpn] = tp;
     m_transportsCount++;
-    currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
+    // Modified:
+    // currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
+    
+    uint32_t port_per_io_die = currentNode->GetNDevices() / currentNode->GetObject<IO_Die_Manager>()->GetIODieCount();
+    uint32_t io_die_id = sport % port_per_io_die;
+    currentNode->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id)->AddTpIntoAlgroithm(tp, sport, priority);
 
     NS_LOG_DEBUG("Created transport channel success");
     return true;
