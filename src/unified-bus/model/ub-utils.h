@@ -103,6 +103,9 @@ private:
         string portNumStr;
 
         string forwardDelay;
+
+        // Modified:
+        string IODieCountStr;
     };
 
     std::map<uint32_t, NodeEle> nodeEle_map;

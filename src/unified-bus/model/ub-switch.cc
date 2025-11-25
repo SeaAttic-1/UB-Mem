@@ -42,8 +42,12 @@ TypeId UbSwitch::GetTypeId (void)
  */
 void UbSwitch::Init()
 {
-    auto node = GetObject<Node>();
-    m_portsNum = node->GetNDevices();
+    // auto node = GetObject<Node>();
+    // m_portsNum = node->GetNDevices();
+    auto node = NodeList::GetNode(m_nodeId);
+    
+    // Modified GetObject<Node>() -> NodeList::GetNode(m_nodeId);
+    m_portsNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
     // alg init
     m_allocator = CreateObject<UbRoundRobinAllocator>();
     m_allocator->SetNodeId(node->GetId());
@@ -79,8 +83,8 @@ void UbSwitch::NodePortsFcInit()
     NS_LOG_DEBUG("[UbSwitch NodePortsFcInit] m_portsNum: " << m_portsNum << " m_isCBFCEnable: " << m_isCBFCEnable
                 << " m_isPFCEnable: " << m_isPFCEnable);
 
-    for (uint32_t pidx = 0; pidx < m_portsNum; pidx++) {
-        Ptr<UbPort> port = DynamicCast<ns3::UbPort>(GetObject<Node>()->GetDevice(pidx));
+    for (uint32_t pidx = m_io_die_id * m_portsNum; pidx < m_portsNum * (m_portsNum + 1); pidx++) {
+        Ptr<UbPort> port = DynamicCast<ns3::UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(pidx));
         if (m_isCBFCEnable) {
             port->CreateAndInitFc("CBFC");
         } else if (m_isPFCEnable) {
@@ -312,7 +316,7 @@ bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     uint16_t dCna = m_memHeader.GetDcna();
     uint32_t dnode = utils::Cna16ToNodeId(dCna);
     // Forward
-    if (dnode != GetObject<Node>()->GetId()) {
+    if (dnode != NodeList::GetNode(m_nodeId)->GetId()) {
         return false;
     }
     // Sink Packet
@@ -320,7 +324,7 @@ bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
         port->m_flowControl->HandleReceivedPacket(packet);
     }
 
-    auto ldstApi = GetObject<Node>()->GetObject<UbController>()->GetUbFunction()->GetUbLdstApi();
+    auto ldstApi = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetUbFunction()->GetUbLdstApi();
     NS_ASSERT_MSG(ldstApi != nullptr, "UbLdstApi can not be nullptr!");
 
     uint8_t type = m_dummyTaHeader.GetTaOpcode();
@@ -349,7 +353,7 @@ void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     RoutingKey rtKey;
     switch (GetPacketType(packet)) {
         case UB_URMA_DATA_PACKET:
-            LastPacketTraversesNotify(GetObject<Node>()->GetId(), m_ubTpHeader);
+            LastPacketTraversesNotify(NodeList::GetNode(m_nodeId)->GetId(), m_ubTpHeader);
             GetURMARoutingKey(packet, rtKey);
             break;
         case UB_LDST_DATA_PACKET:  {
@@ -449,7 +453,7 @@ void UbSwitch::GetLdstRoutingKey(Ptr<Packet> packet, RoutingKey &rtKey)
  */
 void UbSwitch::SendPacket(Ptr<Packet> packet, uint32_t inPort, uint32_t outPort, uint32_t priority)
 {
-    auto node = GetObject<Node>();
+    auto node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> recvPort = DynamicCast<ns3::UbPort>(node->GetDevice(inPort));
     m_voq[outPort][priority][inPort]->Push(packet);
     m_queueManager->PushIngress(inPort, priority, packet->GetSize());
@@ -470,7 +474,7 @@ void UbSwitch::NotifySwitchDequeue(uint16_t inPortId, uint32_t outPort, uint32_t
     UbDatalinkHeader dlHeader;
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
-        NS_LOG_DEBUG("[QMU] Node:" << GetObject<Node>()->GetId()
+        NS_LOG_DEBUG("[QMU] Node:" << NodeList::GetNode(m_nodeId)->GetId()
               << " port:" << outPort
               << " egress size:" << m_queueManager->GetAllEgressUsed(outPort));
         m_congestionCtrl->SwitchForwardPacket(inPortId, outPort, packet);
@@ -500,7 +504,7 @@ void UbSwitch::SwitchSendFinish(uint32_t portId, uint32_t pri, Ptr<Packet> packe
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
         m_queueManager->PopEgress(portId, pri, packet->GetSize());
-        NS_LOG_DEBUG("[queueManager] Node:" << GetObject<Node>()->GetId()
+        NS_LOG_DEBUG("[queueManager] Node:" << NodeList::GetNode(m_nodeId)->GetId()
                   << " port:" << portId
                   << " egress size:" << m_queueManager->GetAllEgressUsed(portId));
     }

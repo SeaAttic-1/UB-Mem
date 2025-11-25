@@ -73,7 +73,7 @@ public:
 
     void Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDataPacket,
               uint8_t retCellGrainControlPacket, int32_t portTxfree,
-              uint32_t nodeId, uint32_t portId);
+              uint32_t nodeId, uint32_t portId, uint32_t io_die_id);
 
     virtual bool IsFcLimited(Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
@@ -94,6 +94,7 @@ private:
     void DoDispose() override;
     uint32_t m_portId;
     uint32_t m_nodeId;
+    uint32_t m_io_die_id;
 
     /**
     * @brief cbfc相关参数配置
@@ -120,7 +121,7 @@ public:
     virtual ~UbPfc() {}
     virtual FcType GetFcType() override;
     
-    void Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId);
+    void Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId, uint32_t io_die_id);
     
     virtual bool IsFcLimited(Ptr<UbIngressQueue> ingressQ) override;
     virtual void HandleReleaseOccupiedFlowControl(Ptr<Packet> p,
@@ -135,6 +136,8 @@ public:
     FcType m_fcType { FcType::PFC };
     uint32_t m_portId;
     uint32_t m_nodeId;
+    uint32_t io_die_id;
+
     void DoDispose() override;
 
     /**

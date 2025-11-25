@@ -165,6 +165,10 @@ public:
     
     /// Reset the channel into READY state and try transmit again
     void TransmitComplete();
+
+    void SetIODieId(uint32_t io_die_id);
+    uint32_t GetIODieId(void);
+
 private:
 
     TracedCallback<uint32_t, uint32_t, uint32_t> m_tracePortTxNotify;
@@ -187,6 +191,8 @@ private:
     void DoDispose() override;
 
     uint32_t m_portId;
+
+    uint32_t m_io_die_id; // Modified
 
     Ptr<UbEgressQueue> m_ubEQ;
 

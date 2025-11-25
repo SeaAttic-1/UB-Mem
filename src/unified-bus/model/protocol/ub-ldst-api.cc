@@ -55,27 +55,35 @@ void UbLdstApi::SetNodeId(uint32_t nodeId)
     m_nodeId = nodeId;
 }
 
-void UbLdstApi::LdstProcess(Ptr<UbLdstTaskSegment> taskSegment)
-{
-    // genpacket
-    auto packet = GenDataPacket(taskSegment);
-    // sendpacket
-    SendPacket(taskSegment, packet);
+void UbLdstApi::InitializeLbSalts(uint32_t die_count) {
+    m_lbHashSalts.resize(die_count);
+    // This should work since default value for uint32_t is 0
 }
 
-void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet)
+void UbLdstApi::LdstProcess(Ptr<UbLdstTaskSegment> taskSegment)
+{
+    // Select an IO Die for sending this task segment
+    auto sw_info = NodeList::GetNode()->GetObject<IO_Die_Manager>()->GetIODie();
+    uint32_t io_die_id = sw_info.io_die_id;
+    // genpacket
+    auto packet = GenDataPacket(taskSegment, io_die_id);
+    // sendpacket
+    SendPacket(taskSegment, packet, io_die_id);
+}
+
+void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet, uint32_t io_die_id)
 {
     RoutingKey rtKey;
     rtKey.sip = utils::NodeIdToIp(taskSegment->GetSrc()).Get();
     rtKey.dip = utils::NodeIdToIp(taskSegment->GetDest()).Get();
-    rtKey.sport = m_lbHashSalt;
+    rtKey.sport = m_lbHashSalts[io_die_id]; // This also needs to be modified
     rtKey.dport = 0;
     rtKey.priority = taskSegment->GetPriority();
     rtKey.useShortestPath = m_useShortestPaths;
     rtKey.usePacketSpray = m_usePacketSpray;
 
     auto node = NodeList::GetNode(m_nodeId);
-    auto sw = node->GetObject<UbSwitch>();
+    auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id);
 
     // Please note that although sw and the class name UbSwitch seem to indicate this is a
     // router or switch, it is not
@@ -86,6 +94,7 @@ void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packe
     // In this sense, A UB Switch is akin to an I/O Die.
     // Instantiating multiple UB Switch objects for a single node is therefore good for modeling multiple I/O Dies
     // Of course, the scheduling algorithm must be carefully implemented
+    // You can add your custom scheduling logic inside the " " function
 
 
     int outPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
@@ -99,7 +108,7 @@ void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packe
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
 }
 
-Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
+Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_t io_die_id)
 {
     // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
     UbCompactMAExtTah cMAETah;
@@ -117,6 +126,7 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
         payloadSize = taskSegment->GetPacketSize();
     }
 
+    uint32_t& m_lbHashSalt = m_lbHashSalts[io_die_id];
     if (m_usePacketSpray) {
         if (m_lbHashSalt == MAX_LB) {
             m_lbHashSalt = MIN_LB;
@@ -206,7 +216,11 @@ void UbLdstApi::OnHBMComplete(void* arg) {
     rtKey.usePacketSpray = linkPacketHeader.GetLoadBalanceMode();
 
     auto node = NodeList::GetNode(m_nodeId);
-    auto sw = node->GetObject<UbSwitch>();
+    // auto sw = node->GetObject<UbSwitch>();
+    
+    // For now, try using a random IO Die to send back the response
+    auto sw_info = node->GetObject<IO_Die_Manager>()->GetIODie();
+    Ptr<UbSwitch> sw = sw_info.io_die_ptr;
 
     int destPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
     if (destPort < 0) {
@@ -322,7 +336,7 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     rtKey.usePacketSpray = linkPacketHeader.GetLoadBalanceMode();
     
     auto node = NodeList::GetNode(m_nodeId);
-    auto sw = node->GetObject<UbSwitch>();
+    // auto sw = node->GetObject<UbSwitch>();
 
     int destPort = sw->GetRoutingProcess()->GetOutPort(rtKey);
     if (destPort < 0) {

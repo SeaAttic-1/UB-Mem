@@ -44,12 +44,13 @@ public:
     void RecvDataPacket(Ptr<Packet> packet);
     void LdstProcess(Ptr<UbLdstTaskSegment> taskSegment);
     void OnHBMComplete(void* arg);
+    void InitializeLbSalts(uint32_t die_count);
 
 private:
     void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet);
-    Ptr<Packet> GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment);
+    Ptr<Packet> GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_t io_die_id);
     uint32_t m_nodeId = 0;
-    uint32_t m_lbHashSalt = 0;
+    std::vector<uint32_t> m_lbHashSalts;
     bool m_usePacketSpray = false;
     bool m_useShortestPaths = false;
     bool m_pktTraceEnabled = false;

@@ -193,7 +193,7 @@ UbPort::~UbPort()
     NS_LOG_FUNCTION(this);
 }
 
-void UbPort::SetIfIndex(const uint32_t portId)
+void UbPort::SetIfIndex(const uint32_t portId) // override ns3 function, no need to change
 {
     m_portId = portId;
 }
@@ -217,6 +217,10 @@ void UbPort::CreateAndInitFc(const std::string& type)
             NS_LOG_WARN(this);
         }
         auto flowControl = DynamicCast<UbCbfc>(m_flowControl);
+
+        //Modified:
+        uint32_t io_die_id = 
+
         flowControl->Init(m_cbfcFlitLen, m_cbfcFlitsPerCell, m_cbfcRetCellGrainDataPacket,
             m_cbfcRetCellGrainControlPacket, m_cbfcPortTxfree, GetNode()->GetId(), m_portId);
         NS_LOG_DEBUG("[UbPort CreateAndInitFc] flowControl Cbfc Init");
@@ -256,7 +260,10 @@ void UbPort::TransmitComplete()
 
     // 转发时通知switch发送完成
     if (m_currentInPortId != m_portId) {
-        GetNode()->GetObject<UbSwitch>()->SwitchSendFinish(m_portId, m_currentPriority, m_currentPkt);
+        // Original:
+        // GetNode()->GetObject<UbSwitch>-> ...
+        GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)
+        ->SwitchSendFinish(m_portId, m_currentPriority, m_currentPkt);
     }
     m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentInPortId, m_portId);
 
@@ -279,13 +286,13 @@ void UbPort::DequeuePacket(void)
     m_currentPriority = priority;
     if (m_ubEQ->IsEmpty()) {
         // Switch allocation when port sendding packet.
-        auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
+        auto allocator = GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
     }
 
     // switch节点, 通知switch发送了packet
     if (inPortId != m_portId) { // 转发的报文
-        GetNode()->GetObject<UbSwitch>()->NotifySwitchDequeue(inPortId, m_portId, priority, packet);
+        GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->NotifySwitchDequeue(inPortId, m_portId, priority, packet);
     }
 
     if (!m_faultCallBack.IsNull()) {
@@ -299,7 +306,7 @@ void UbPort::DequeuePacket(void)
 void UbPort::TransmitPacket(Ptr<Packet> packet, Time delay)
 {
     PortTxNotify(GetNode()->GetId(), m_portId, packet->GetSize());
-    NS_LOG_DEBUG("[UbPort send] nodetype: " << g_node_type_map[GetNode()->GetObject<UbSwitch>()->GetNodeType()]
+    NS_LOG_DEBUG("[UbPort send] nodetype: " << g_node_type_map[GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetNodeType()]
         << " NodeId: " << GetNode()->GetId() << " PortId: " << m_portId << " send to:"
         << " NodeId: " << m_channel->GetDestination(this)->GetNode()->GetId()
         << " PortId: " << m_channel->GetDestination(this)->GetIfIndex()
@@ -329,7 +336,7 @@ void UbPort::TransmitPacket(Ptr<Packet> packet, Time delay)
 
 void UbPort::Receive(Ptr<Packet> packet)
 {
-    NS_LOG_DEBUG("[UbPort recv] nodetype: " << g_node_type_map[GetNode()->GetObject<UbSwitch>()->GetNodeType()]
+    NS_LOG_DEBUG("[UbPort recv] nodetype: " << g_node_type_map[GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetNodeType()]
         << " NodeId: " << GetNode()->GetId()
         << " PortId: " << GetIfIndex()
         << " recv from:"
@@ -343,7 +350,7 @@ void UbPort::Receive(Ptr<Packet> packet)
         packet->AddPacketTag(tag);
     }
     PortRxNotify(GetNode()->GetId(), m_portId, packet->GetSize());
-    GetNode()->GetObject<UbSwitch>()->SwitchHandlePacket(this, packet);
+    GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->SwitchHandlePacket(this, packet);
 
     return;
 }
@@ -439,7 +446,7 @@ void UbPort::TriggerTransmit()
     }
     if (m_ubEQ->IsEmpty()) {
         NS_LOG_DEBUG("[UbPort TriggerTransmit] trigger Allocator");
-        auto allocator = GetNode()->GetObject<UbSwitch>()->GetAllocator();
+        auto allocator = GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
         return;
     }
@@ -524,7 +531,7 @@ void UbPort::SetDataRate(DataRate bps)
 {
     NS_LOG_DEBUG("port set data rate");
     m_bps = bps;
-    Ptr<UbCongestionControl> congestionCtrl = GetNode()->GetObject<UbSwitch>()->GetCongestionCtrl();
+    Ptr<UbCongestionControl> congestionCtrl = GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetCongestionCtrl();
     if (congestionCtrl->GetCongestionAlgo() == CAQM) {
         Ptr<UbSwitchCaqm> caqmSw = DynamicCast<UbSwitchCaqm>(congestionCtrl);
         caqmSw->SetDataRate(m_portId, bps);

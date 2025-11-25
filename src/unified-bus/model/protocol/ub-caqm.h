@@ -120,7 +120,8 @@ public:
     UbSwitchCaqm();
     ~UbSwitchCaqm() override;
     // 初始化
-    void SwitchInit(Ptr<UbSwitch> sw) override;
+    // void SwitchInit(Ptr<UbSwitch> sw) override;
+    void SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die_id) override;
 
     // 设置每个端口的带宽
     void SetDataRate(uint32_t portId, DataRate bps);
@@ -143,6 +144,7 @@ private:
     std::vector<DataRate> m_bps;                // port带宽
 
     uint32_t m_nodeId;                          // 绑定的switch节点号
+    uint32_t m_io_die_id;                       // Modified: 
 
     Ptr<UniformRandomVariable> m_random;        // 随机数产生工具，伪随机，多次仿真可复现
 };

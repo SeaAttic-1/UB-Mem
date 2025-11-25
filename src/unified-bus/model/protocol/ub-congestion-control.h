@@ -58,7 +58,7 @@ public:
     virtual void SenderRecvAck(uint32_t psn, UbCongestionExtTph header) {}
 
     // 绑定switch，初始化参数
-    virtual void SwitchInit(Ptr<UbSwitch> sw) {}
+    virtual void SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die_id) {}
 
     // 绑定tp，初始化参数
     virtual void TpInit(Ptr<UbTransportChannel> tp) {}

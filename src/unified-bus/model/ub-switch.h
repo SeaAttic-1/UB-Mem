@@ -55,6 +55,34 @@ public:
     {
         m_vlNum = vlNum;
     }
+
+    uint32_t GetIODieId(void)
+    {
+        return m_io_die_id;
+    }
+    void SetIODieId(uint32_t IODieId)
+    {
+        m_io_die_id = IODieId;
+    }
+
+    uint32_t GetNodeId(void)
+    {
+        return m_nodeId;
+    }
+    void SetNodeId(uint32_t nodeId)
+    {
+        m_nodeId = nodeId;
+    }
+
+    uint32_t GetPortCount(void)
+    {
+        return m_portsNum;
+    }
+    void SetPortCount(uint32_t portNum)
+    {
+        
+    }
+
     UbNodeType_t GetNodeType() {return m_nodeType;}
     void SetNodeType(UbNodeType_t type) {m_nodeType = type;}
     uint32_t GetPortsNum() {return m_portsNum;}
@@ -99,6 +127,8 @@ private:
     Ptr<UbQueueManager> m_queueManager;   // Memory Management Unit
     Ptr<UbCongestionControl> m_congestionCtrl;
     UbNodeType_t m_nodeType;
+    uint32_t m_nodeId;
+    uint32_t m_io_die_id;
     uint32_t m_portsNum = 1025;
     Ptr<UbSwitchAllocator> m_allocator;
     uint32_t m_vlNum = 16;

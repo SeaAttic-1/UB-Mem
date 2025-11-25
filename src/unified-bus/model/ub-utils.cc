@@ -2,6 +2,7 @@
 #include "ub-utils.h"
 #include "ns3/hbm-helper.h"
 #include "ns3/random-variable-stream.h"
+#include "ns3/IO_die_manager.h"
 
 namespace utils {
 
@@ -485,17 +486,25 @@ void UbUtils::CreateNode(const string &filename)
         string nodeTypeStr;
         string portNumStr;
         string forwardDelay;
+        // Modified:
+        string IODieCount;
         // 解析CSV行
         getline(ss, nodeIdStr, ',');
         getline(ss, nodeTypeStr, ',');
         getline(ss, portNumStr, ',');
-        getline(ss, forwardDelay);
+
+        // Modified:
+        // getline(ss, forwardDelay);
+        getline(ss, forwardDelay, ',');
+        getline(ss, IODieCount)
 
         NodeEle nodeEle = {};
         nodeEle.nodeIdStr = nodeIdStr;
         nodeEle.nodeTypeStr = nodeTypeStr;
         nodeEle.portNumStr = portNumStr;
         nodeEle.forwardDelay = forwardDelay;
+        // Modified:
+        nodeEle.IODieCountStr = IODieCount;
 
         // 解析节点ID（范围 or 单个节点）
         ParseNodeRange(nodeIdStr, nodeEle);
@@ -507,11 +516,23 @@ void UbUtils::CreateNode(const string &filename)
         string nodeTypeStr = it.second.nodeTypeStr;
         string portNumStr = it.second.portNumStr;
         string forwardDelay = it.second.forwardDelay;
+        
+        //Modified:
+        string IODieCountStr = it.second.IODieCountStr;
+        uint32_t io_die_count = IO_DIE_PER_NODE; 
+        if (!IODieCountStr)
+            io_die_count = static_cast<uint32_t>(stoi(IODieCountStr));
+
         int portNum = stoi(portNumStr);
         Ptr<Node> node = CreateObject<Node>();
-        Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
+        Ptr<IO_Die_Manager> manager = CreateObject<IO_Die_Manager>();
 
-        node->AggregateObject(sw);
+        manager->SetIODieCount(io_die_count);
+        // Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
+
+        // node->AggregateObject(sw);
+        node->AggregateObject(manager);
+        manager->SetNodeId();
         Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
         node->AggregateObject(ldst);
         ldst->Init(node->GetId());
@@ -520,7 +541,8 @@ void UbUtils::CreateNode(const string &filename)
             node->AggregateObject(ubCtrl);
             ubCtrl->CreateUbFunction();
             ubCtrl->CreateUbTransaction();
-            sw->SetNodeType(UB_DEVICE);
+            // sw->SetNodeType(UB_DEVICE);
+            manager->SetNodeType(UB_DEVICE);
 
             Ptr<HBMController> hbm = HBMHelper().Create(8);
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
@@ -528,22 +550,34 @@ void UbUtils::CreateNode(const string &filename)
             node->AggregateObject(hbm);
             
         } else if (nodeTypeStr == "SWITCH") {
-            sw->SetNodeType(UB_SWITCH);
+            // sw->SetNodeType(UB_SWITCH);
+            manager->SetNodeType(UB_SWITCH);
         } else {
             NS_ASSERT_MSG(0, "node type not support");
         }
-        for (int i = 0; i < portNum; i++) {
+
+        // Note: each node now should have multiple IO dies 
+        // Suppose each node have 8 io dies
+        // Then port 0 - 7: IO die 0; port 8 - 15: IO die 1 ...
+        // The port id is simply for differentiating purpose, port 8 is in fact port 0 of IO die 1
+        // This, of course, assume that IO dies have the same number of ports
+
+        for (int i = 0; i < portNum * io_die_count; i++) {
             Ptr<UbPort> port = CreateObject<UbPort>();
             port->SetAddress(Mac48Address::Allocate());
             node->AddDevice(port);
         }
-        sw->Init();
-        auto cc = UbCongestionControl::Create(UB_SWITCH);
-        cc->SwitchInit(sw);
+        manager->Init();
+        // auto cc = UbCongestionControl::Create(UB_SWITCH);
+        // cc->SwitchInit(sw);
+        manager->CongestionControlInit();
+        /*
         if (!forwardDelay.empty()) {
             auto allocator = sw->GetAllocator();
             allocator->SetAttribute("AllocationTime", StringValue(forwardDelay));
         }
+        */
+        manager->SetForwardDelay(forwardDelay);
     }
 }
 
@@ -933,7 +967,9 @@ void UbUtils::InitFaultMoudle(const string &FaultConfigFile)
     Ptr<UbFault> ubFault = CreateObject<UbFault>();
     for (auto it = NodeList::Begin(); it != NodeList::End(); ++it) {
         Ptr<Node> node = *it;
-        uint16_t portNum = node->GetNDevices();
+        // Modified:
+        // uint16_t portNum = node->GetNDevices() / IO_DIE_PER_NODE;
+        uint16_t portNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
         for (int i = 0; i < portNum; i++) {
             Ptr<UbPort> port = DynamicCast<ns3::UbPort>(node->GetDevice(i));
             port->SetFaultCallBack(MakeCallback(&UbFault::FaultCallback, ubFault));

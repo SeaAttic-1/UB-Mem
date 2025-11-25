@@ -23,7 +23,7 @@ TypeId UbCbfc::GetTypeId(void)
 
 void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDataPacket,
                   uint8_t retCellGrainControlPacket, int32_t portTxfree,
-                  uint32_t nodeId, uint32_t portId)
+                  uint32_t nodeId, uint32_t portId, uint32_t io_die_id)
 {
     // 基础参数配置
     m_cbfcCfg = new cbfcCfg_t;
@@ -38,6 +38,7 @@ void UbCbfc::Init(uint8_t flitLen, uint8_t nFlitPerCell, uint8_t retCellGrainDat
     m_crdToReturn.resize(ubVlNum, 0);
     m_nodeId = nodeId;
     m_portId = portId;
+    m_io_die_id = io_die_id;
     NS_LOG_DEBUG("NodeId: " << m_nodeId << "PortId: " << m_portId << "Init Cbfc");
 
     NS_LOG_DEBUG("m_crdTxfree[*]: " << m_crdTxfree[0]);
@@ -209,7 +210,11 @@ void UbCbfc::SendCrdAck(Ptr<Packet> cbfcPkt, uint32_t targetPortId)
     Ptr<Node> node = NodeList::GetNode(m_nodeId);
 
     Ptr<UbPort> port = DynamicCast<UbPort>(node->GetDevice(targetPortId));
-    node->GetObject<UbSwitch>()->AddPktToVoq(cbfcPkt, targetPortId, 0, targetPortId);
+    // Modified: 
+    // node->GetObject<UbSwitch>()->AddPktToVoq(cbfcPkt, targetPortId, 0, targetPortId);
+    auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
+    sw->AddPktToVoq(cbfcPkt, targetPortId, 0, targetPortId);
+    
     NS_LOG_DEBUG("send crd pkt");
 
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, port);
@@ -281,7 +286,7 @@ FcType UbPfc::GetFcType()
     return m_fcType;
 }
 
-void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId)
+void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId, uint32_t portId, uint32_t io_die_id)
 {
     IntegerValue val;
     g_ub_vl_num.GetValue(val);
@@ -294,6 +299,7 @@ void UbPfc::Init(int32_t portpfcUpThld, int32_t portpfcLowThld, uint32_t nodeId,
 
     m_nodeId = nodeId;
     m_portId = portId;
+    m_io_die_id = io_die_id;
     NS_LOG_DEBUG("NodeId: " << m_nodeId << "PortId: " << m_portId << "Init Pfc");
 }
 

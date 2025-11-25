@@ -11,6 +11,7 @@
 #include "ns3/ub-port.h"
 #include "ns3/ub-caqm.h"
 #include "ns3/ub-utils.h"
+#include "ns3/IO_die_manager.h"
 
 namespace ns3 {
 
@@ -425,12 +426,15 @@ TypeId UbSwitchCaqm::GetTypeId(void)
     return tid;
 }
 
-void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw)
+void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die_id)
 {
-    auto node = sw->GetObject<Node>();
-    m_nodeId = node->GetId();
+    auto node = NodeList::GetNode(nodeId);
+    m_nodeId = nodeId;
+    m_io_die_id = io_die_id;
     if (m_congestionCtrlEnabled) {
-        uint32_t ndevice = node->GetNDevices();
+        // Modified uint32_t ndevice = node->GetNDevices();
+        // uint32_t ndevice = sw->GetIfIndex();
+        uint32_t ndevice = node->Get
         for (uint32_t i = 0; i < ndevice; i++) {
             m_txSize.push_back(0);
             m_cc.push_back(0);
@@ -446,8 +450,11 @@ void UbSwitchCaqm::ResetLocalCc()
 {
     if (m_congestionCtrlEnabled) {
         auto node = NodeList::GetNode(m_nodeId);
-        auto sw = node->GetObject<UbSwitch>();
-        uint32_t ndevice = node->GetNDevices();
+        // Modified:
+        // auto sw = node->GetObject<UbSwitch>();
+        auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
+        // uint32_t ndevice = node->GetNDevices(); Origin line for getting port count
+        uint32_t ndevice = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
         for (uint32_t portId = 0; portId < ndevice; portId++) {
             uint64_t cc = uint64_t(m_lambda *
                                 (m_ccUpdatePeriod.GetSeconds()
@@ -486,7 +493,8 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
             return;
         }
         m_txSize[outPort] += p->GetSize();
-        auto sw = NodeList::GetNode(m_nodeId)->GetObject<UbSwitch>();
+        // auto sw = NodeList::GetNode(m_nodeId)->GetObject<UbSwitch>();
+        auto sw = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                   << "[Debug]"
                   << "[" << __FUNCTION__ << "]"
