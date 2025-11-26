@@ -40,7 +40,6 @@ private:
     std::unordered_map<uint32_t, uint32_t> m_taskSegmentCompletedNum;
     std::unordered_map<uint32_t, Ptr<UbLdstTaskSegment>> m_taskSegmentsMap;
      
-    Ptr<HBMController> m_hbm_controller = HBMHelper().Create(8);
     // This implements the HBM model
     
     uint32_t m_currentTaskId = 0;

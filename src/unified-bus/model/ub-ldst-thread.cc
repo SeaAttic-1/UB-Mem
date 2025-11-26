@@ -197,7 +197,7 @@ void UbLdstThread::InternalHBMAccess(void) {
     // Very simple logic here, can expand to get more realistic internal traffic patterns
     for(uint32_t i = 0; i < hbm_intensity; i++) {
         auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
-        hbm->SendRequest(i, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, false, [](void* p){}, nullptr);
+        hbm->SendRequest(m_threadId, i, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, false, [](void* p){}, nullptr);
     }
 
     Simulator::Schedule(NanoSeconds(positive ? this->m_fire_period + jitter : this->m_fire_period - jitter),

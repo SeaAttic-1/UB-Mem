@@ -88,6 +88,8 @@ void RunCase(const string& configPath)
 // 根据配置文件路径执行用例
 int main(int argc, char* argv[])
 {
+    ns3::RngSeedManager::SetSeed(1);
+    ns3::RngSeedManager::SetRun(1);
     if (UbUtils::Get()->QueryAttributeInfor(argc, argv))
         return 0;
     // 开始计时
@@ -113,9 +115,9 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLink", LOG_LEVEL_ALL);
-    LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
-    LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
-    LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
     LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
     // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);

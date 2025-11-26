@@ -7,21 +7,21 @@
 
 namespace ns3 {
 
-class HBMBank;
+class SimpleHBMBank;
 
-class HBMController : public Object
+class SimpleHBMController : public Object
 {
 public:
   static TypeId GetTypeId(void);
 
-  HBMController();
-  virtual ~HBMController();
+  SimpleHBMController();
+  virtual ~SimpleHBMController();
 
   void InitializeBanks(uint32_t nodeId, uint32_t numBanks);
   void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg);
 
 private:
-  std::vector<Ptr<HBMBank>> m_banks;
+  std::vector<Ptr<SimpleHBMBank>> m_banks;
 };
 
 } // namespace ns3

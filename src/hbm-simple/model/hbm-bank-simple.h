@@ -22,7 +22,7 @@
 
 namespace ns3 {
 
-struct MemoryRequest {
+struct SimpleMemoryRequest {
     uint32_t cuid;     // The CU that initiates this request
     uint64_t address;  // Memory address for the request
     uint32_t size;     // Size of the request (in bytes)  
@@ -33,27 +33,27 @@ struct MemoryRequest {
     void* arg; // argument for the Callback func
 };
 
-class HBMBank : public Object
+class SimpleHBMBank : public Object
 {
 public:
   static TypeId GetTypeId(void);
 
-  HBMBank();
-  virtual ~HBMBank();
+  SimpleHBMBank();
+  virtual ~SimpleHBMBank();
 
-  void ReceiveRequest(MemoryRequest request);
+  void ReceiveRequest(SimpleMemoryRequest request);
   void ProcessNext();
   void SetNodeId(uint32_t nodeId);
 
 private:
-  std::queue <MemoryRequest> request_q;
+  std::queue <SimpleMemoryRequest> request_q;
   bool m_busy;
   EventId m_processEvent;
   Time m_processDelay;
 
   uint32_t m_nodeId;
 
-  void FinishProcessing(MemoryRequest request);
+  void FinishProcessing(SimpleMemoryRequest request);
 };
 
 } // namespace ns3

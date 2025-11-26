@@ -293,10 +293,10 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
 
     for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
     {
-        hbm_controller->SendRequest(iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
+        hbm_controller->SendRequest(12345, iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
     } // For all the previous tasks, do nothing.
 
-    hbm_controller->SendRequest(num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+    hbm_controller->SendRequest(12345, num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
     // Only when processing the final segments, pass in real callback func as well as arg ptr;
     /*
     uint16_t tassn = cTaHeader.GetIniTaSsn();

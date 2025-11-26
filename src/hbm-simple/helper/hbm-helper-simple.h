@@ -6,14 +6,14 @@
 
 namespace ns3 {
 
-class HBMController;
+class SimpleHBMController;
 
-class HBMHelper
+class SimpleHBMHelper
 {
 public:
-  HBMHelper();
+  SimpleHBMHelper();
 
-  Ptr<HBMController> Create(uint32_t nodeId, uint32_t numBanks);
+  Ptr<SimpleHBMController> Create(uint32_t nodeId, uint32_t numBanks);
 
 private:
   uint32_t m_defaultBanks;

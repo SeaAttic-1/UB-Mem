@@ -522,7 +522,7 @@ void UbUtils::CreateNode(const string &filename)
             ubCtrl->CreateUbTransaction();
             sw->SetNodeType(UB_DEVICE);
 
-            Ptr<HBMController> hbm = HBMHelper().Create(8);
+            Ptr<HBMController> hbm = HBMHelper().Create(node->GetId(), 8);
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
             node->AggregateObject(hbm);

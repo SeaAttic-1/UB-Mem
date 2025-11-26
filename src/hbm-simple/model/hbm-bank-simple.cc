@@ -1,4 +1,4 @@
-#include "hbm-bank.h"
+#include "hbm-bank-simple.h"
 #include "ns3/simulator.h"
 #include "ns3/uinteger.h"
 #include "ns3/core-module.h"
@@ -7,37 +7,37 @@
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("HBMBank");
-NS_OBJECT_ENSURE_REGISTERED(HBMBank);
+NS_LOG_COMPONENT_DEFINE("SimpleHBMBank");
+NS_OBJECT_ENSURE_REGISTERED(SimpleHBMBank);
 
-TypeId HBMBank::GetTypeId(void)
+TypeId SimpleHBMBank::GetTypeId(void)
 {
   static TypeId tid =
-    TypeId("ns3::HBMBank")
+    TypeId("ns3::SimpleHBMBank")
       .SetParent<Object>()
-      .SetGroupName("HBM")
-      .AddConstructor<HBMBank>()
+      .SetGroupName("SimpleHBM")
+      .AddConstructor<SimpleHBMBank>()
       .AddAttribute("ProcessDelay",
         "Delay (in nanoseconds) to process a request.",
         TimeValue(NanoSeconds(50)),
-        MakeTimeAccessor(&HBMBank::m_processDelay),
+        MakeTimeAccessor(&SimpleHBMBank::m_processDelay),
         MakeTimeChecker());
   return tid;
 }
 
-HBMBank::HBMBank()
+SimpleHBMBank::SimpleHBMBank()
   : m_busy(false)
 {
   NS_LOG_FUNCTION(this);
 }
 
-HBMBank::~HBMBank()
+SimpleHBMBank::~SimpleHBMBank()
 {
   NS_LOG_FUNCTION(this);
 }
 
 void
-HBMBank::ReceiveRequest(MemoryRequest request)
+SimpleHBMBank::ReceiveRequest(SimpleMemoryRequest request)
 {
   NS_LOG_FUNCTION(this << request.requestId);
 
@@ -46,7 +46,7 @@ HBMBank::ReceiveRequest(MemoryRequest request)
       uint32_t bus_delay = request.size / HBM_BUS_BANK_BANDWIDTH;
       m_busy = true;
       m_processEvent = Simulator::Schedule(m_processDelay + NanoSeconds(bus_delay),
-                                           &HBMBank::FinishProcessing,
+                                           &SimpleHBMBank::FinishProcessing,
                                            this, request);
     }
   else
@@ -61,7 +61,7 @@ HBMBank::ReceiveRequest(MemoryRequest request)
 }
 
 void
-HBMBank::FinishProcessing(MemoryRequest request)
+SimpleHBMBank::FinishProcessing(SimpleMemoryRequest request)
 {
   NS_LOG_INFO("HBM Bank " <<  request.bankId << " on node " << m_nodeId  << " processed request " << request.requestId << " by CU " << request.cuid
               << " at " << Simulator::Now().GetNanoSeconds() << " ns");
@@ -69,15 +69,15 @@ HBMBank::FinishProcessing(MemoryRequest request)
   request.cb(request.arg);
   if (!request_q.empty()) {
     m_busy = true;
-    MemoryRequest next_request = request_q.front();
+    SimpleMemoryRequest next_request = request_q.front();
     request_q.pop();
     uint32_t bus_delay = next_request.size / HBM_BUS_BANK_BANDWIDTH;
-    Simulator::Schedule(m_processDelay + NanoSeconds(bus_delay), &HBMBank::FinishProcessing, this, next_request);
+    Simulator::Schedule(m_processDelay + NanoSeconds(bus_delay), &SimpleHBMBank::FinishProcessing, this, next_request);
   }
   	
 }
 
-void HBMBank::SetNodeId(uint32_t nodeId) {
+void SimpleHBMBank::SetNodeId(uint32_t nodeId) {
   m_nodeId = nodeId;
 }
 

@@ -45,7 +45,7 @@ private:
     uint32_t m_loadOutstanding; // 发数据包--, 收ack ++
     std::unordered_map<uint32_t, uint32_t> m_waitingAckNum;
 
-    const uint32_t m_fire_period = 500; // nanoseconds
+    const uint32_t m_fire_period = 200; // nanoseconds
     const uint32_t m_hbm_intensity = 2;
 
 };

@@ -12,10 +12,10 @@ HBMHelper::HBMHelper()
 }
 
 Ptr<HBMController>
-HBMHelper::Create(uint32_t numBanks)
+HBMHelper::Create(uint32_t nodeId, uint32_t numBanks)
 {
   Ptr<HBMController> ctrl = CreateObject<HBMController>();
-  ctrl->InitializeBanks(numBanks);
+  ctrl->InitializeBanks(nodeId, numBanks);
   return ctrl;
 }
 

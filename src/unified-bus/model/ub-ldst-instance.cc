@@ -6,7 +6,7 @@
 #include "ub-ldst-instance.h"
 #include "ns3/random-variable-stream.h"
 
-//#define SIM_HBM_INTERNAL
+#define SIM_HBM_INTERNAL
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
@@ -67,6 +67,7 @@ void UbLdstInstance::Init(uint32_t nodeId)
         #ifdef SIM_HBM_INTERNAL
             ldstThread->DoInitialize();
         #endif
+
         ldstThread->SetNode(nodeId);
         ldstThread->SetThreadId(threadId);
         m_threads.push_back(ldstThread);

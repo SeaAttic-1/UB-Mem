@@ -1,6 +1,7 @@
 #include "hbm-controller.h"
 #include "hbm-bank.h"
 #include "ns3/log.h"
+#include "ns3/node.h"
 
 namespace ns3 {
 
@@ -28,18 +29,20 @@ HBMController::~HBMController()
 }
 
 void
-HBMController::InitializeBanks(uint32_t numBanks)
+HBMController::InitializeBanks(uint32_t nodeId, uint32_t numBanks)
 {
   NS_LOG_FUNCTION(this << numBanks);
 
   m_banks.clear();
   for (uint32_t i = 0; i < numBanks; i++)
     {
-      m_banks.push_back(CreateObject<HBMBank>());
+      auto bank = CreateObject<HBMBank>();
+      bank->SetNodeId(nodeId);
+      m_banks.push_back(bank);
     }
 }
 
-void HBMController::SendRequest(uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg)
+void HBMController::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg)
 {
   NS_LOG_FUNCTION(this << requestId);
 
@@ -52,7 +55,7 @@ void HBMController::SendRequest(uint32_t requestId, uint64_t address, uint32_t s
       NS_LOG_ERROR("Attempt to access bank" << bankId << "but HBM has only" << m_banks.size() << "banks" );
       return;
   }
-  MemoryRequest request = {address, size, bankId, isWrite, requestId, cb, arg};
+  MemoryRequest request = {cuid, address, size, bankId, isWrite, requestId, cb, arg};
   m_banks[request.bankId]->ReceiveRequest(request);
 }
 
