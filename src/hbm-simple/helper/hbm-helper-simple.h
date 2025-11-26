@@ -1,5 +1,5 @@
-#ifndef HBM_HELPER_H
-#define HBM_HELPER_H
+#ifndef HBM_HELPER_SIMPLE_H
+#define HBM_HELPER_SIMPLE_H
 
 #include "ns3/object.h"
 #include "ns3/ptr.h"

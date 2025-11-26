@@ -3,8 +3,11 @@
 #include "ns3/ub-ldst-thread.h"
 #include "ns3/hbm-bank.h"
 #include "ns3/hbm-helper.h"
+#include "ns3/hbm-helper-simple.h"
+#include "ns3/hbm-controller-simple.h"
 #include "ub-ldst-instance.h"
 #include "ns3/random-variable-stream.h"
+#include "control-macro.h"
 
 #define SIM_HBM_INTERNAL
 
@@ -169,4 +172,24 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
 {
     m_traceLastPacketSendsNotify(nodeId, memTaskId);
 }
+
+#ifdef USE_SIMPLE_HBM
+    void UbLdstInstance::InternalHBMAccess(void) {
+        auto node = GetObject<Node>();
+        auto rng = node->GetObject<UniformRandomVariable>();
+        auto hbm = node->GetObject<SimpleHBMController>();
+
+        // Changable
+        auto bg_intensity = rng->GetInteger(0, 5);
+        hbm->SetBackgroundIntensity(bg_intensity);
+
+        Simulator::Schedule(NanoSeconds(m_fire_period), &UbLdstInstance::InternalHBMAccess, this);
+    }
+
+    void UbLdstInstance::Init(void) {
+        Simulator::ScheduleNow(&UbLdstInstance::InternalHBMAccess, this);
+    }
+
+#endif
+
 }

@@ -4,7 +4,7 @@
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("HBMHelper");
+NS_LOG_COMPONENT_DEFINE("SimpleHBMHelper");
 
 SimpleHBMHelper::SimpleHBMHelper()
   : m_defaultBanks(8)

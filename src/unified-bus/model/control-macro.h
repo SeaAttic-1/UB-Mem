@@ -1,0 +1,2 @@
+#define USE_SIMPLE_HBM
+#define SIM_HBM_INTERNAL

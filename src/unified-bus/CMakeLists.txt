@@ -70,9 +70,11 @@ build_lib(
 	model/ub-queue-manager.h
 	model/ub-tag.h
 	model/ub-fault.h
+	model/control-macro.h
   LIBRARIES_TO_LINK ${libnetwork}
                     ${libinternet}
                     ${mpi_libraries}
+					"hbm-simple"
 					hbm
   TEST_SOURCES test/ub-test.cc
 )

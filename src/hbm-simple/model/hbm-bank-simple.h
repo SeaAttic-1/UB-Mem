@@ -1,14 +1,10 @@
-#ifndef HBM_BANK_H
-#define HBM_BANK_H
+#ifndef HBM_BANK_SIMPLE_H
+#define HBM_BANK_SIMPLE_H
 
-#define HBM_BANK_ATOMIC_SIZE 32
+#define HBM_BANK_ATOMIC_SIZE 64
 #define HBM_BANK_PER_DIE 8
-#define HBM_BUS_BANDWIDTH_BITS 256
-#define HBM_BUS_BANDWIDTH HBM_BUS_BANDWIDTH_BITS / 8
+#define HBM_BUS_BANDWIDTH 2048 // in GB/s or B/ns, 2048 given by the latest HBM4 standard
 #define HBM_BUS_BANK_BANDWIDTH HBM_BUS_BANDWIDTH / HBM_BANK_PER_DIE
-// Usually bus transfer takes less than 1 nanoseconds, so doesn't quite matter.
-// The major latencies are brought by mem row access 
-// The macros are still defined if you need to tweak it though
 
 #include "ns3/object.h"
 #include "ns3/event-id.h"
@@ -42,17 +38,20 @@ public:
   virtual ~SimpleHBMBank();
 
   void ReceiveRequest(SimpleMemoryRequest request);
-  void ProcessNext();
   void SetNodeId(uint32_t nodeId);
+  void SetBackgroundIntensity(uint32_t bg_intensity);
 
 private:
   std::queue <SimpleMemoryRequest> request_q;
-  bool m_busy;
+  uint32_t m_nominal_bandwidth = HBM_BUS_BANK_BANDWIDTH;
+  uint32_t m_bg_intensity = 0; // Intra-node traffic
+  uint32_t m_correction_coeff = 1; // Used for correction purpose
   EventId m_processEvent;
-  Time m_processDelay;
+  bool m_busy = false;
 
   uint32_t m_nodeId;
 
+  uint32_t CalculateLatency(uint32_t length);
   void FinishProcessing(SimpleMemoryRequest request);
 };
 

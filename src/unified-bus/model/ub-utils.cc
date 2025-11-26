@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include "ub-utils.h"
 #include "ns3/hbm-helper.h"
+#include "ns3/hbm-helper-simple.h"
 #include "ns3/random-variable-stream.h"
+#include "control-macro.h"
 
 namespace utils {
 
@@ -514,6 +516,12 @@ void UbUtils::CreateNode(const string &filename)
         node->AggregateObject(sw);
         Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
         node->AggregateObject(ldst);
+        
+        #ifdef USE_SIMPLE_HBM
+            // ldst->DoInitialize();
+        #endif
+
+        
         ldst->Init(node->GetId());
         if (nodeTypeStr == "DEVICE") {
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
@@ -522,10 +530,18 @@ void UbUtils::CreateNode(const string &filename)
             ubCtrl->CreateUbTransaction();
             sw->SetNodeType(UB_DEVICE);
 
-            Ptr<HBMController> hbm = HBMHelper().Create(node->GetId(), 8);
+            #ifndef USE_SIMPLE_HBM
+                Ptr<HBMController> hbm = HBMHelper().Create(node->GetId(), 8);
+                node->AggregateObject(hbm);
+            #endif
+            #ifdef USE_SIMPLE_HBM
+                Ptr<SimpleHBMController> hbm = SimpleHBMHelper().Create(node->GetId(), 8);
+                node->AggregateObject(hbm);
+            #endif
+
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
-            node->AggregateObject(hbm);
+            
             
         } else if (nodeTypeStr == "SWITCH") {
             sw->SetNodeType(UB_SWITCH);

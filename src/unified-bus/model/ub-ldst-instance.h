@@ -8,6 +8,9 @@
 #include "ns3/node.h"
 #include "ns3/hbm-helper.h"
 #include "ns3/hbm-controller.h"
+#include "ns3/hbm-helper-simple.h"
+#include "ns3/hbm-controller-simple.h"
+#include "control-macro.h"
 
 namespace ns3 {
 class UbLdstThread;
@@ -28,6 +31,11 @@ public:
     Callback<void, uint32_t> FinishCallback;
     void OnRecvAck(uint32_t taskSegmentId);
     void OnTaskSegmentCompleted(uint32_t taskId);
+
+    #ifdef USE_SIMPLE_HBM
+        void InternalHBMAccess(void);
+        void Init(void);
+    #endif
 
 private:
     void MemTaskStartsNotify(uint32_t nodeId, uint32_t memTaskId);
@@ -52,6 +60,10 @@ private:
     TracedCallback<uint32_t, uint32_t> m_traceMemTaskStartsNotify;
     TracedCallback<uint32_t, uint32_t> m_traceFirstPacketSendsNotify;
     TracedCallback<uint32_t, uint32_t> m_traceLastPacketSendsNotify;
+
+    #ifdef USE_SIMPLE_HBM
+        uint32_t m_fire_period = 500;
+    #endif
 }; 
 } 
 

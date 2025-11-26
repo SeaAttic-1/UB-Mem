@@ -13,7 +13,7 @@ TypeId SimpleHBMController::GetTypeId(void)
   static TypeId tid =
     TypeId("ns3::SimpleHBMController")
       .SetParent<Object>()
-      .SetGroupName("SimpleHBM")
+      .SetGroupName("Simple-HBM")
       .AddConstructor<SimpleHBMController>();
   return tid;
 }
@@ -57,6 +57,12 @@ void SimpleHBMController::SendRequest(uint32_t cuid, uint32_t requestId, uint64_
   }
   SimpleMemoryRequest request = {cuid, address, size, bankId, isWrite, requestId, cb, arg};
   m_banks[request.bankId]->ReceiveRequest(request);
+}
+
+void SimpleHBMController::SetBackgroundIntensity(uint32_t bg_intensity) {
+  for (auto i : m_banks) {
+    i->SetBackgroundIntensity(bg_intensity);
+  }
 }
 
 } // namespace ns3
