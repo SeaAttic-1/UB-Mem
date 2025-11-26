@@ -1,0 +1,3 @@
+nodeId,nodeType,portNum,forwardDelay,IODieCount
+0..1,DEVICE,1,1ns,1
+2,SWITCH,2,1ns,1
