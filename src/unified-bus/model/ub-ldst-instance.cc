@@ -178,8 +178,8 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
         auto node = GetObject<Node>();
         auto rng = node->GetObject<UniformRandomVariable>();
         auto hbm = node->GetObject<SimpleHBMController>();
-
-        // Changable
+        
+        // Changable. Add logic to simulate more realistic background traffic
         auto bg_intensity = rng->GetInteger(0, 5);
         hbm->SetBackgroundIntensity(bg_intensity);
 
@@ -187,7 +187,7 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
     }
 
     void UbLdstInstance::Init(void) {
-        Simulator::ScheduleNow(&UbLdstInstance::InternalHBMAccess, this);
+        Simulator::Schedule(NanoSeconds(10), &UbLdstInstance::InternalHBMAccess, this);
     }
 
 #endif

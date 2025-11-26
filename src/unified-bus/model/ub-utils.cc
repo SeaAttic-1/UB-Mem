@@ -516,10 +516,6 @@ void UbUtils::CreateNode(const string &filename)
         node->AggregateObject(sw);
         Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
         node->AggregateObject(ldst);
-        
-        #ifdef USE_SIMPLE_HBM
-            // ldst->DoInitialize();
-        #endif
 
         
         ldst->Init(node->GetId());
@@ -541,13 +537,18 @@ void UbUtils::CreateNode(const string &filename)
 
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
-            
+
+            #ifdef USE_SIMPLE_HBM
+                ldst->Init();
+            #endif
             
         } else if (nodeTypeStr == "SWITCH") {
             sw->SetNodeType(UB_SWITCH);
         } else {
             NS_ASSERT_MSG(0, "node type not support");
         }
+
+
         for (int i = 0; i < portNum; i++) {
             Ptr<UbPort> port = CreateObject<UbPort>();
             port->SetAddress(Mac48Address::Allocate());
