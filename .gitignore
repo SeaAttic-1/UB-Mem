@@ -74,3 +74,6 @@ Thumbs.db
 # IDE files
 .vscode/
 *.sublime-*
+
+#Debug log
+new_log.txt
