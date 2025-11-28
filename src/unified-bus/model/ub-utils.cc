@@ -527,7 +527,7 @@ void UbUtils::CreateNode(const string &filename)
             sw->SetNodeType(UB_DEVICE);
 
             #ifndef USE_SIMPLE_HBM
-                Ptr<HBMController> hbm = HBMHelper().Create(node->GetId(), 8);
+                Ptr<HBMController> hbm = HBMHelper().Create(node->GetId());
                 node->AggregateObject(hbm);
             #endif
             #ifdef USE_SIMPLE_HBM

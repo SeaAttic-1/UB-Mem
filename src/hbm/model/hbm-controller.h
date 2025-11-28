@@ -4,10 +4,12 @@
 #include "ns3/object.h"
 #include "ns3/ptr.h"
 #include <vector>
+#include "hbm-stack.h"
+#include "hbm-macro.h"
 
 namespace ns3 {
 
-class HBMBank;
+class HBMStack;
 
 class HBMController : public Object
 {
@@ -17,11 +19,11 @@ public:
   HBMController();
   virtual ~HBMController();
 
-  void InitializeBanks(uint32_t nodeId, uint32_t numBanks);
-  void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg);
+  void Initialize(uint32_t nodeId, uint32_t numStacks = HBM_STACK_COUNT);
+  void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg);
 
 private:
-  std::vector<Ptr<HBMBank>> m_banks;
+  std::vector<Ptr<HBMStack>> m_stacks;
 };
 
 } // namespace ns3

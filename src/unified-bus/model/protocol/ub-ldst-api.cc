@@ -129,9 +129,18 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
         }
     }
     Ptr<Packet> packet = Create<Packet>(payloadSize);
+
+    uint64_t address = taskSegment->GetAddress();
     taskSegment->UpdateSentBytes(dataSize);
+    if (taskSegment->IsContextSwitching(dataSize)) {
+        taskSegment->SetAddress(NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>()->GetInteger(0, 1 << 31));
+    }
+    else
+        taskSegment->SetAddress(address + dataSize);
     // Gen Headers
     cMAETah.SetLength((uint8_t)length);
+    cMAETah.SetVirtualAddress(address);
+
     cTaHeader.SetIniTaSsn(taskSegment->GetTaskSegmentId()); // taskid
     uint16_t scna = static_cast<uint16_t>(utils::NodeIdToCna16(taskSegment->GetSrc()));
     memHeader.SetScna(scna);
@@ -278,9 +287,9 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
         // ackp = Create<Packet>(payloadSize);
     }
 
-    uint32_t num_of_atomics = payloadSize / HBM_BANK_ATOMIC_SIZE;
+    uint32_t num_of_atomics = payloadSize / HBM_ATOMIC_SIZE;
     if (num_of_atomics == 0) num_of_atomics  = 1;
-    if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog it too long.
+    if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog for too long.
     
     UbLdstApi::PacketContext* temp_ptr = new UbLdstApi::PacketContext();
     temp_ptr->linkPacketHeader = linkPacketHeader;
@@ -293,19 +302,35 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
     #ifdef USE_SIMPLE_HBM
         auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<SimpleHBMController>();
+        auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+        auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
+
+        for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
+        {
+            hbm_controller->SendRequest(12345, iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
+        } // For all the previous tasks, do nothing.
+
+        hbm_controller->SendRequest(12345, num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
     #else
         auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<HBMController>();
+        auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+
+        uint64_t base_address = cMAETah.GetVirtualAddress();
+
+        for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
+        {
+            // Simulator::Schedule(NanoSeconds(iter), &HBMController::SendRequest, hbm_controller, 12345, iter, 
+                // base_address, HBM_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
+            hbm_controller->SendRequest(12345, iter, base_address, HBM_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
+            base_address += HBM_ATOMIC_SIZE;
+        } // For all the previous tasks, do nothing.
+
+        // Simulator::Schedule(NanoSeconds(num_of_atomics-1), &HBMController::SendRequest, hbm_controller, 12345, num_of_atomics-1, 
+            // base_address, HBM_ATOMIC_SIZE, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+        hbm_controller->SendRequest(12345, num_of_atomics, base_address, HBM_BANK_ATOMIC_SIZE, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
     #endif
     
-    auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
-    auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
-
-    for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
-    {
-        hbm_controller->SendRequest(12345, iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
-    } // For all the previous tasks, do nothing.
-
-    hbm_controller->SendRequest(12345, num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+    
     // Only when processing the final segments, pass in real callback func as well as arg ptr;
     /*
     uint16_t tassn = cTaHeader.GetIniTaSsn();

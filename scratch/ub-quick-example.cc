@@ -46,7 +46,7 @@ void CheckExampleProcess()
 void RunCase(const string& configPath)
 {
     std::cout << configPath << std::endl;
-    RngSeedManager::SetSeed(10);
+    RngSeedManager::SetSeed(32125);
     string LoadConfigFilePath = configPath + "/network_attribute.txt";
     UbUtils::Get()->SetComponentsAttribute(LoadConfigFilePath);
     UbUtils::Get()->CreateTraceDir();
@@ -88,8 +88,8 @@ void RunCase(const string& configPath)
 // 根据配置文件路径执行用例
 int main(int argc, char* argv[])
 {
-    ns3::RngSeedManager::SetSeed(1);
-    ns3::RngSeedManager::SetRun(1);
+    // ns3::RngSeedManager::SetSeed(1);
+    // ns3::RngSeedManager::SetRun(1);
     if (UbUtils::Get()->QueryAttributeInfor(argc, argv))
         return 0;
     // 开始计时

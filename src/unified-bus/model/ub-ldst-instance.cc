@@ -9,8 +9,6 @@
 #include "ns3/random-variable-stream.h"
 #include "control-macro.h"
 
-#define SIM_HBM_INTERNAL
-
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
 
@@ -111,6 +109,7 @@ void UbLdstInstance::HandleLdstTask(uint32_t src, uint32_t dest, uint32_t length
         taskSegment->SetTaskSegmentId(m_currentTaskId);
         taskSegment->SetType(type);
         taskSegment->SetThreadId(threadId);
+        
         m_taskToSegmentMap[taskId].push_back(taskSegment);
         m_taskSegmentsMap[m_currentTaskId] = taskSegment;
         m_taskSegmentCompletedNum[taskId] = 0;

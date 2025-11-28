@@ -29,34 +29,21 @@ HBMController::~HBMController()
 }
 
 void
-HBMController::InitializeBanks(uint32_t nodeId, uint32_t numBanks)
+HBMController::Initialize(uint32_t nodeId, uint32_t numStacks)
 {
-  NS_LOG_FUNCTION(this << numBanks);
-
-  m_banks.clear();
-  for (uint32_t i = 0; i < numBanks; i++)
-    {
-      auto bank = CreateObject<HBMBank>();
-      bank->SetNodeId(nodeId);
-      m_banks.push_back(bank);
-    }
+  for(uint32_t i = 0; i < numStacks; i++) {
+    Ptr<HBMStack> new_stack = CreateObject<HBMStack>();
+    new_stack->Initialize(nodeId, i);
+    m_stacks.push_back(new_stack);
+  }
 }
 
-void HBMController::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg)
+void HBMController::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg)
 {
   NS_LOG_FUNCTION(this << requestId);
 
-  if (m_banks.empty())
-    {
-      NS_LOG_ERROR("HBMController has no banks initialized!");
-      return;
-    }
-  if (bankId >= m_banks.size()) {
-      NS_LOG_ERROR("Attempt to access bank" << bankId << "but HBM has only" << m_banks.size() << "banks" );
-      return;
-  }
-  MemoryRequest request = {cuid, address, size, bankId, isWrite, requestId, cb, arg};
-  m_banks[request.bankId]->ReceiveRequest(request);
+  uint32_t stackId = EXTRACT_STACK(address);
+  m_stacks[stackId]->SendRequest(cuid, requestId, address, size, isWrite, cb, arg);
 }
 
 } // namespace ns3

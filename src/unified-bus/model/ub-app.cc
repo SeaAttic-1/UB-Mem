@@ -46,6 +46,7 @@ TypeId UbApp::GetTypeId(void)
 
 UbApp::UbApp()
 {
+
 }
 
 UbApp::~UbApp()
@@ -74,12 +75,21 @@ void UbApp::DoDispose(void)
 
 void UbApp::SendTraffic(TrafficRecord record)
 {
+    static uint32_t sentBytes = 0;
+    static uint64_t random_address = 0;
+
     if (record.priority == 0) {
         NS_LOG_DEBUG("Task uses the highest priority, not recommended.");
     }
 
     if (record.opType == "MEM_STORE" || record.opType == "MEM_LOAD") {
         // 内存语义发送
+
+        if (sentBytes == 0) {
+            auto rng = GetNode()->GetObject<UniformRandomVariable>();
+            random_address = rng->GetInteger(0, 1 << 29);
+        }
+
         UbMemOperationType type = UbMemOperationType::STORE;
         if (record.opType == "MEM_STORE") {
             type = UbMemOperationType::STORE;
@@ -91,9 +101,18 @@ void UbApp::SendTraffic(TrafficRecord record)
         SetFinishCallback(MakeCallback(&UbApp::OnMemTaskCompleted, this), ldstInstance);
         NS_LOG_INFO("MEM Task Starts, taskId: " << record.taskId);
         MemTaskStartsNotify(GetNode()->GetId(), record.taskId);
+        
+        // Modify this to use more threads
+        // std::vector<uint32_t> threadIds = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         std::vector<uint32_t> threadIds = {0, 1};
         ldstInstance->HandleLdstTask(record.sourceNode, record.destNode, record.dataSize,
-                          record.taskId, type, threadIds, 0);
+                          record.taskId, type, threadIds, random_address);
+        sentBytes += 64;
+        random_address += 64;
+
+        if (sentBytes >= 2048)
+            sentBytes = 0;
+
     } else if (record.opType == "URMA_WRITE") {
         // URMA发送
         Ptr<UbFunction> ubFunc = GetNode()->GetObject<UbController>()->GetUbFunction();

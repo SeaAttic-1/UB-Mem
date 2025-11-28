@@ -13,11 +13,11 @@ main(int argc, char** argv)
   LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
 
   HBMHelper helper;
-  Ptr<HBMController> controller = helper.Create(0, 4);
+  Ptr<HBMController> controller = helper.Create(0);
 
-  controller->SendRequest(0, 1, 0x1000, 128, 1, true, [](void* p){}, nullptr);
-  controller->SendRequest(0, 2, 0x1000, 256, 1, false, [](void* p){}, nullptr);
-  controller->SendRequest(0, 3, 0x2000, 64, 2, true, [](void* p){}, nullptr);
+  controller->SendRequest(0, 1, 0x1000, 128, true, [](void* p){}, nullptr);
+  controller->SendRequest(0, 2, 0x1000, 256, false, [](void* p){}, nullptr);
+  controller->SendRequest(0, 3, 0x2000, 64, true, [](void* p){}, nullptr);
 
   Simulator::Run();
   Simulator::Destroy();

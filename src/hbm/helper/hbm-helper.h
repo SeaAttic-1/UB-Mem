@@ -13,7 +13,7 @@ class HBMHelper
 public:
   HBMHelper();
 
-  Ptr<HBMController> Create(uint32_t nodeId, uint32_t numBanks);
+  Ptr<HBMController> Create(uint32_t nodeId);
 
 private:
   uint32_t m_defaultBanks;

@@ -117,6 +117,11 @@ void UbLdstThread::PushTaskSegment(Ptr<UbLdstTaskSegment> taskSegment)
     m_waitingAckNum[taskSegmentId] = taskSegment->GetPsnSize();
     NS_LOG_DEBUG("[UbLdstThread PushTaskSegment] m_waitingAckNum[" << taskSegmentId << "]: " <<
                  m_waitingAckNum[taskSegmentId]);
+    
+    // Get a random address
+    uint64_t random_address = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>()->GetInteger(0, 1 << 31);
+    taskSegment->SetAddress(random_address);
+
     if (taskSegment->GetType() == UbMemOperationType::LOAD) {
         m_loadQueue.push(taskSegment);
         Simulator::ScheduleNow(&UbLdstThread::HandleLoadTask, this);
@@ -199,8 +204,15 @@ void UbLdstThread::InternalHBMAccess(void) {
 
         // Very simple logic here, can expand to get more realistic internal traffic patterns
         for(uint32_t i = 0; i < hbm_intensity; i++) {
-            auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
-            hbm->SendRequest(m_threadId, i, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, false, [](void* p){}, nullptr);
+            auto random_length = rng->GetInteger(0, 10); // changable
+            auto random_size = 1 << random_length;
+            auto random_address = rng->GetInteger(0, 1 << 29);
+
+            for(int j = 0; j < random_size / HBM_ATOMIC_SIZE; j++) {
+                hbm->SendRequest(m_threadId, i, random_address, HBM_BANK_ATOMIC_SIZE, false, [](void* p){}, nullptr);
+                random_address += HBM_ATOMIC_SIZE;
+            }
+            
         }
 
         Simulator::Schedule(NanoSeconds(positive ? this->m_fire_period + jitter : this->m_fire_period - jitter),

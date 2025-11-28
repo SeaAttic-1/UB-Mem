@@ -53,6 +53,9 @@ private:
     bool m_usePacketSpray = false;
     bool m_useShortestPaths = false;
     bool m_pktTraceEnabled = false;
+
+    uint32_t m_bytesReceived = 0;
+
     void LdstRecvNotify(uint32_t packetUid, uint32_t src, uint32_t dst,
                         PacketType type, uint32_t size, uint32_t taskId, UbPacketTraceTag traceTag);
     TracedCallback<uint32_t, uint32_t, uint32_t,

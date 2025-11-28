@@ -6,6 +6,7 @@
 #include "ns3/ipv4-address.h"
 #include "ns3/object.h"
 #include "ns3/core-module.h"
+#include "control-macro.h"
 
 #include <bitset>
 #include <cstdint>
@@ -276,6 +277,10 @@ public:
         m_psnCnt = (m_size + m_dataSize - 1) / m_dataSize;
     }
 
+    void SetAddress(uint64_t address) {
+        m_address = address;
+    }
+
     uint32_t GetLength()
     {
         return m_length;
@@ -284,6 +289,11 @@ public:
     uint32_t GetDataSize()
     {
         return m_dataSize;
+    }
+
+    uint64_t GetAddress(void)
+    {
+        return m_address;
     }
 
     uint32_t GetPacketSize()
@@ -348,6 +358,15 @@ public:
         return actualSent;
     }
 
+    bool IsContextSwitching (uint32_t sentBytes) {
+        m_bytesSent += sentBytes;
+        if (m_bytesSent >= CONTEXT_SWITCH_MARGIN) {
+            m_bytesSent = 0;
+            return true;
+        }
+        return false;
+    }
+
 private:
     // ========== 全局信息 ==========
     uint32_t m_taskId;
@@ -367,6 +386,7 @@ private:
     uint32_t m_bytesLeft = 0;       // 剩余的字节数
     uint32_t m_msn = 0;
     uint32_t m_packetSize = 0; // 请求包的payload size
+    uint32_t m_bytesSent = 0; // For simulating purposes
 };
 
 // ============================================================================

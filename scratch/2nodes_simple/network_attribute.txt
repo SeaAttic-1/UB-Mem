@@ -44,7 +44,7 @@ default ns3::UbHostCaqm::UbCaqmCwnd "40960"
 default ns3::UbSwitchCaqm::UbCcUpdatePeriod "+500ns"
 default ns3::UbQueueManager::BufferSize "12582912"
 default ns3::UbFault::UbFaultUsePacketSpray "true"
-default ns3::SimpleHBMBank::CorrectCoefficient "1"
+default ns3::SimpleHBMBank::CorrectCoefficient "0"
 
 global UB_FAULT_ENABLE "false"
 global UB_PRIORITY_NUM "16"
