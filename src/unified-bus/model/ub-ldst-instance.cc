@@ -64,15 +64,14 @@ void UbLdstInstance::Init(uint32_t nodeId)
 {
     for (uint32_t threadId = 0; threadId < m_threadNum; threadId++) {
         auto ldstThread = CreateObject<UbLdstThread>();
-        
-        #ifdef SIM_HBM_INTERNAL
-            ldstThread->DoInitialize();
-        #endif
 
         ldstThread->SetNode(nodeId);
         ldstThread->SetThreadId(threadId);
         m_threads.push_back(ldstThread);
     }
+    #ifdef SIM_HBM_INTERNAL
+        m_threads[0]->DoInitialize();
+    #endif
 }
 
 void UbLdstInstance::DoDispose()

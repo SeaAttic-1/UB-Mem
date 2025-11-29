@@ -32,7 +32,7 @@
 // GHz
 #define HBM_CAS_LATENCY 3
 // = int(10/3.6), CAS usually takes 10 cycles
-#define HBM_ROW_MISS_PENALTY 50
+#define HBM_ROW_MISS_PENALTY 100
 // 50 ns for row misses
 // Usually just 1 nanoseconds
 

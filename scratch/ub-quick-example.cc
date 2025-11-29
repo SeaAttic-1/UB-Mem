@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLink", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
+    LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
     // LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
     LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);

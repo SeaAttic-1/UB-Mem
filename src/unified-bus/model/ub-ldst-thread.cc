@@ -191,28 +191,36 @@ void UbLdstThread::InternalHBMAccess(void) {
         if (node->GetObject<UbSwitch>()->GetNodeType() != UB_DEVICE)
             return;
 
-        NS_LOG_DEBUG("Node " << m_nodeId << " makes 2 HBM access at " << Simulator::Now().GetNanoSeconds());
-
-        
         auto rng = node->GetObject<UniformRandomVariable>();
-        auto hbm = node->GetObject<HBMController>();
+        uint32_t jitter = 0;
+        bool positive = true;
 
-        auto jitter = rng->GetInteger(0, 10);
-        bool positive = rng->GetInteger(0, 1) == 0;
+        if (rng->GetInteger(1, LLC_MISS_PROBABILITY) != 1) {}
+        else {
+            NS_LOG_DEBUG("Node " << m_nodeId << " makes 2 HBM access at " << Simulator::Now().GetNanoSeconds());
+            auto hbm = node->GetObject<HBMController>();
 
-        auto hbm_intensity = this->GetHBMIntensity();
+            jitter = rng->GetInteger(0, 1);
+            positive = rng->GetInteger(0, 1) == 0;
 
-        // Very simple logic here, can expand to get more realistic internal traffic patterns
-        for(uint32_t i = 0; i < hbm_intensity; i++) {
-            auto random_length = rng->GetInteger(0, 10); // changable
-            auto random_size = 1 << random_length;
-            auto random_address = rng->GetInteger(0, 1 << 29);
+            auto hbm_intensity = this->GetHBMIntensity();
 
-            for(int j = 0; j < random_size / HBM_ATOMIC_SIZE; j++) {
-                hbm->SendRequest(m_threadId, i, random_address, HBM_BANK_ATOMIC_SIZE, false, [](void* p){}, nullptr);
-                random_address += HBM_ATOMIC_SIZE;
+            // Very simple logic here, can expand to get more realistic internal traffic patterns
+            // An LLC miss usually triggers the writeback of a dirty cache line, and the fetch of a new cache line
+            // So hbm_intensity = 2
+            // You may alter this value to simulate more or less intense accesses
+            // You can also change the macros in control-macro.h
+
+            for(uint32_t i = 0; i < hbm_intensity; i++) {
+                uint32_t fetch_size = 64; // A cache line size
+                auto random_address = rng->GetInteger(0, 1 << 31);
+                bool isWrite = positive;
+
+                for(uint32_t j = 0; j < fetch_size / HBM_ATOMIC_SIZE; j++) {
+                    hbm->SendRequest(m_threadId, i, random_address, HBM_BANK_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
+                    random_address += HBM_ATOMIC_SIZE;
+                }              
             }
-            
         }
 
         Simulator::Schedule(NanoSeconds(positive ? this->m_fire_period + jitter : this->m_fire_period - jitter),
