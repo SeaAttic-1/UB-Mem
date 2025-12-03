@@ -20,7 +20,7 @@ public:
   virtual ~HBMStack();
 
   void Initialize(uint32_t nodeId, uint32_t stackId, uint32_t numChannels = HBM_PC_PER_STACK);
-  void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg);
+  void SendRequest(MemoryRequest request);
 
 private:
   std::vector<Ptr<HBMPseudoChannel>> m_channels;

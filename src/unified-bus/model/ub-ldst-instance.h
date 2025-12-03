@@ -32,10 +32,9 @@ public:
     void OnRecvAck(uint32_t taskSegmentId);
     void OnTaskSegmentCompleted(uint32_t taskId);
 
-    #ifdef USE_SIMPLE_HBM
-        void InternalHBMAccess(void);
-        void Init(void);
-    #endif
+    void InternalHBMAccess(void);
+    void Init(void);
+    
 
 private:
     void MemTaskStartsNotify(uint32_t nodeId, uint32_t memTaskId);
@@ -63,6 +62,27 @@ private:
 
     #ifdef USE_SIMPLE_HBM
         uint32_t m_fire_period = 500;
+    #else
+        uint64_t m_workingSetSize = 8 * 1024 * 1024; // 8MB working set
+        std::vector<uint64_t> m_usedPages;
+        std::vector<std::pair<uint32_t, double>> m_sizeDist = {{128, 0.6}, {256, 0.3}, {64, 0.1}};
+        uint32_t m_outstanding = 0;
+
+        void ScheduleNextAccess();
+        uint64_t ChooseAddress();
+        uint32_t ChooseSize();
+        void OnHBMComplete(void* arg);
+
+        Ptr<ExponentialRandomVariable> m_exp_rng;
+
+        double m_ipc = 2.0;
+        double m_clockHz = 1.5e9;
+        double m_activeSMRatio = 0.2;
+        uint32_t m_numSM = 128;
+        uint32_t m_maxOutstanding = 4096;
+        double m_intraSetProbability = 0.8;
+
+
     #endif
 }; 
 } 

@@ -20,7 +20,7 @@ public:
   virtual ~HBMPseudoChannel();
 
   void Initialize(uint32_t nodeId, uint32_t channelId, uint32_t numGroups = HBM_BANK_GROUP_PER_PC);
-  void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg);
+  void SendRequest(MemoryRequest request);
 
 private:
   std::vector<Ptr<HBMBankGroup>> m_bank_groups;

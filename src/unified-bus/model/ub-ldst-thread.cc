@@ -12,6 +12,7 @@
 #include "ns3/hbm-controller.h"
 #include "ns3/hbm-bank.h"
 #include "control-macro.h"
+#include "traffic-macro.h"
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstThread");
@@ -47,7 +48,12 @@ TypeId UbLdstThread::GetTypeId(void)
                                           "Payload size (bytes) for each LOAD request.",
                                           UintegerValue(64),
                                           MakeUintegerAccessor(&UbLdstThread::m_loadReqSize),
-                                          MakeUintegerChecker<uint32_t>());
+                                          MakeUintegerChecker<uint32_t>())
+                            .AddAttribute("StoreRequestLength",
+                                          "The payload size for a STORE request is calculated as 64B * (2^length).",
+                                          UintegerValue(3),
+                                          MakeUintegerAccessor(&UbLdstThread::m_storeReqLength),
+                                          MakeUintegerChecker<uint32_t>(0, 7));
 
     return tid;
 }
@@ -60,10 +66,12 @@ UbLdstThread::~UbLdstThread()
 {
 }
 
+
 void UbLdstThread::DoInitialize(void) {
-    Simulator::ScheduleNow(&UbLdstThread::InternalHBMAccess, this);
+    // Simulator::ScheduleNow(&UbLdstThread::InternalHBMAccess, this);
     Object::DoInitialize();
 }
+
 
 uint32_t UbLdstThread::CalcLength(uint32_t size)
 {
@@ -80,9 +88,14 @@ uint32_t UbLdstThread::CalcLength(uint32_t size)
 
 void UbLdstThread::Init()
 {
+    NS_LOG_INFO("m_store_ReqSize is " << m_storeReqSize);
+    NS_LOG_INFO("m_load_RspSize is " << m_loadReqSize);
+    
     m_loadRspLength = CalcLength(m_storeReqSize);
     m_storeReqLength = CalcLength(m_loadRspSize);
     // Reset Size
+    NS_LOG_INFO("m_load_RspLength is " << m_loadRspLength);
+    NS_LOG_INFO("m_store_ReqLength is " << m_storeReqLength);
     m_loadRspSize = 64 * (1 << m_loadRspLength);
     m_storeReqSize = 64 * (1 << m_storeReqLength);
 }
@@ -97,6 +110,8 @@ void UbLdstThread::SetStoreReqLength(uint32_t length)
     m_storeReqLength = length;
     m_storeReqSize = 64 * (1 << m_storeReqLength);
 }
+
+// Modified
 
 void UbLdstThread::SetLoadRspLength(uint32_t length)
 {
@@ -119,7 +134,10 @@ void UbLdstThread::PushTaskSegment(Ptr<UbLdstTaskSegment> taskSegment)
                  m_waitingAckNum[taskSegmentId]);
     
     // Get a random address
-    uint64_t random_address = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>()->GetInteger(0, 1 << 31);
+    auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+    uint32_t random_address_lower_half = rng->GetInteger(0, 0xFFFFFFFF) & ROW_ALIGNED_AND_BIT_MASK;
+    uint32_t random_address_upper_half = rng->GetInteger(0, MAX_PHYSICAL_ADDRESS_UPPER_HALF);
+    uint64_t random_address = (static_cast<uint64_t>(random_address_upper_half) << 32ULL) + random_address_lower_half;
     taskSegment->SetAddress(random_address);
 
     if (taskSegment->GetType() == UbMemOperationType::LOAD) {
@@ -179,6 +197,7 @@ void UbLdstThread::HandleStoreTask()
     }
 }
 
+/*
 uint32_t UbLdstThread::GetHBMIntensity(void) {
     return this->m_hbm_intensity;
 }
@@ -213,11 +232,15 @@ void UbLdstThread::InternalHBMAccess(void) {
 
             for(uint32_t i = 0; i < hbm_intensity; i++) {
                 uint32_t fetch_size = 64; // A cache line size
-                auto random_address = rng->GetInteger(0, 1 << 31);
+
+                uint32_t random_address_lower_half = rng->GetInteger(0, 0xFFFFFFFF) & ROW_ALIGNED_AND_BIT_MASK;
+                uint32_t random_address_upper_half = rng->GetInteger(0, MAX_PHYSICAL_ADDRESS_UPPER_HALF);
+                uint64_t random_address = (static_cast<uint64_t>(random_address_upper_half) << 32ULL) + random_address_lower_half;
+
                 bool isWrite = positive;
 
                 for(uint32_t j = 0; j < fetch_size / HBM_ATOMIC_SIZE; j++) {
-                    hbm->SendRequest(m_threadId, i, random_address, HBM_BANK_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
+                    hbm->SendRequest(random_address, HBM_BANK_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
                     random_address += HBM_ATOMIC_SIZE;
                 }              
             }
@@ -227,6 +250,8 @@ void UbLdstThread::InternalHBMAccess(void) {
         &UbLdstThread::InternalHBMAccess, this);
     #endif
 }
+*/
+
 
 void UbLdstThread::SetNode(uint32_t nodeId)
 {

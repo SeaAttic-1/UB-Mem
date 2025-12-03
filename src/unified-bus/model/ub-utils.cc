@@ -517,8 +517,8 @@ void UbUtils::CreateNode(const string &filename)
         Ptr<ns3::UbLdstInstance> ldst = CreateObject<UbLdstInstance>();
         node->AggregateObject(ldst);
 
-        
         ldst->Init(node->GetId());
+        
         if (nodeTypeStr == "DEVICE") {
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
             node->AggregateObject(ubCtrl);
@@ -537,8 +537,7 @@ void UbUtils::CreateNode(const string &filename)
 
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
-
-            #ifdef USE_SIMPLE_HBM
+            #ifdef SIM_HBM_INTERNAL
                 ldst->Init();
             #endif
             

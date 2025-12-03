@@ -43,9 +43,9 @@ void HBMStack::Initialize(uint32_t nodeId, uint32_t stackId, uint32_t numChannel
     }
 }
 
-void HBMStack::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg) {
-    uint32_t channelId = EXTRACT_PC(address);
-    this->m_channels[channelId]->SendRequest(cuid, requestId, address, size, isWrite, cb, arg);
+void HBMStack::SendRequest(MemoryRequest request) {
+    uint32_t channelId = EXTRACT_PC(request.address);
+    this->m_channels[channelId]->SendRequest(request);
 }
 
 } // namespace ns3

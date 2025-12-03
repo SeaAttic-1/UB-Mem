@@ -1,0 +1,6 @@
+Experiment 1:
+model, overhead_enabled, overhead_latency, throughput, packet_size, test_case
+UB, no, 0, 255.9 Gbps, 64B, 2nodes_simple
+H100, no, 0, 255.9 Gbps, 64B, 2nodes_simple
+H100, yes, 100ns, 101.14 Gbps, 64B, 2nodes_simple
+H100, yes, 100ns, 

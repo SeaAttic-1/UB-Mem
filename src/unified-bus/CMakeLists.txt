@@ -71,6 +71,7 @@ build_lib(
 	model/ub-tag.h
 	model/ub-fault.h
 	model/control-macro.h
+	model/traffic-macro.h
   LIBRARIES_TO_LINK ${libnetwork}
                     ${libinternet}
                     ${mpi_libraries}

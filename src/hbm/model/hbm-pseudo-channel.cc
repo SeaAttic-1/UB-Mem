@@ -43,9 +43,9 @@ void HBMPseudoChannel::Initialize(uint32_t nodeId, uint32_t channelId, uint32_t 
     }
 }
 
-void HBMPseudoChannel::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg) {
-    uint32_t groupId = EXTRACT_BANK_GROUP(address);
-    this->m_bank_groups[groupId]->SendRequest(cuid, requestId, address, size, isWrite, cb, arg);
+void HBMPseudoChannel::SendRequest(MemoryRequest request) {
+    uint32_t groupId = EXTRACT_BANK_GROUP(request.address);
+    this->m_bank_groups[groupId]->SendRequest(request);
 }
 
 } // namespace ns3

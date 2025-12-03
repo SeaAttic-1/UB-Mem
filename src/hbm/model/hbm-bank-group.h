@@ -20,7 +20,7 @@ public:
   virtual ~HBMBankGroup();
 
   void Initialize(uint32_t nodeId, uint32_t groupId, uint32_t numBanks = HBM_BANK_PER_BANK_GROUP);
-  void SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg);
+  void SendRequest(MemoryRequest request);
 
 private:
   std::vector<Ptr<HBMBank>> m_banks;

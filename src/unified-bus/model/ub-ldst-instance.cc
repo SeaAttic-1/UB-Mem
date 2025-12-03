@@ -8,6 +8,7 @@
 #include "ub-ldst-instance.h"
 #include "ns3/random-variable-stream.h"
 #include "control-macro.h"
+#include "traffic-macro.h"
 
 namespace ns3 {
 NS_LOG_COMPONENT_DEFINE("UbLdstInstance");
@@ -69,9 +70,7 @@ void UbLdstInstance::Init(uint32_t nodeId)
         ldstThread->SetThreadId(threadId);
         m_threads.push_back(ldstThread);
     }
-    #ifdef SIM_HBM_INTERNAL
-        m_threads[0]->DoInitialize();
-    #endif
+    
 }
 
 void UbLdstInstance::DoDispose()
@@ -188,6 +187,92 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
         Simulator::Schedule(NanoSeconds(10), &UbLdstInstance::InternalHBMAccess, this);
     }
 
+#else
+    void UbLdstInstance::Init(void) {
+        uint64_t pages = std::max(1UL, m_workingSetSize / HBM_ROW_SIZE);
+
+        auto rng = GetObject<Node>()->GetObject<UniformRandomVariable>();
+        uint32_t random_address_lower_half = rng->GetInteger(0, 0xFFFFFFFF) & ROW_ALIGNED_AND_BIT_MASK;
+        uint32_t random_address_upper_half = rng->GetInteger(0, MAX_PHYSICAL_ADDRESS_UPPER_HALF);
+        uint64_t random_base_address = (static_cast<uint64_t>(random_address_upper_half) << 32ULL) + random_address_lower_half;
+        
+        m_usedPages.reserve(pages);
+
+        for(uint64_t i = 0; i < pages; i++) {
+            m_usedPages.push_back(random_base_address + i * HBM_ROW_SIZE);
+        }
+
+        m_exp_rng = CreateObject<ExponentialRandomVariable>();
+        
+        double lambda = LLC_MISS_PER_KILO_INSTRUCTION / 1000.0 * m_ipc * m_clockHz * m_numSM * m_activeSMRatio;
+        NS_LOG_INFO("lambda is " << lambda);
+        m_exp_rng->SetAttribute("Mean", DoubleValue(1.0 / lambda));
+
+        Simulator::ScheduleNow(&UbLdstInstance::ScheduleNextAccess, this);
+    }
+
+    void UbLdstInstance::ScheduleNextAccess() {
+        auto rng = GetObject<Node>()->GetObject<UniformRandomVariable>();
+        if (m_outstanding > m_maxOutstanding) {
+            uint32_t delay = 1000 + rng->GetInteger(0, 1000);
+            Simulator::Schedule(NanoSeconds(delay), &UbLdstInstance::ScheduleNextAccess, this);
+        }
+        else {
+            double interval = m_exp_rng->GetValue();
+            NS_LOG_INFO("Wait for " << interval);
+            Simulator::Schedule(Seconds(interval), &UbLdstInstance::InternalHBMAccess, this);
+        }
+    }
+
+    void UbLdstInstance::InternalHBMAccess(void) {
+        if (m_outstanding < m_maxOutstanding) {
+            m_outstanding ++;
+            NS_LOG_INFO("Issued one HBM access at " << Simulator::Now().GetNanoSeconds() << " on node " << GetObject<Node>()->GetId());
+            GetObject<Node>()->GetObject<HBMController>()->SendRequest(ChooseAddress(), ChooseSize(), true,
+            false, MakeCallback(&UbLdstInstance::OnHBMComplete, this), static_cast<void*>((int*)1));
+
+            Simulator::ScheduleNow(&UbLdstInstance::ScheduleNextAccess, this);
+        }
+        else
+            NS_LOG_INFO("stalled because used up all otsd credits on " << GetObject<Node>()->GetId());
+    }
+
+    void UbLdstInstance::OnHBMComplete(void* arg) {
+        m_outstanding --;
+    }
+
+    uint64_t UbLdstInstance::ChooseAddress() {
+        auto rng = GetObject<Node>()->GetObject<UniformRandomVariable>();
+        double p = rng->GetValue();
+
+        if(p < m_intraSetProbability) {
+            uint64_t random_base_address = m_usedPages[rng->GetInteger(0, m_usedPages.size()-1)];
+            uint64_t max_offset = HBM_ROW_SIZE - 64;
+            uint64_t offset = rng->GetInteger(0, max_offset / 64) * 64;
+
+            return random_base_address + offset;
+            
+        }
+        else {
+            uint32_t random_address_lower_half = rng->GetInteger(0, 0xFFFFFFFF) & ROW_ALIGNED_AND_BIT_MASK;
+            uint32_t random_address_upper_half = rng->GetInteger(0, MAX_PHYSICAL_ADDRESS_UPPER_HALF);
+            return (static_cast<uint64_t>(random_address_upper_half) << 32ULL) + random_address_lower_half;
+
+        }
+    }
+
+    uint32_t UbLdstInstance::ChooseSize() {
+        double x = GetObject<Node>()->GetObject<UniformRandomVariable>()->GetValue();
+        double sum = 0.0;
+
+        for(auto& i : m_sizeDist) {
+            sum += i.second;
+            if (x <= sum) return i.first;
+        }
+        return m_sizeDist.back().first;
+    }
+
 #endif
+
 
 }

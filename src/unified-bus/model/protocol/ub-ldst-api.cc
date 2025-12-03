@@ -133,7 +133,11 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
     uint64_t address = taskSegment->GetAddress();
     taskSegment->UpdateSentBytes(dataSize);
     if (taskSegment->IsContextSwitching(dataSize)) {
-        taskSegment->SetAddress(NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>()->GetInteger(0, 1 << 31));
+        auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+        uint32_t random_address_lower_half = rng->GetInteger(0, 0xFFFFFFFF) & ROW_ALIGNED_AND_BIT_MASK;
+        uint32_t random_address_upper_half = rng->GetInteger(0, MAX_PHYSICAL_ADDRESS_UPPER_HALF);
+        uint64_t random_address = (static_cast<uint64_t>(random_address_upper_half) << 32ULL) + random_address_lower_half;
+        taskSegment->SetAddress(random_address);
     }
     else
         taskSegment->SetAddress(address + dataSize);
@@ -168,6 +172,7 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment)
 
 void UbLdstApi::OnHBMComplete(void* arg) {
     
+    NS_LOG_INFO("Callback function called by HBM instance");
     if (arg == nullptr) {
         NS_LOG_ERROR("Error: got nullptr");
     }
@@ -286,10 +291,6 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
         NS_LOG_DEBUG("[UbLdstApi RecvDataPacket] Load payloadSize: " << payloadSize);
         // ackp = Create<Packet>(payloadSize);
     }
-
-    uint32_t num_of_atomics = payloadSize / HBM_ATOMIC_SIZE;
-    if (num_of_atomics == 0) num_of_atomics  = 1;
-    if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog for too long.
     
     UbLdstApi::PacketContext* temp_ptr = new UbLdstApi::PacketContext();
     temp_ptr->linkPacketHeader = linkPacketHeader;
@@ -301,6 +302,13 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
 
     auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
     #ifdef USE_SIMPLE_HBM
+        uint32_t num_of_atomics = payloadSize / (HBM_ATOMIC_SIZE);
+        NS_LOG_INFO("HBM_ATOMIC_SIZE is " << HBM_ATOMIC_SIZE);
+        NS_LOG_INFO("payloadSize is " << payloadSize);
+        NS_LOG_INFO("Making " << payloadSize / (HBM_ATOMIC_SIZE) << " writes");
+        if (num_of_atomics == 0) num_of_atomics  = 1;
+        if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog for too long.
+
         auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<SimpleHBMController>();
         auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
         auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
@@ -316,18 +324,7 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
         auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
 
         uint64_t base_address = cMAETah.GetVirtualAddress();
-
-        for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
-        {
-            // Simulator::Schedule(NanoSeconds(iter), &HBMController::SendRequest, hbm_controller, 12345, iter, 
-                // base_address, HBM_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
-            hbm_controller->SendRequest(12345, iter, base_address, HBM_ATOMIC_SIZE, isWrite, [](void* p){}, nullptr);
-            base_address += HBM_ATOMIC_SIZE;
-        } // For all the previous tasks, do nothing.
-
-        // Simulator::Schedule(NanoSeconds(num_of_atomics-1), &HBMController::SendRequest, hbm_controller, 12345, num_of_atomics-1, 
-            // base_address, HBM_ATOMIC_SIZE, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
-        hbm_controller->SendRequest(12345, num_of_atomics, base_address, HBM_BANK_ATOMIC_SIZE, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+        hbm_controller->SendRequest(base_address, payloadSize, isWrite, true, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
     #endif
     
     

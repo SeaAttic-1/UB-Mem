@@ -17,13 +17,12 @@
 namespace ns3 {
 
 struct MemoryRequest {
-    uint32_t cuid;     // The CU that initiates this request
-    uint32_t requestId; // An unused field
     uint64_t address;  // Memory address for the request
     uint32_t size;     // Size of the request (in bytes)  
     bool isWrite;// Whether it's a write request or a read request
-    Callback<void, void*> cb; // Callback function used to notify the receiver
-    void* arg; // argument for the Callback func
+    bool isRemote;
+    std::vector<Callback<void, void*>> cbs; // Callback function used to notify the receiver
+    std::vector<void*> args; // argument for the Callback func
 };
 
 class HBMBank : public Object
@@ -45,7 +44,7 @@ private:
 
   uint32_t m_nodeId;
   uint32_t m_bankId;
-  uint32_t m_activeRow;
+  uint32_t m_activeRow = 32768;
 
   void FinishProcessing(MemoryRequest request);
 };

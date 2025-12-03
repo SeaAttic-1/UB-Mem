@@ -43,9 +43,8 @@ void HBMBankGroup::Initialize(uint32_t nodeId, uint32_t groupId, uint32_t numBan
     }
 }
 
-void HBMBankGroup::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, bool isWrite, Callback<void, void*> cb, void* arg) {
-    MemoryRequest request = {cuid, requestId, address, size, isWrite, cb, arg};
-    uint32_t bankId = EXTRACT_BANK(address);
+void HBMBankGroup::SendRequest(MemoryRequest request) {
+    uint32_t bankId = EXTRACT_BANK(request.address);
     this->m_banks[bankId]->ReceiveRequest(request);
 }
 

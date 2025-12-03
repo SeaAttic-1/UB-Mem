@@ -33,15 +33,16 @@ HBMBank::~HBMBank()
 
 void HBMBank::ReceiveRequest(MemoryRequest request) {
 
-  if (request.cuid == 12345)
-        NS_LOG_INFO("Remote request " << request.requestId << " accessing " << request.address << " in Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
+  if (request.isRemote)
+        NS_LOG_INFO("Remote request accessing " << request.address << " in Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
               << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId << " queued at " << Simulator::Now().GetNanoSeconds() << " ns");
       else
-         NS_LOG_INFO("Request " << request.requestId << " accessing " << request.address << " in Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
+         NS_LOG_INFO("Request accessing " << request.address << " in Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
               << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId << " queued at " << Simulator::Now().GetNanoSeconds() << " ns");
 
   uint32_t bus_delay = request.size / HBM_BUS_BANDWIDTH_PER_PC;
-  bus_delay += HBM_CAS_LATENCY;
+  NS_LOG_INFO("Request size first is " << request.size);
+  NS_LOG_INFO("Process delay first is " << bus_delay);
 
   if (!m_busy)
     {
@@ -50,12 +51,29 @@ void HBMBank::ReceiveRequest(MemoryRequest request) {
       if (row_id != m_activeRow) {
         NS_LOG_INFO("Row miss at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
               << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId);
+              if (m_activeRow != 32768) {
+                bus_delay += HBM_PRECHARGE_LATENCY;
+              }
         m_activeRow = row_id;
-        bus_delay += HBM_ROW_MISS_PENALTY;
+        bus_delay += HBM_ACTIVE_ROW_LATENCY;
       }
+
       else
         NS_LOG_INFO("Row hit at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
               << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId);
+      
+      bus_delay += HBM_CAS_LATENCY;
+      if(request.size > HBM_COLUMN_SIZE) {
+        uint32_t extra_col_accesses = request.size / HBM_COLUMN_SIZE;
+        bus_delay += extra_col_accesses * HBM_TCCDL_LATENCY;
+      }
+    
+
+      #ifdef INCLUDE_OTHER_OVERHEAD
+        bus_delay += OTHER_OVERHEAD;
+      #endif
+      NS_LOG_INFO("Process delay is " << bus_delay);
+
       m_processEvent = Simulator::Schedule(NanoSeconds(bus_delay),
                                            &HBMBank::FinishProcessing,
                                            this, request);
@@ -72,29 +90,44 @@ void
 HBMBank::FinishProcessing(MemoryRequest request)
 {
   NS_LOG_INFO("HBM Bank " <<  m_bankId << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
-              << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId  << " processed request " << request.requestId << " by CU " << request.cuid
-              << " at " << Simulator::Now().GetNanoSeconds() << " ns");
+              << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId  << " processed request "<< 
+             " at " << Simulator::Now().GetNanoSeconds() << " ns");
   m_busy = false;
-  request.cb(request.arg);
+
+  for(uint32_t i = 0; i < request.cbs.size(); i++) {
+    request.cbs[i](request.args[i]);
+  }
+
   if (!request_q.empty()) {
     MemoryRequest next_request = request_q.front();
     m_busy = true;
     
     uint32_t bus_delay = next_request.size / HBM_BUS_BANDWIDTH_PER_PC;
-    bus_delay += HBM_CAS_LATENCY;
     uint32_t row_id = EXTRACT_ROW(next_request.address);
-
     if (row_id != m_activeRow) {
+        NS_LOG_INFO("Row miss at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
+              << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId);
+              if (m_activeRow != 32768) {
+                bus_delay += HBM_PRECHARGE_LATENCY;
+              }
         m_activeRow = row_id;
-        bus_delay += HBM_ROW_MISS_PENALTY;
-        NS_LOG_INFO("Row miss at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(next_request.address) << " in channel " << EXTRACT_PC(next_request.address)
-              << " in stack " << EXTRACT_STACK(next_request.address) << " on node " << m_nodeId);
-    }
-    else
-        NS_LOG_INFO("Row hit at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(next_request.address) << " in channel " << EXTRACT_PC(next_request.address)
-              << " in stack " << EXTRACT_STACK(next_request.address) << " on node " << m_nodeId);
+        bus_delay += HBM_ACTIVE_ROW_LATENCY;
+      }
 
-    
+      else
+        NS_LOG_INFO("Row hit at Bank " << m_bankId  << " in group " << EXTRACT_BANK_GROUP(request.address) << " in channel " << EXTRACT_PC(request.address)
+              << " in stack " << EXTRACT_STACK(request.address) << " on node " << m_nodeId);
+      
+      bus_delay += HBM_CAS_LATENCY;
+      if(request.size > HBM_COLUMN_SIZE) {
+        uint32_t extra_col_accesses = request.size / HBM_COLUMN_SIZE;
+        bus_delay += extra_col_accesses * HBM_TCCDL_LATENCY;
+      }
+
+      #ifdef INCLUDE_OTHER_OVERHEAD
+        bus_delay += OTHER_OVERHEAD;
+      #endif
+
     request_q.pop();
     Simulator::Schedule(NanoSeconds(bus_delay), &HBMBank::FinishProcessing, this, next_request);
   }
