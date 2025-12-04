@@ -1,3 +1,3 @@
 // #define USE_SIMPLE_HB
-#define SIM_HBM_INTERNAL
+// #define SIM_HBM_INTERNAL
 #define CONTEXT_SWITCH_MARGIN 1024

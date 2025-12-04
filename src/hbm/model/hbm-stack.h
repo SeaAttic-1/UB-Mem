@@ -10,6 +10,7 @@
 namespace ns3 {
 
 class HBMPseudoChannel;
+struct MemoryRequest;
 
 class HBMStack : public Object
 {
@@ -20,7 +21,7 @@ public:
   virtual ~HBMStack();
 
   void Initialize(uint32_t nodeId, uint32_t stackId, uint32_t numChannels = HBM_PC_PER_STACK);
-  void SendRequest(MemoryRequest request);
+  bool SendRequest(MemoryRequest request);
 
 private:
   std::vector<Ptr<HBMPseudoChannel>> m_channels;

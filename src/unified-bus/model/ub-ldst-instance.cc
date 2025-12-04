@@ -212,6 +212,7 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
     }
 
     void UbLdstInstance::ScheduleNextAccess() {
+        if(m_blocked) return;
         auto rng = GetObject<Node>()->GetObject<UniformRandomVariable>();
         if (m_outstanding > m_maxOutstanding) {
             uint32_t delay = 1000 + rng->GetInteger(0, 1000);
@@ -226,19 +227,30 @@ void UbLdstInstance::LastPacketSendsNotify(uint32_t nodeId, uint32_t memTaskId)
 
     void UbLdstInstance::InternalHBMAccess(void) {
         if (m_outstanding < m_maxOutstanding) {
+            NS_LOG_INFO("outstanding is " << m_outstanding);
             m_outstanding ++;
             NS_LOG_INFO("Issued one HBM access at " << Simulator::Now().GetNanoSeconds() << " on node " << GetObject<Node>()->GetId());
-            GetObject<Node>()->GetObject<HBMController>()->SendRequest(ChooseAddress(), ChooseSize(), true,
-            false, MakeCallback(&UbLdstInstance::OnHBMComplete, this), static_cast<void*>((int*)1));
+            bool backpressure = not GetObject<Node>()->GetObject<HBMController>()->SendRequest(ChooseAddress(), ChooseSize(), true,
+                false, MakeCallback(&UbLdstInstance::OnHBMComplete, this), static_cast<void*>((int*)1));
 
-            Simulator::ScheduleNow(&UbLdstInstance::ScheduleNextAccess, this);
+            if (backpressure) {
+                NS_LOG_INFO("HBM backpressured, stalled");
+                m_blocked = true;
+            } 
+            else Simulator::ScheduleNow(&UbLdstInstance::ScheduleNextAccess, this);
         }
         else
             NS_LOG_INFO("stalled because used up all otsd credits on " << GetObject<Node>()->GetId());
     }
 
     void UbLdstInstance::OnHBMComplete(void* arg) {
-        m_outstanding --;
+        if (arg != nullptr)
+            m_outstanding --;
+        if (m_blocked) {
+            m_blocked = false;
+            NS_LOG_INFO("Resumed execution");
+            Simulator::ScheduleNow(&UbLdstInstance::ScheduleNextAccess, this);
+        }
     }
 
     uint64_t UbLdstInstance::ChooseAddress() {

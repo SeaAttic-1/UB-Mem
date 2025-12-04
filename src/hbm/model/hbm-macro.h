@@ -109,8 +109,14 @@
 
 
     #define HBM_CONTROLLER_WRITE_BUFFER_MAX_SIZE 8
-    #define HBM_CONTROOLER_WRITE_BUFFER_TIMEOUT 50
+    #define HBM_CONTROLLER_WRITE_BUFFER_TIME_OUT 50
+    #define HBM_MAX_BANK_QUEUE_SIZE 16
+    #define HBM_MAX_PC_OTSD_LIMITS 64
+    #define HBM_MAX_MC_OTSD_LIMITS 512
     #define OTHER_OVERHEAD 100
+    #define TLB_ACCESS_LATENCY 10
+    #define PAGE_TABLE_WALK_LATENCY 50
+    #define TLB_MISS_PROBABILITY 0.2
     // latency for mem controller, NIC processing, packet processing, 100 ns is an estimate
     // Use larger packet or more nodes to amortize this delay
 

@@ -4,6 +4,7 @@
 #include "ns3/core-module.h"
 #include "ns3/singleton.h"
 #include "ns3/node.h"
+#include "hbm-bank.h"
 
 namespace ns3 {
 
@@ -43,9 +44,9 @@ void HBMStack::Initialize(uint32_t nodeId, uint32_t stackId, uint32_t numChannel
     }
 }
 
-void HBMStack::SendRequest(MemoryRequest request) {
+bool HBMStack::SendRequest(MemoryRequest request) {
     uint32_t channelId = EXTRACT_PC(request.address);
-    this->m_channels[channelId]->SendRequest(request);
+    return this->m_channels[channelId]->SendRequest(request);
 }
 
 } // namespace ns3

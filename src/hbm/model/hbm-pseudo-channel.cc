@@ -4,6 +4,7 @@
 #include "ns3/core-module.h"
 #include "ns3/singleton.h"
 #include "ns3/node.h"
+#include "hbm-bank.h"
 
 namespace ns3 {
 
@@ -38,14 +39,24 @@ void HBMPseudoChannel::Initialize(uint32_t nodeId, uint32_t channelId, uint32_t 
 
     for(uint32_t i = 0; i < numGroups; i++) {
         Ptr<HBMBankGroup> new_bank_group = CreateObject<HBMBankGroup>();
-        new_bank_group->Initialize(nodeId, i);
+        new_bank_group->Initialize(nodeId, i, this);
         m_bank_groups.push_back(new_bank_group);
     }
 }
 
-void HBMPseudoChannel::SendRequest(MemoryRequest request) {
+bool HBMPseudoChannel::SendRequest(MemoryRequest request) {
+
+    if(m_outstanding > HBM_MAX_PC_OTSD_LIMITS)
+      return false;
+
     uint32_t groupId = EXTRACT_BANK_GROUP(request.address);
-    this->m_bank_groups[groupId]->SendRequest(request);
+    bool received = this->m_bank_groups[groupId]->SendRequest(request);
+    if(received) m_outstanding ++;
+    return received;
+  }
+
+void HBMPseudoChannel::NotifyComplete(void) {
+  m_outstanding --;
 }
 
 } // namespace ns3

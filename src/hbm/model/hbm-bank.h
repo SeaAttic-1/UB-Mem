@@ -12,9 +12,14 @@
 #include "ns3/core-module.h"
 #include "ns3/singleton.h"
 #include "ns3/ptr.h"
+#include "hbm-pseudo-channel.h"
+#include "hbm-controller.h"
 #include <queue>
 
 namespace ns3 {
+
+class HBMPseudoChannel;
+class HBMController;
 
 struct MemoryRequest {
     uint64_t address;  // Memory address for the request
@@ -23,6 +28,7 @@ struct MemoryRequest {
     bool isRemote;
     std::vector<Callback<void, void*>> cbs; // Callback function used to notify the receiver
     std::vector<void*> args; // argument for the Callback func
+    std::vector<uint64_t> end_addresses;
 };
 
 class HBMBank : public Object
@@ -33,9 +39,9 @@ public:
   HBMBank();
   virtual ~HBMBank();
 
-  void ReceiveRequest(MemoryRequest request);
+  bool ReceiveRequest(MemoryRequest request);
   void ProcessNext();
-  void Initialize(uint32_t nodeId, uint32_t bankId);
+  void Initialize(uint32_t nodeId, uint32_t bankId, HBMPseudoChannel* pc_ptr);
 
 private:
   std::queue <MemoryRequest> request_q;
@@ -46,7 +52,10 @@ private:
   uint32_t m_bankId;
   uint32_t m_activeRow = 32768;
 
+  HBMPseudoChannel* m_pc_ptr = nullptr;
+
   void FinishProcessing(MemoryRequest request);
+  void InvokeCallback(Callback<void, void*> cb, void* arg);
 };
 
 } // namespace ns3

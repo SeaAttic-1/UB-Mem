@@ -68,6 +68,8 @@ private:
         std::vector<std::pair<uint32_t, double>> m_sizeDist = {{128, 0.6}, {256, 0.3}, {64, 0.1}};
         uint32_t m_outstanding = 0;
 
+        bool m_blocked = false;
+
         void ScheduleNextAccess();
         uint64_t ChooseAddress();
         uint32_t ChooseSize();

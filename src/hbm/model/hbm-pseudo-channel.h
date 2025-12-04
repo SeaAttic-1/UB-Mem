@@ -9,7 +9,8 @@
 
 namespace ns3 {
 
-class HBMPseudoChannel;
+class HBMBankGroup;
+struct MemoryRequest;
 
 class HBMPseudoChannel : public Object
 {
@@ -20,12 +21,15 @@ public:
   virtual ~HBMPseudoChannel();
 
   void Initialize(uint32_t nodeId, uint32_t channelId, uint32_t numGroups = HBM_BANK_GROUP_PER_PC);
-  void SendRequest(MemoryRequest request);
+  bool SendRequest(MemoryRequest request);
+  void NotifyComplete(void);
 
 private:
   std::vector<Ptr<HBMBankGroup>> m_bank_groups;
   uint32_t m_nodeId;
   uint32_t m_channelId;
+  
+  uint32_t m_outstanding = 0;
 };
 
 } // namespace ns3

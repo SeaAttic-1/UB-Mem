@@ -1,2050 +1,2050 @@
 MPKI=0.05:
-Trial 0: 170.068
+Trial 0: 186.8373
 
-Trial 1: 170.068
+Trial 1: 186.977
 
-Trial 2: 164.7786
+Trial 2: 187.0601
 
-Trial 3: 169.9958
+Trial 3: 187.4195
 
-Trial 4: 170.249
+Trial 4: 187.7846
 
-Trial 5: 170.4303
+Trial 5: 185.5804
 
-Trial 6: 171.2695
+Trial 6: 186.3152
 
-Trial 7: 168.5985
+Trial 7: 187.6261
 
-Trial 8: 169.8874
+Trial 8: 187.5821
 
-Trial 9: 173.8375
+Trial 9: 186.9421
 
-Trial 10: 168.3502
+Trial 10: 186.3933
 
-Trial 11: 168.6696
+Trial 11: 187.7141
 
-Trial 12: 170.068
+Trial 12: 186.7501
 
-Trial 13: 170.4303
+Trial 13: 187.3536
 
-Trial 14: 170.068
+Trial 14: 187.5953
 
-Trial 15: 169.7073
+Trial 15: 188.2574
 
-Trial 16: 168.5275
+Trial 16: 186.9596
 
-Trial 17: 170.068
+Trial 17: 186.785
 
-Trial 18: 169.8874
+Trial 18: 186.615
 
-Trial 19: 166.9449
+Trial 19: 187.1608
 
 MPKI=0.1:
-Trial 0: 169.9235
+Trial 0: 186.4454
 
-Trial 1: 171.2695
+Trial 1: 187.1082
 
-Trial 2: 171.7107
+Trial 2: 187.2659
 
-Trial 3: 173.2352
+Trial 3: 187.2747
 
-Trial 4: 170.068
+Trial 4: 186.3152
 
-Trial 5: 170.068
+Trial 5: 186.7588
 
-Trial 6: 174.5201
+Trial 6: 187.3756
 
-Trial 7: 170.068
+Trial 7: 187.047
 
-Trial 8: 171.7844
+Trial 8: 186.9902
 
-Trial 9: 170.068
+Trial 9: 186.1851
 
-Trial 10: 168.3147
+Trial 10: 188.2885
 
-Trial 11: 171.8951
+Trial 11: 185.6795
 
-Trial 12: 174.3679
+Trial 12: 185.4127
 
-Trial 13: 170.068
+Trial 13: 186.4367
 
-Trial 14: 169.7073
+Trial 14: 188.0362
 
-Trial 15: 166.182
+Trial 15: 186.3282
 
-Trial 16: 171.8582
+Trial 16: 187.7758
 
-Trial 17: 171.7107
+Trial 17: 187.152
 
-Trial 18: 170.068
+Trial 18: 188.0053
 
-Trial 19: 170.4667
+Trial 19: 186.4367
 
 MPKI=0.15000000000000002:
-Trial 0: 169.9958
+Trial 0: 187.5821
 
-Trial 1: 170.068
+Trial 1: 187.3317
 
-Trial 2: 168.1732
+Trial 2: 187.7582
 
-Trial 3: 170.068
+Trial 3: 186.7414
 
-Trial 4: 170.068
+Trial 4: 186.8504
 
-Trial 5: 170.249
+Trial 5: 187.3492
 
-Trial 6: 170.5393
+Trial 6: 186.4976
 
-Trial 7: 167.8909
+Trial 7: 187.8596
 
-Trial 8: 166.3894
+Trial 8: 187.2572
 
-Trial 9: 160.2885
+Trial 9: 186.929
 
-Trial 10: 166.6667
+Trial 10: 185.2624
 
-Trial 11: 170.2852
+Trial 11: 185.7355
 
-Trial 12: 170.4303
+Trial 12: 187.4195
 
-Trial 13: 170.068
+Trial 13: 187.117
 
-Trial 14: 170.068
+Trial 14: 187.3492
 
-Trial 15: 172.6743
+Trial 15: 186.4845
 
-Trial 16: 173.5734
+Trial 16: 187.1564
 
-Trial 17: 165.9407
+Trial 17: 186.7675
 
-Trial 18: 171.7107
+Trial 18: 186.6891
 
-Trial 19: 170.3215
+Trial 19: 186.8897
 
 MPKI=0.2:
-Trial 0: 168.6696
+Trial 0: 187.2002
 
-Trial 1: 170.068
+Trial 1: 186.3933
 
-Trial 2: 170.1766
+Trial 2: 187.0732
 
-Trial 3: 170.068
+Trial 3: 186.6629
 
-Trial 4: 170.068
+Trial 4: 186.4715
 
-Trial 5: 167.8556
+Trial 5: 187.9743
 
-Trial 6: 170.068
+Trial 6: 186.7109
 
-Trial 7: 171.2695
+Trial 7: 187.2002
 
-Trial 8: 174.444
+Trial 8: 186.2327
 
-Trial 9: 171.123
+Trial 9: 186.9814
 
-Trial 10: 170.1766
+Trial 10: 185.5417
 
-Trial 11: 170.068
+Trial 11: 187.0732
 
-Trial 12: 171.4898
+Trial 12: 186.2284
 
-Trial 13: 171.7107
+Trial 13: 185.6105
 
-Trial 14: 166.3894
+Trial 14: 186.6499
 
-Trial 15: 173.3853
+Trial 15: 187.1345
 
-Trial 16: 166.4586
+Trial 16: 187.5117
 
-Trial 17: 173.6865
+Trial 17: 187.3624
 
-Trial 18: 167.9614
+Trial 18: 186.9159
 
-Trial 19: 168.1379
+Trial 19: 187.1564
 
 MPKI=0.25:
-Trial 0: 170.068
+Trial 0: 186.2284
 
-Trial 1: 170.249
+Trial 1: 187.3185
 
-Trial 2: 170.068
+Trial 2: 186.6194
 
-Trial 3: 173.7242
+Trial 3: 187.2133
 
-Trial 4: 170.068
+Trial 4: 186.4237
 
-Trial 5: 174.0265
+Trial 5: 186.1244
 
-Trial 6: 172.2282
+Trial 6: 187.2396
 
-Trial 7: 170.4303
+Trial 7: 187.1958
 
-Trial 8: 166.7014
+Trial 8: 186.3152
 
-Trial 9: 171.7107
+Trial 9: 188.3106
 
-Trial 10: 169.5274
+Trial 10: 187.5953
 
-Trial 11: 166.2856
+Trial 11: 186.9028
 
-Trial 12: 170.7942
+Trial 12: 187.2002
 
-Trial 13: 169.7073
+Trial 13: 187.6261
 
-Trial 14: 165.3234
+Trial 14: 186.0292
 
-Trial 15: 174.444
+Trial 15: 187.0295
 
-Trial 16: 169.7793
+Trial 16: 186.6542
 
-Trial 17: 174.7488
+Trial 17: 186.402
 
-Trial 18: 171.637
+Trial 18: 187.8375
 
-Trial 19: 169.8153
+Trial 19: 187.8596
 
 MPKI=0.30000000000000004:
-Trial 0: 169.5993
+Trial 0: 186.6629
 
-Trial 1: 171.7107
+Trial 1: 187.8552
 
-Trial 2: 169.9596
+Trial 2: 186.5193
 
-Trial 3: 170.068
+Trial 3: 186.5019
 
-Trial 4: 170.068
+Trial 4: 187.7494
 
-Trial 5: 171.4898
+Trial 5: 187.3185
 
-Trial 6: 170.068
+Trial 6: 186.3889
 
-Trial 7: 171.4531
+Trial 7: 185.6709
 
-Trial 8: 171.8582
+Trial 8: 187.481
 
-Trial 9: 170.068
+Trial 9: 187.4195
 
-Trial 10: 170.7577
+Trial 10: 187.5821
 
-Trial 11: 166.5626
+Trial 11: 186.5063
 
-Trial 12: 170.4303
+Trial 12: 188.2176
 
-Trial 13: 170.068
+Trial 13: 187.187
 
-Trial 14: 166.5626
+Trial 14: 186.0941
 
-Trial 15: 170.068
+Trial 15: 187.1608
 
-Trial 16: 169.8514
+Trial 16: 186.1937
 
-Trial 17: 169.9235
+Trial 17: 186.2241
 
-Trial 18: 171.2695
+Trial 18: 187.3756
 
-Trial 19: 170.068
+Trial 19: 184.9797
 
 MPKI=0.35000000000000003:
-Trial 0: 168.0319
+Trial 0: 185.3955
 
-Trial 1: 170.068
+Trial 1: 186.8373
 
-Trial 2: 171.7107
+Trial 2: 186.9945
 
-Trial 3: 172.4138
+Trial 3: 186.5324
 
-Trial 4: 170.1766
+Trial 4: 187.012
 
-Trial 5: 170.1766
+Trial 5: 187.3273
 
-Trial 6: 170.068
+Trial 6: 186.2371
 
-Trial 7: 170.068
+Trial 7: 187.2221
 
-Trial 8: 170.3215
+Trial 8: 187.6877
 
-Trial 9: 173.7619
+Trial 9: 187.5645
 
-Trial 10: 168.1732
+Trial 10: 187.4941
 
-Trial 11: 163.2986
+Trial 11: 184.7234
 
-Trial 12: 171.3796
+Trial 12: 187.2265
 
-Trial 13: 172.3766
+Trial 13: 187.0907
 
-Trial 14: 170.068
+Trial 14: 186.6325
 
-Trial 15: 166.5626
+Trial 15: 186.3846
 
-Trial 16: 169.7073
+Trial 16: 187.6525
 
-Trial 17: 170.4303
+Trial 17: 186.4063
 
-Trial 18: 168.3502
+Trial 18: 187.1739
 
-Trial 19: 171.7107
+Trial 19: 186.4802
 
 MPKI=0.4:
-Trial 0: 172.3766
+Trial 0: 186.5454
 
-Trial 1: 170.6849
+Trial 1: 186.1201
 
-Trial 2: 170.4303
+Trial 2: 186.0638
 
-Trial 3: 168.7764
+Trial 3: 187.5381
 
-Trial 4: 170.3215
+Trial 4: 187.5953
 
-Trial 5: 170.068
+Trial 5: 186.2848
 
-Trial 6: 169.6353
+Trial 6: 185.7528
 
-Trial 7: 164.6429
+Trial 7: 186.2848
 
-Trial 8: 172.08
+Trial 8: 186.9203
 
-Trial 9: 170.1766
+Trial 9: 187.5821
 
-Trial 10: 171.7844
+Trial 10: 187.8022
 
-Trial 11: 169.7073
+Trial 11: 186.0119
 
-Trial 12: 172.5998
+Trial 12: 185.4384
 
-Trial 13: 167.8204
+Trial 13: 187.7582
 
-Trial 14: 166.7709
+Trial 14: 186.2414
 
-Trial 15: 174.4059
+Trial 15: 186.402
 
-Trial 16: 168.244
+Trial 16: 186.2501
 
-Trial 17: 171.4163
+Trial 17: 186.9683
 
-Trial 18: 167.9614
+Trial 18: 187.5777
 
-Trial 19: 170.068
+Trial 19: 186.6542
 
 MPKI=0.45:
-Trial 0: 166.2165
+Trial 0: 186.4063
 
-Trial 1: 169.9958
+Trial 1: 186.5237
 
-Trial 2: 171.8951
+Trial 2: 187.0995
 
-Trial 3: 171.7475
+Trial 3: 186.0725
 
-Trial 4: 173.6865
+Trial 4: 187.6525
 
-Trial 5: 168.5275
+Trial 5: 186.6542
 
-Trial 6: 170.4303
+Trial 6: 187.2002
 
-Trial 7: 172.973
+Trial 7: 186.0508
 
-Trial 8: 166.5973
+Trial 8: 186.3369
 
-Trial 9: 170.394
+Trial 9: 186.6194
 
-Trial 10: 170.068
+Trial 10: 186.5454
 
-Trial 11: 172.1911
+Trial 11: 186.7632
 
-Trial 12: 172.2653
+Trial 12: 187.0907
 
-Trial 13: 173.7997
+Trial 13: 185.4213
 
-Trial 14: 170.6485
+Trial 14: 185.4384
 
-Trial 15: 170.1766
+Trial 15: 186.9377
 
-Trial 16: 170.1404
+Trial 16: 185.0781
 
-Trial 17: 170.068
+Trial 17: 186.6107
 
-Trial 18: 169.7073
+Trial 18: 187.767
 
-Trial 19: 170.0319
+Trial 19: 186.2197
 
 MPKI=0.5:
-Trial 0: 170.6849
+Trial 0: 185.8088
 
-Trial 1: 170.068
+Trial 1: 187.047
 
-Trial 2: 174.254
+Trial 2: 186.2804
 
-Trial 3: 166.3894
+Trial 3: 187.0995
 
-Trial 4: 168.8476
+Trial 4: 187.3098
 
-Trial 5: 170.3578
+Trial 5: 185.6062
 
-Trial 6: 164.4737
+Trial 6: 187.1695
 
-Trial 7: 173.7997
+Trial 7: 185.8002
 
-Trial 8: 170.068
+Trial 8: 187.0557
 
-Trial 9: 164.6768
+Trial 9: 186.7152
 
-Trial 10: 168.3502
+Trial 10: 186.515
 
-Trial 11: 164.6091
+Trial 11: 185.168
 
-Trial 12: 171.7107
+Trial 12: 186.5976
 
-Trial 13: 170.503
+Trial 13: 186.0595
 
-Trial 14: 170.3215
+Trial 14: 185.8952
 
-Trial 15: 168.3502
+Trial 15: 184.5742
 
-Trial 16: 169.7793
+Trial 16: 184.8984
 
-Trial 17: 168.6341
+Trial 17: 186.977
 
-Trial 18: 171.2329
+Trial 18: 186.9814
 
-Trial 19: 168.5275
+Trial 19: 185.3654
 
 MPKI=0.55:
-Trial 0: 166.5279
+Trial 0: 186.3282
 
-Trial 1: 170.4667
+Trial 1: 187.2747
 
-Trial 2: 168.5985
+Trial 2: 185.5503
 
-Trial 3: 170.6121
+Trial 3: 184.7106
 
-Trial 4: 172.4138
+Trial 4: 185.5546
 
-Trial 5: 169.8874
+Trial 5: 186.6716
 
-Trial 6: 170.2128
+Trial 6: 187.2002
 
-Trial 7: 166.8753
+Trial 7: 186.2111
 
-Trial 8: 164.7786
+Trial 8: 186.0465
 
-Trial 9: 169.9596
+Trial 9: 186.3282
 
-Trial 10: 167.9261
+Trial 10: 184.9839
 
-Trial 11: 172.4881
+Trial 11: 186.7021
 
-Trial 12: 170.6849
+Trial 12: 186.6194
 
-Trial 13: 166.5279
+Trial 13: 185.7959
 
-Trial 14: 173.0104
+Trial 14: 185.1338
 
-Trial 15: 169.8514
+Trial 15: 187.3756
 
-Trial 16: 168.0672
+Trial 16: 186.7414
 
-Trial 17: 170.068
+Trial 17: 186.4367
 
-Trial 18: 169.8514
+Trial 18: 185.1123
 
-Trial 19: 168.244
+Trial 19: 186.6629
 
 MPKI=0.6000000000000001:
-Trial 0: 166.3894
+Trial 0: 186.6804
 
-Trial 1: 164.6768
+Trial 1: 183.963
 
-Trial 2: 164.8465
+Trial 2: 184.6722
 
-Trial 3: 168.5275
+Trial 3: 185.7226
 
-Trial 4: 169.8874
+Trial 4: 187.5777
 
-Trial 5: 169.9235
+Trial 5: 183.2089
 
-Trial 6: 169.8874
+Trial 6: 187.1126
 
-Trial 7: 173.7242
+Trial 7: 185.8563
 
-Trial 8: 168.3502
+Trial 8: 185.1466
 
-Trial 9: 166.3894
+Trial 9: 184.7191
 
-Trial 10: 168.3856
+Trial 10: 185.6795
 
-Trial 11: 168.6341
+Trial 11: 186.0508
 
-Trial 12: 172.8235
+Trial 12: 185.9557
 
-Trial 13: 170.1042
+Trial 13: 185.6235
 
-Trial 14: 169.6353
+Trial 14: 184.86
 
-Trial 15: 172.4881
+Trial 15: 184.9369
 
-Trial 16: 166.9798
+Trial 16: 185.5288
 
-Trial 17: 171.969
+Trial 17: 185.6493
 
-Trial 18: 172.3395
+Trial 18: 185.8952
 
-Trial 19: 170.1404
+Trial 19: 186.9159
 
 MPKI=0.65:
-Trial 0: 164.8465
+Trial 0: 184.5316
 
-Trial 1: 169.9958
+Trial 1: 184.7916
 
-Trial 2: 163.8002
+Trial 2: 184.9283
 
-Trial 3: 169.8874
+Trial 3: 185.9773
 
-Trial 4: 164.5752
+Trial 4: 184.2554
 
-Trial 5: 164.8465
+Trial 5: 186.0249
 
-Trial 6: 172.7489
+Trial 6: 184.9326
 
-Trial 7: 167.4341
+Trial 7: 184.9797
 
-Trial 8: 171.8213
+Trial 8: 185.3697
 
-Trial 9: 168.7764
+Trial 9: 186.5411
 
-Trial 10: 166.5279
+Trial 10: 185.7873
 
-Trial 11: 164.9145
+Trial 11: 185.6235
 
-Trial 12: 174.9781
+Trial 12: 186.4585
 
-Trial 13: 170.4303
+Trial 13: 184.9454
 
-Trial 14: 169.8514
+Trial 14: 184.4295
 
-Trial 15: 168.492
+Trial 15: 184.9625
 
-Trial 16: 166.2165
+Trial 16: 184.9925
 
-Trial 17: 174.7488
+Trial 17: 185.0652
 
-Trial 18: 166.9798
+Trial 18: 185.6536
 
-Trial 19: 169.7433
+Trial 19: 186.0119
 
 MPKI=0.7000000000000001:
-Trial 0: 159.5533
+Trial 0: 185.8304
 
-Trial 1: 172.117
+Trial 1: 184.7703
 
-Trial 2: 168.6341
+Trial 2: 182.7068
 
-Trial 3: 172.08
+Trial 3: 184.4593
 
-Trial 4: 172.006
+Trial 4: 185.8132
 
-Trial 5: 168.1025
+Trial 5: 184.0434
 
-Trial 6: 172.1911
+Trial 6: 184.5359
 
-Trial 7: 159.9041
+Trial 7: 184.9754
 
-Trial 8: 166.7361
+Trial 8: 184.9326
 
-Trial 9: 167.6446
+Trial 9: 184.4295
 
-Trial 10: 169.5274
+Trial 10: 184.7148
 
-Trial 11: 173.4982
+Trial 11: 184.5104
 
-Trial 12: 168.492
+Trial 12: 182.0333
 
-Trial 13: 168.2793
+Trial 13: 185.5374
 
-Trial 14: 168.1379
+Trial 14: 185.6795
 
-Trial 15: 170.2852
+Trial 15: 184.9797
 
-Trial 16: 168.4565
+Trial 16: 185.2967
 
-Trial 17: 170.4303
+Trial 17: 183.8742
 
-Trial 18: 167.6095
+Trial 18: 184.4848
 
-Trial 19: 168.3856
+Trial 19: 185.7873
 
 MPKI=0.75:
-Trial 0: 170.2852
+Trial 0: 184.5018
 
-Trial 1: 168.3856
+Trial 1: 184.7063
 
-Trial 2: 167.9614
+Trial 2: 183.718
 
-Trial 3: 169.348
+Trial 3: 183.8911
 
-Trial 4: 166.8753
+Trial 4: 183.8742
 
-Trial 5: 167.8909
+Trial 5: 183.0077
 
-Trial 6: 171.7475
+Trial 6: 184.8429
 
-Trial 7: 169.9235
+Trial 7: 184.0561
 
-Trial 8: 168.2793
+Trial 8: 184.107
 
-Trial 9: 164.5413
+Trial 9: 183.5031
 
-Trial 10: 166.3548
+Trial 10: 185.5718
 
-Trial 11: 170.1042
+Trial 11: 184.2554
 
-Trial 12: 166.632
+Trial 12: 185.301
 
-Trial 13: 170.4303
+Trial 13: 183.9334
 
-Trial 14: 164.4737
+Trial 14: 185.031
 
-Trial 15: 168.6341
+Trial 15: 183.9461
 
-Trial 16: 173.7997
+Trial 16: 185.0995
 
-Trial 17: 171.8213
+Trial 17: 182.8362
 
-Trial 18: 164.6091
+Trial 18: 184.3615
 
-Trial 19: 166.3548
+Trial 19: 184.4763
 
 MPKI=0.8:
-Trial 0: 167.8556
+Trial 0: 183.9334
 
-Trial 1: 164.8125
+Trial 1: 184.3488
 
-Trial 2: 163.7331
+Trial 2: 183.146
 
-Trial 3: 171.8213
+Trial 3: 185.8261
 
-Trial 4: 169.8514
+Trial 4: 183.3727
 
-Trial 5: 163.3653
+Trial 5: 182.6109
 
-Trial 6: 166.251
+Trial 6: 182.7986
 
-Trial 7: 168.1732
+Trial 7: 182.8362
 
-Trial 8: 161.4857
+Trial 8: 182.8404
 
-Trial 9: 168.1379
+Trial 9: 185.4986
 
-Trial 10: 168.0672
+Trial 10: 184.9968
 
-Trial 11: 169.9596
+Trial 11: 185.2023
 
-Trial 12: 170.5757
+Trial 12: 184.9369
 
-Trial 13: 166.0095
+Trial 13: 183.7475
 
-Trial 14: 159.204
+Trial 14: 183.5452
 
-Trial 15: 166.182
+Trial 15: 184.6083
 
-Trial 16: 167.7852
+Trial 16: 183.7602
 
-Trial 17: 168.7408
+Trial 17: 184.0392
 
-Trial 18: 165.9063
+Trial 18: 184.2596
 
-Trial 19: 161.2903
+Trial 19: 183.8827
 
 MPKI=0.8500000000000001:
-Trial 0: 168.244
+Trial 0: 183.0329
 
-Trial 1: 166.5973
+Trial 1: 183.2593
 
-Trial 2: 168.1732
+Trial 2: 182.1908
 
-Trial 3: 170.0319
+Trial 3: 183.2761
 
-Trial 4: 162.4695
+Trial 4: 184.8813
 
-Trial 5: 164.6429
+Trial 5: 182.3777
 
-Trial 6: 168.1025
+Trial 6: 182.8906
 
-Trial 7: 165.1869
+Trial 7: 183.058
 
-Trial 8: 168.7764
+Trial 8: 182.0292
 
-Trial 9: 169.0974
+Trial 9: 183.2929
 
-Trial 10: 164.8805
+Trial 10: 184.0519
 
-Trial 11: 164.8805
+Trial 11: 185.4642
 
-Trial 12: 166.6667
+Trial 12: 183.4105
 
-Trial 13: 165.0505
+Trial 13: 183.6126
 
-Trial 14: 170.4303
+Trial 14: 182.083
 
-Trial 15: 164.3385
+Trial 15: 184.107
 
-Trial 16: 168.5985
+Trial 16: 183.621
 
-Trial 17: 168.4565
+Trial 17: 182.3777
 
-Trial 18: 167.0844
+Trial 18: 183.6758
 
-Trial 19: 165.426
+Trial 19: 184.0477
 
 MPKI=0.9:
-Trial 0: 166.4586
+Trial 0: 181.9505
 
-Trial 1: 167.0146
+Trial 1: 184.0434
 
-Trial 2: 170.503
+Trial 2: 183.3223
 
-Trial 3: 168.7764
+Trial 3: 182.2282
 
-Trial 4: 171.8582
+Trial 4: 182.4901
 
-Trial 5: 163.0989
+Trial 5: 181.7438
 
-Trial 6: 157.7598
+Trial 6: 182.2905
 
-Trial 7: 168.5985
+Trial 7: 182.4526
 
-Trial 8: 166.6667
+Trial 8: 181.1676
 
-Trial 9: 168.9903
+Trial 9: 184.4083
 
-Trial 10: 172.1541
+Trial 10: 182.6359
 
-Trial 11: 161.3554
+Trial 11: 181.4388
 
-Trial 12: 166.5973
+Trial 12: 182.2863
 
-Trial 13: 167.0146
+Trial 13: 181.4676
 
-Trial 14: 168.7764
+Trial 14: 183.2803
 
-Trial 15: 170.5393
+Trial 15: 181.9505
 
-Trial 16: 165.8719
+Trial 16: 182.0499
 
-Trial 17: 168.1025
+Trial 17: 182.8655
 
-Trial 18: 168.4211
+Trial 18: 183.1921
 
-Trial 19: 164.6429
+Trial 19: 183.1334
 
 MPKI=0.9500000000000001:
-Trial 0: 164.6768
+Trial 0: 182.5026
 
-Trial 1: 165.0846
+Trial 1: 181.9878
 
-Trial 2: 161.3879
+Trial 2: 183.9842
 
-Trial 3: 164.9145
+Trial 3: 183.4231
 
-Trial 4: 165.1528
+Trial 4: 182.3403
 
-Trial 5: 168.0319
+Trial 5: 181.8099
 
-Trial 6: 164.7107
+Trial 6: 183.0496
 
-Trial 7: 166.632
+Trial 7: 182.3944
 
-Trial 8: 166.5279
+Trial 8: 182.2323
 
-Trial 9: 164.7107
+Trial 9: 182.357
 
-Trial 10: 166.9798
+Trial 10: 180.9873
 
-Trial 11: 161.1604
+Trial 11: 180.8768
 
-Trial 12: 144.1701
+Trial 12: 181.9671
 
-Trial 13: 163.5992
+Trial 13: 183.0915
 
-Trial 14: 168.244
+Trial 14: 183.4147
 
-Trial 15: 166.3894
+Trial 15: 180.5299
 
-Trial 16: 167.9261
+Trial 16: 182.3985
 
-Trial 17: 166.3202
+Trial 17: 180.7379
 
-Trial 18: 164.8125
+Trial 18: 180.591
 
-Trial 19: 168.2793
+Trial 19: 181.3072
 
 MPKI=1.0:
-Trial 0: 162.7339
+Trial 0: 181.9919
 
-Trial 1: 162.3047
+Trial 1: 181.2867
 
-Trial 2: 164.9825
+Trial 2: 181.6283
 
-Trial 3: 166.632
+Trial 3: 180.5136
 
-Trial 4: 168.1379
+Trial 4: 181.5211
 
-Trial 5: 164.3723
+Trial 5: 181.6283
 
-Trial 6: 166.3202
+Trial 6: 180.9914
 
-Trial 7: 167.6446
+Trial 7: 181.016
 
-Trial 8: 168.5275
+Trial 8: 181.4759
 
-Trial 9: 166.7014
+Trial 9: 181.0037
 
-Trial 10: 166.5973
+Trial 10: 181.6324
 
-Trial 11: 161.3228
+Trial 11: 181.4018
 
-Trial 12: 162.8333
+Trial 12: 181.0979
 
-Trial 13: 165.2551
+Trial 13: 180.481
 
-Trial 14: 168.9903
+Trial 14: 181.1512
 
-Trial 15: 168.563
+Trial 15: 181.1594
 
-Trial 16: 162.8333
+Trial 16: 184.035
 
-Trial 17: 169.2763
+Trial 17: 181.7686
 
-Trial 18: 164.8125
+Trial 18: 179.9451
 
-Trial 19: 165.2551
+Trial 19: 179.8885
 
 MPKI=1.05:
-Trial 0: 168.2793
+Trial 0: 180.591
 
-Trial 1: 163.5323
+Trial 1: 182.1162
 
-Trial 2: 163.6661
+Trial 2: 178.5276
 
-Trial 3: 161.2903
+Trial 3: 182.0955
 
-Trial 4: 165.0505
+Trial 4: 181.9753
 
-Trial 5: 168.3502
+Trial 5: 180.1112
 
-Trial 6: 167.5393
+Trial 6: 181.1266
 
-Trial 7: 163.6661
+Trial 7: 181.061
 
-Trial 8: 162.4036
+Trial 8: 180.538
 
-Trial 9: 158.1028
+Trial 9: 180.4159
 
-Trial 10: 165.0846
+Trial 10: 181.6159
 
-Trial 11: 165.7344
+Trial 11: 181.373
 
-Trial 12: 170.1404
+Trial 12: 180.4118
 
-Trial 13: 166.7361
+Trial 13: 181.6737
 
-Trial 14: 162.8002
+Trial 14: 179.9087
 
-Trial 15: 166.5626
+Trial 15: 181.9422
 
-Trial 16: 161.2578
+Trial 16: 180.5095
 
-Trial 17: 164.5075
+Trial 17: 180.6073
 
-Trial 18: 166.7361
+Trial 18: 178.8989
 
-Trial 19: 164.9485
+Trial 19: 179.8804
 
 MPKI=1.1:
-Trial 0: 162.8333
+Trial 0: 179.2275
 
-Trial 1: 163.5657
+Trial 1: 180.5217
 
-Trial 2: 163.5657
+Trial 2: 181.686
 
-Trial 3: 161.5835
+Trial 3: 181.0692
 
-Trial 4: 169.8874
+Trial 4: 179.8278
 
-Trial 5: 156.2805
+Trial 5: 179.6986
 
-Trial 6: 163.1987
+Trial 6: 180.1437
 
-Trial 7: 164.5413
+Trial 7: 180.2005
 
-Trial 8: 168.1025
+Trial 8: 179.743
 
-Trial 9: 161.3879
+Trial 9: 178.2928
 
-Trial 10: 169.6713
+Trial 10: 179.2195
 
-Trial 11: 164.4737
+Trial 11: 181.221
 
-Trial 12: 166.5279
+Trial 12: 178.5714
 
-Trial 13: 161.7469
+Trial 13: 178.6272
 
-Trial 14: 163.8002
+Trial 14: 180.424
 
-Trial 15: 164.9145
+Trial 15: 178.8949
 
-Trial 16: 162.6347
+Trial 16: 178.711
 
-Trial 17: 163.2986
+Trial 17: 183.2005
 
-Trial 18: 164.3385
+Trial 18: 179.4768
 
-Trial 19: 162.5025
+Trial 19: 179.1473
 
 MPKI=1.1500000000000001:
-Trial 0: 168.563
+Trial 0: 178.763
 
-Trial 1: 161.7796
+Trial 1: 179.6259
 
-Trial 2: 162.966
+Trial 2: 179.0951
 
-Trial 3: 161.4857
+Trial 3: 181.1594
 
-Trial 4: 163.8337
+Trial 4: 181.4594
 
-Trial 5: 166.4932
+Trial 5: 177.8371
 
-Trial 6: 148.4505
+Trial 6: 176.9716
 
-Trial 7: 166.7361
+Trial 7: 179.1152
 
-Trial 8: 165.3918
+Trial 8: 177.5095
 
-Trial 9: 169.2047
+Trial 9: 177.7422
 
-Trial 10: 158.0091
+Trial 10: 181.1184
 
-Trial 11: 161.5509
+Trial 11: 178.5555
 
-Trial 12: 163.0324
+Trial 12: 178.6193
 
-Trial 13: 159.9041
+Trial 13: 179.7914
 
-Trial 14: 164.5075
+Trial 14: 178.9469
 
-Trial 15: 163.2986
+Trial 15: 175.354
 
-Trial 16: 161.3228
+Trial 16: 178.6991
 
-Trial 17: 162.9992
+Trial 17: 178.8949
 
-Trial 18: 168.6341
+Trial 18: 179.8278
 
-Trial 19: 163.1321
+Trial 19: 177.8608
 
 MPKI=1.2000000000000002:
-Trial 0: 157.9779
+Trial 0: 178.9069
 
-Trial 1: 150.2065
+Trial 1: 178.8109
 
-Trial 2: 164.8805
+Trial 2: 176.1882
 
-Trial 3: 165.426
+Trial 3: 176.0021
 
-Trial 4: 161.6162
+Trial 4: 178.6272
 
-Trial 5: 165.0505
+Trial 5: 179.6421
 
-Trial 6: 166.2856
+Trial 6: 174.5924
 
-Trial 7: 165.1528
+Trial 7: 178.1261
 
-Trial 8: 164.8125
+Trial 8: 177.2029
 
-Trial 9: 161.0954
+Trial 9: 176.2658
 
-Trial 10: 167.1193
+Trial 10: 179.1473
 
-Trial 11: 162.8996
+Trial 11: 178.4997
 
-Trial 12: 166.5279
+Trial 12: 173.4756
 
-Trial 13: 162.8996
+Trial 13: 174.3489
 
-Trial 14: 169.0617
+Trial 14: 178.5953
 
-Trial 15: 164.3385
+Trial 15: 177.1597
 
-Trial 16: 163.0324
+Trial 16: 177.5371
 
-Trial 17: 163.2653
+Trial 17: 177.9637
 
-Trial 18: 158.7302
+Trial 18: 175.4578
 
-Trial 19: 164.6768
+Trial 19: 177.0695
 
 MPKI=1.25:
-Trial 0: 157.8532
+Trial 0: 177.5292
 
-Trial 1: 159.9041
+Trial 1: 175.7469
 
-Trial 2: 163.9008
+Trial 2: 169.7829
 
-Trial 3: 156.6171
+Trial 3: 176.9951
 
-Trial 4: 161.1279
+Trial 4: 177.246
 
-Trial 5: 163.0989
+Trial 5: 177.6988
 
-Trial 6: 165.5972
+Trial 6: 172.5514
 
-Trial 7: 166.8405
+Trial 7: 174.6039
 
-Trial 8: 159.7444
+Trial 8: 175.9286
 
-Trial 9: 155.3096
+Trial 9: 170.7504
 
-Trial 10: 165.2551
+Trial 10: 176.0253
 
-Trial 11: 155.6117
+Trial 11: 178.0151
 
-Trial 12: 160.7394
+Trial 12: 168.5666
 
-Trial 13: 162.7008
+Trial 13: 171.8435
 
-Trial 14: 162.0089
+Trial 14: 176.3707
 
-Trial 15: 161.4531
+Trial 15: 172.7787
 
-Trial 16: 166.2165
+Trial 16: 178.8509
 
-Trial 17: 164.9145
+Trial 17: 179.4325
 
-Trial 18: 132.3846
+Trial 18: 170.0716
 
-Trial 19: 161.2903
+Trial 19: 164.1665
 
 MPKI=1.3:
-Trial 0: 157.0167
+Trial 0: 171.1633
 
-Trial 1: 160.1281
+Trial 1: 166.4586
 
-Trial 2: 166.6667
+Trial 2: 157.1678
 
-Trial 3: 162.8002
+Trial 3: 175.0624
 
-Trial 4: 160.1281
+Trial 4: 170.2671
 
-Trial 5: 159.5533
+Trial 5: 171.7844
 
-Trial 6: 153.9942
+Trial 6: 164.0218
 
-Trial 7: 162.2718
+Trial 7: 168.5381
 
-Trial 8: 168.3502
+Trial 8: 168.9939
 
-Trial 9: 152.6426
+Trial 9: 158.0559
 
-Trial 10: 165.9407
+Trial 10: 172.637
 
-Trial 11: 158.51
+Trial 11: 167.9719
 
-Trial 12: 163.332
+Trial 12: 155.7026
 
-Trial 13: 165.5972
+Trial 13: 158.4629
 
-Trial 14: 163.1321
+Trial 14: 174.1667
 
-Trial 15: 158.4786
+Trial 15: 168.5879
 
-Trial 16: 163.0656
+Trial 16: 175.354
 
-Trial 17: 156.5251
+Trial 17: 175.5926
 
-Trial 18: 164.8125
+Trial 18: 164.1969
 
-Trial 19: 153.7279
+Trial 19: 149.9166
 
 MPKI=1.35:
-Trial 0: 155.4606
+Trial 0: 154.2109
 
-Trial 1: 160.2885
+Trial 1: 154.7838
 
-Trial 2: 159.3943
+Trial 2: 146.719
 
-Trial 3: 161.8123
+Trial 3: 167.7008
 
-Trial 4: 154.4402
+Trial 4: 167.7536
 
-Trial 5: 166.4932
+Trial 5: 158.3124
 
-Trial 6: 161.1928
+Trial 6: 153.4537
 
-Trial 7: 154.9487
+Trial 7: 160.1153
 
-Trial 8: 162.0746
+Trial 8: 160.5781
 
-Trial 9: 160.1602
+Trial 9: 148.4313
 
-Trial 10: 167.7501
+Trial 10: 159.9328
 
-Trial 11: 164.7446
+Trial 11: 150.8068
 
-Trial 12: 165.0505
+Trial 12: 147.4274
 
-Trial 13: 159.4578
+Trial 13: 144.9512
 
-Trial 14: 163.1654
+Trial 14: 162.3475
 
-Trial 15: 164.9485
+Trial 15: 151.5611
 
-Trial 16: 161.9105
+Trial 16: 162.5554
 
-Trial 17: 163.332
+Trial 17: 162.0483
 
-Trial 18: 167.0146
+Trial 18: 148.044
 
-Trial 19: 160.5136
+Trial 19: 140.5185
 
 MPKI=1.4000000000000001:
-Trial 0: 157.4183
+Trial 0: 138.3724
 
-Trial 1: 159.8082
+Trial 1: 147.4111
 
-Trial 2: 156.7705
+Trial 2: 139.5065
 
-Trial 3: 164.3723
+Trial 3: 145.3488
 
-Trial 4: 166.044
+Trial 4: 148.7708
 
-Trial 5: 163.332
+Trial 5: 145.1431
 
-Trial 6: 159.9041
+Trial 6: 137.893
 
-Trial 7: 166.8405
+Trial 7: 143.9937
 
-Trial 8: 158.134
+Trial 8: 149.2482
 
-Trial 9: 166.632
+Trial 9: 127.7588
 
-Trial 10: 164.7786
+Trial 10: 142.7883
 
-Trial 11: 161.9105
+Trial 11: 137.535
 
-Trial 12: 161.2903
+Trial 12: 138.6602
 
-Trial 13: 169.2047
+Trial 13: 133.0783
 
-Trial 14: 157.9467
+Trial 14: 145.7354
 
-Trial 15: 160.9982
+Trial 15: 137.3721
 
-Trial 16: 166.9798
+Trial 16: 150.2235
 
-Trial 17: 155.4303
+Trial 17: 153.8284
 
-Trial 18: 138.0739
+Trial 18: 134.5872
 
-Trial 19: 156.8627
+Trial 19: 132.8551
 
 MPKI=1.4500000000000002:
-Trial 0: 156.6784
+Trial 0: 130.5313
 
-Trial 1: 164.2036
+Trial 1: 132.8661
 
-Trial 2: 162.966
+Trial 2: 129.4792
 
-Trial 3: 158.5414
+Trial 3: 130.3144
 
-Trial 4: 161.3228
+Trial 4: 137.1625
 
-Trial 5: 138.7203
+Trial 5: 135.0553
 
-Trial 6: 161.0954
+Trial 6: 131.9131
 
-Trial 7: 157.3255
+Trial 7: 138.2337
 
-Trial 8: 165.4602
+Trial 8: 131.0552
 
-Trial 9: 161.8778
+Trial 9: 126.7046
 
-Trial 10: 163.1654
+Trial 10: 132.615
 
-Trial 11: 162.7339
+Trial 11: 131.3586
 
-Trial 12: 164.3048
+Trial 12: 129.9651
 
-Trial 13: 162.8996
+Trial 13: 122.102
 
-Trial 14: 161.9105
+Trial 14: 132.2904
 
-Trial 15: 168.0672
+Trial 15: 123.1831
 
-Trial 16: 150.3477
+Trial 16: 140.2058
 
-Trial 17: 157.2018
+Trial 17: 132.3736
 
-Trial 18: 163.0656
+Trial 18: 125.3329
 
-Trial 19: 161.3228
+Trial 19: 121.2985
 
 MPKI=1.5:
-Trial 0: 159.7444
-
-Trial 1: 155.0688
-
-Trial 2: 156.8013
-
-Trial 3: 160.3206
-
-Trial 4: 156.9551
-
-Trial 5: 160.2885
-
-Trial 6: 151.8027
-
-Trial 7: 163.332
-
-Trial 8: 161.845
-
-Trial 9: 159.6488
-
-Trial 10: 153.4036
-
-Trial 11: 160.1922
-
-Trial 12: 161.5835
-
-Trial 13: 159.4578
-
-Trial 14: 163.5992
-
-Trial 15: 158.1653
-
-Trial 16: 167.0844
-
-Trial 17: 163.232
-
-Trial 18: 164.271
-
-Trial 19: 161.6815
-
-MPKI=1.55:
-Trial 0: 162.6678
-
-Trial 1: 159.9041
-
-Trial 2: 162.2389
-
-Trial 3: 161.3228
-
-Trial 4: 160.032
-
-Trial 5: 157.3255
-
-Trial 6: 155.37
-
-Trial 7: 156.5251
-
-Trial 8: 161.8123
-
-Trial 9: 158.7302
-
-Trial 10: 156.7091
-
-Trial 11: 161.4205
-
-Trial 12: 159.968
-
-Trial 13: 159.6488
-
-Trial 14: 164.4061
-
-Trial 15: 158.3218
-
-Trial 16: 163.2653
-
-Trial 17: 158.3531
-
-Trial 18: 158.7932
-
-Trial 19: 159.968
-
-MPKI=1.6:
-Trial 0: 154.8887
-
-Trial 1: 157.8221
-
-Trial 2: 154.0535
-
-Trial 3: 158.4158
-
-Trial 4: 159.9041
-
-Trial 5: 158.2591
-
-Trial 6: 159.4896
-
-Trial 7: 160.0961
-
-Trial 8: 162.8333
-
-Trial 9: 160.5781
-
-Trial 10: 155.2494
-
-Trial 11: 161.845
-
-Trial 12: 161.8123
-
-Trial 13: 159.8082
-
-Trial 14: 155.0688
-
-Trial 15: 159.6169
-
-Trial 16: 150.0375
-
-Trial 17: 153.3154
-
-Trial 18: 163.9008
-
-Trial 19: 161.8778
-
-MPKI=1.6500000000000001:
-Trial 0: 160.5781
-
-Trial 1: 154.0239
-
-Trial 2: 156.832
-
-Trial 3: 161.6815
-
-Trial 4: 158.3845
-
-Trial 5: 162.767
-
-Trial 6: 145.8523
-
-Trial 7: 161.9761
-
-Trial 8: 165.5287
-
-Trial 9: 165.1869
-
-Trial 10: 164.4737
-
-Trial 11: 160.6748
-
-Trial 12: 149.3373
-
-Trial 13: 157.6355
-
-Trial 14: 152.0913
-
-Trial 15: 158.7617
-
-Trial 16: 162.8996
-
-Trial 17: 164.8125
-
-Trial 18: 162.9328
-
-Trial 19: 156.5251
-
-MPKI=1.7000000000000002:
-Trial 0: 160.032
-
-Trial 1: 159.4261
-
-Trial 2: 159.4578
-
-Trial 3: 161.845
-
-Trial 4: 159.7763
-
-Trial 5: 160.1281
-
-Trial 6: 161.7796
-
-Trial 7: 161.6162
-
-Trial 8: 163.4655
-
-Trial 9: 155.1891
-
-Trial 10: 163.232
-
-Trial 11: 157.1709
-
-Trial 12: 155.642
-
-Trial 13: 163.2986
-
-Trial 14: 154.9187
-
-Trial 15: 154.679
-
-Trial 16: 110.1928
-
-Trial 17: 155.521
-
-Trial 18: 135.5243
-
-Trial 19: 155.5815
-
-MPKI=1.75:
-Trial 0: 150.8865
-
-Trial 1: 146.8159
-
-Trial 2: 153.4919
-
-Trial 3: 158.1653
-
-Trial 4: 160.5136
-
-Trial 5: 146.3058
-
-Trial 6: 160.4171
-
-Trial 7: 155.2795
-
-Trial 8: 161.5835
-
-Trial 9: 141.2429
-
-Trial 10: 159.8402
-
-Trial 11: 151.4005
-
-Trial 12: 147.9564
-
-Trial 13: 150.6308
-
-Trial 14: 156.832
-
-Trial 15: 155.129
-
-Trial 16: 158.2905
-
-Trial 17: 156.7091
-
-Trial 18: 146.5738
-
-Trial 19: 161.5183
-
-MPKI=1.8:
-Trial 0: 105.8761
-
-Trial 1: 156.5251
-
-Trial 2: 160.9334
-
-Trial 3: 162.6678
-
-Trial 4: 160.8687
-
-Trial 5: 148.2305
-
-Trial 6: 140.6223
-
-Trial 7: 151.9468
-
-Trial 8: 162.8333
-
-Trial 9: 160.9982
-
-Trial 10: 159.4896
-
-Trial 11: 153.6098
-
-Trial 12: 158.0091
-
-Trial 13: 164.0353
-
-Trial 14: 155.0989
-
-Trial 15: 151.8315
-
-Trial 16: 156.7398
-
-Trial 17: 151.2287
-
-Trial 18: 126.5623
-
-Trial 19: 158.1653
-
-MPKI=1.85:
-Trial 0: 156.832
-
-Trial 1: 159.9041
-
-Trial 2: 156.0367
-
-Trial 3: 155.4303
-
-Trial 4: 156.2195
-
-Trial 5: 155.4303
-
-Trial 6: 144.5348
-
-Trial 7: 155.159
-
-Trial 8: 161.4205
-
-Trial 9: 163.0989
-
-Trial 10: 146.789
-
-Trial 11: 150.263
-
-Trial 12: 153.6393
-
-Trial 13: 150.8296
-
-Trial 14: 155.2494
-
-Trial 15: 158.1028
-
-Trial 16: 156.7398
-
-Trial 17: 152.2649
-
-Trial 18: 147.547
-
-Trial 19: 155.37
-
-MPKI=1.9000000000000001:
-Trial 0: 153.7279
-
-Trial 1: 158.51
-
-Trial 2: 152.5844
-
-Trial 3: 156.4027
-
-Trial 4: 153.7574
-
-Trial 5: 153.787
-
-Trial 6: 153.935
-
-Trial 7: 156.7091
-
-Trial 8: 155.37
-
-Trial 9: 152.5844
-
-Trial 10: 154.9487
-
-Trial 11: 152.0334
-
-Trial 12: 151.0289
-
-Trial 13: 155.4303
-
-Trial 14: 158.0715
-
-Trial 15: 157.9155
-
-Trial 16: 154.2615
-
-Trial 17: 155.7632
-
-Trial 18: 159.4261
-
-Trial 19: 155.4303
-
-MPKI=1.9500000000000002:
-Trial 0: 149.6446
-
-Trial 1: 110.543
-
-Trial 2: 143.6266
-
-Trial 3: 155.4606
-
-Trial 4: 155.6117
-
-Trial 5: 156.6784
-
-Trial 6: 144.5087
-
-Trial 7: 158.0715
-
-Trial 8: 153.7279
-
-Trial 9: 155.2795
-
-Trial 10: 158.4472
-
-Trial 11: 155.642
-
-Trial 12: 150.2912
-
-Trial 13: 162.8664
-
-Trial 14: 147.3568
-
-Trial 15: 157.0475
-
-Trial 16: 146.7621
-
-Trial 17: 157.1709
-
-Trial 18: 151.6588
-
-Trial 19: 150.4891
-
-MPKI=2.0:
-Trial 0: 152.3519
-
-Trial 1: 151.1145
-
-Trial 2: 144.1441
-
-Trial 3: 155.4002
-
-Trial 4: 159.5214
-
-Trial 5: 144.3522
-
-Trial 6: 155.6117
-
-Trial 7: 159.8721
-
-Trial 8: 121.304
-
-Trial 9: 160.2243
-
-Trial 10: 156.128
-
-Trial 11: 159.3308
-
-Trial 12: 154.6491
-
-Trial 13: 162.4036
-
-Trial 14: 149.1981
-
-Trial 15: 159.4578
-
-Trial 16: 109.7243
-
-Trial 17: 150.858
-
-Trial 18: 156.6784
-
-Trial 19: 153.6098
-
-MPKI=2.0500000000000003:
-Trial 0: 155.3096
-
-Trial 1: 154.9187
-
-Trial 2: 122.212
-
-Trial 3: 156.6171
-
-Trial 4: 155.2795
-
-Trial 5: 153.787
-
-Trial 6: 136.8925
-
-Trial 7: 155.2192
-
-Trial 8: 153.4625
-
-Trial 9: 156.0367
-
-Trial 10: 147.2754
-
-Trial 11: 159.6806
-
-Trial 12: 150.8865
-
-Trial 13: 146.1988
-
-Trial 14: 160.0
-
-Trial 15: 156.7705
-
-Trial 16: 148.3404
-
-Trial 17: 151.8603
-
-Trial 18: 155.0087
-
-Trial 19: 155.159
-
-MPKI=2.1:
-Trial 0: 154.2317
-
-Trial 1: 156.8013
-
-Trial 2: 153.6098
-
-Trial 3: 158.3531
-
-Trial 4: 151.9468
-
-Trial 5: 161.5183
-
-Trial 6: 141.7686
-
-Trial 7: 152.3519
-
-Trial 8: 156.7398
-
-Trial 9: 94.4399
-
-Trial 10: 127.551
-
-Trial 11: 122.399
-
-Trial 12: 149.925
-
-Trial 13: 158.1966
-
-Trial 14: 162.6016
-
-Trial 15: 155.5815
-
-Trial 16: 155.3398
-
-Trial 17: 151.7739
-
-Trial 18: 158.3845
-
-Trial 19: 123.8965
-
-MPKI=2.15:
-Trial 0: 157.1709
-
-Trial 1: 154.0239
-
-Trial 2: 149.3094
-
-Trial 3: 96.6534
-
-Trial 4: 107.1237
-
-Trial 5: 158.1028
-
-Trial 6: 139.1546
-
-Trial 7: 155.521
-
-Trial 8: 151.4578
-
-Trial 9: 159.2674
-
-Trial 10: 154.0832
-
-Trial 11: 152.2649
-
-Trial 12: 156.9859
-
-Trial 13: 159.5851
-
-Trial 14: 154.8287
-
-Trial 15: 155.6117
-
-Trial 16: 155.5512
-
-Trial 17: 149.7006
-
-Trial 18: 126.0438
-
-Trial 19: 142.0959
-
-MPKI=2.2:
-Trial 0: 119.976
-
-Trial 1: 149.8408
-
-Trial 2: 152.5844
-
-Trial 3: 152.1491
-
-Trial 4: 160.0
-
-Trial 5: 152.7884
-
-Trial 6: 154.5297
-
-Trial 7: 155.2192
-
-Trial 8: 151.6875
-
-Trial 9: 159.6806
-
-Trial 10: 92.3788
-
-Trial 11: 146.8429
-
-Trial 12: 150.9149
-
-Trial 13: 156.5864
-
-Trial 14: 156.0367
-
-Trial 15: 116.2284
-
-Trial 16: 152.9637
-
-Trial 17: 142.1717
-
-Trial 18: 154.1723
-
-Trial 19: 147.656
-
-MPKI=2.25:
 Trial 0: 119.8861
 
-Trial 1: 106.2699
+Trial 1: 127.6283
 
-Trial 2: 155.642
+Trial 2: 118.3397
 
-Trial 3: 154.0832
+Trial 3: 120.835
 
-Trial 4: 144.4826
+Trial 4: 126.6284
 
-Trial 5: 156.0671
+Trial 5: 123.6266
 
-Trial 6: 154.9187
+Trial 6: 119.3353
 
-Trial 7: 152.439
+Trial 7: 121.1295
 
-Trial 8: 156.7091
+Trial 8: 120.9775
 
-Trial 9: 155.5815
+Trial 9: 122.5791
 
-Trial 10: 139.6404
+Trial 10: 118.5062
 
-Trial 11: 147.0318
+Trial 11: 123.4625
 
-Trial 12: 159.936
+Trial 12: 119.8969
 
-Trial 13: 145.7726
+Trial 13: 116.2875
 
-Trial 14: 155.8239
+Trial 14: 119.9886
 
-Trial 15: 145.2697
+Trial 15: 120.2754
 
-Trial 16: 152.3229
+Trial 16: 130.1511
 
-Trial 17: 151.918
+Trial 17: 125.2642
 
-Trial 18: 103.1061
+Trial 18: 122.5002
 
-Trial 19: 149.1146
+Trial 19: 121.0672
+
+MPKI=1.55:
+Trial 0: 115.8564
+
+Trial 1: 115.6838
+
+Trial 2: 113.8855
+
+Trial 3: 118.9856
+
+Trial 4: 118.3152
+
+Trial 5: 118.9397
+
+Trial 6: 113.5058
+
+Trial 7: 115.5301
+
+Trial 8: 115.302
+
+Trial 9: 111.3493
+
+Trial 10: 114.8699
+
+Trial 11: 114.9739
+
+Trial 12: 114.0365
+
+Trial 13: 110.4286
+
+Trial 14: 118.7384
+
+Trial 15: 110.5324
+
+Trial 16: 122.7898
+
+Trial 17: 114.32
+
+Trial 18: 111.4656
+
+Trial 19: 111.1605
+
+MPKI=1.6:
+Trial 0: 110.8095
+
+Trial 1: 108.8065
+
+Trial 2: 106.1529
+
+Trial 3: 112.8987
+
+Trial 4: 112.3801
+
+Trial 5: 111.0433
+
+Trial 6: 109.0349
+
+Trial 7: 111.5994
+
+Trial 8: 111.4579
+
+Trial 9: 105.5562
+
+Trial 10: 110.0806
+
+Trial 11: 110.2141
+
+Trial 12: 112.5382
+
+Trial 13: 104.8204
+
+Trial 14: 116.7168
+
+Trial 15: 106.9833
+
+Trial 16: 117.8464
+
+Trial 17: 109.9883
+
+Trial 18: 108.5069
+
+Trial 19: 109.586
+
+MPKI=1.6500000000000001:
+Trial 0: 106.2925
+
+Trial 1: 106.0445
+
+Trial 2: 103.5438
+
+Trial 3: 106.7877
+
+Trial 4: 106.6553
+
+Trial 5: 109.8886
+
+Trial 6: 103.3365
+
+Trial 7: 105.3519
+
+Trial 8: 107.0549
+
+Trial 9: 103.7196
+
+Trial 10: 104.8671
+
+Trial 11: 107.6368
+
+Trial 12: 108.0482
+
+Trial 13: 105.3866
+
+Trial 14: 106.1106
+
+Trial 15: 101.8719
+
+Trial 16: 112.6729
+
+Trial 17: 105.5005
+
+Trial 18: 105.994
+
+Trial 19: 102.3018
+
+MPKI=1.7000000000000002:
+Trial 0: 103.3018
+
+Trial 1: 104.7738
+
+Trial 2: 99.7195
+
+Trial 3: 101.2107
+
+Trial 4: 103.2098
+
+Trial 5: 101.6196
+
+Trial 6: 98.6887
+
+Trial 7: 100.2079
+
+Trial 8: 100.5935
+
+Trial 9: 99.2753
+
+Trial 10: 103.5572
+
+Trial 11: 102.8608
+
+Trial 12: 102.1359
+
+Trial 13: 98.8093
+
+Trial 14: 100.7316
+
+Trial 15: 100.823
+
+Trial 16: 103.3498
+
+Trial 17: 101.371
+
+Trial 18: 100.0363
+
+Trial 19: 98.0741
+
+MPKI=1.75:
+Trial 0: 97.5717
+
+Trial 1: 98.3055
+
+Trial 2: 95.0446
+
+Trial 3: 100.2029
+
+Trial 4: 99.7195
+
+Trial 5: 101.0394
+
+Trial 6: 98.774
+
+Trial 7: 100.1402
+
+Trial 8: 99.7158
+
+Trial 9: 98.355
+
+Trial 10: 98.8484
+
+Trial 11: 97.978
+
+Trial 12: 99.9375
+
+Trial 13: 94.9003
+
+Trial 14: 97.4647
+
+Trial 15: 98.4337
+
+Trial 16: 103.7304
+
+Trial 17: 98.4712
+
+Trial 18: 99.945
+
+Trial 19: 97.473
+
+MPKI=1.8:
+Trial 0: 97.2514
+
+Trial 1: 99.5917
+
+Trial 2: 95.4073
+
+Trial 3: 97.7971
+
+Trial 4: 97.2172
+
+Trial 5: 98.3659
+
+Trial 6: 94.6634
+
+Trial 7: 95.4665
+
+Trial 8: 94.2985
+
+Trial 9: 97.7601
+
+Trial 10: 97.3769
+
+Trial 11: 97.2763
+
+Trial 12: 98.6643
+
+Trial 13: 94.6902
+
+Trial 14: 96.616
+
+Trial 15: 93.6549
+
+Trial 16: 98.6582
+
+Trial 17: 98.0584
+
+Trial 18: 95.7316
+
+Trial 19: 96.6616
+
+MPKI=1.85:
+Trial 0: 94.193
+
+Trial 1: 95.4415
+
+Trial 2: 93.2618
+
+Trial 3: 95.1192
+
+Trial 4: 93.8901
+
+Trial 5: 97.8581
+
+Trial 6: 93.4001
+
+Trial 7: 93.9507
+
+Trial 8: 93.6264
+
+Trial 9: 93.8879
+
+Trial 10: 93.8471
+
+Trial 11: 95.388
+
+Trial 12: 97.0768
+
+Trial 13: 94.5716
+
+Trial 14: 95.1531
+
+Trial 15: 96.6079
+
+Trial 16: 96.1897
+
+Trial 17: 96.0949
+
+Trial 18: 91.8748
+
+Trial 19: 92.7902
+
+MPKI=1.9000000000000001:
+Trial 0: 91.7221
+
+Trial 1: 92.2339
+
+Trial 2: 93.085
+
+Trial 3: 93.5333
+
+Trial 4: 93.4721
+
+Trial 5: 91.6307
+
+Trial 6: 93.1326
+
+Trial 7: 93.163
+
+Trial 8: 92.1903
+
+Trial 9: 92.0281
+
+Trial 10: 94.4644
+
+Trial 11: 92.1638
+
+Trial 12: 91.9889
+
+Trial 13: 92.815
+
+Trial 14: 93.8593
+
+Trial 15: 94.0944
+
+Trial 16: 95.1882
+
+Trial 17: 93.588
+
+Trial 18: 92.2382
+
+Trial 19: 92.1903
+
+MPKI=1.9500000000000002:
+Trial 0: 91.6947
+
+Trial 1: 92.0238
+
+Trial 2: 90.8544
+
+Trial 3: 92.4962
+
+Trial 4: 91.4129
+
+Trial 5: 91.8305
+
+Trial 6: 91.9551
+
+Trial 7: 92.3425
+
+Trial 8: 91.4254
+
+Trial 9: 88.478
+
+Trial 10: 90.6516
+
+Trial 11: 91.0996
+
+Trial 12: 93.4056
+
+Trial 13: 91.4401
+
+Trial 14: 91.2263
+
+Trial 15: 92.7321
+
+Trial 16: 93.7537
+
+Trial 17: 94.1431
+
+Trial 18: 91.1172
+
+Trial 19: 90.2171
+
+MPKI=2.0:
+Trial 0: 89.7052
+
+Trial 1: 91.8864
+
+Trial 2: 90.464
+
+Trial 3: 91.083
+
+Trial 4: 92.2371
+
+Trial 5: 91.1079
+
+Trial 6: 89.9756
+
+Trial 7: 91.3075
+
+Trial 8: 90.8265
+
+Trial 9: 88.1912
+
+Trial 10: 91.0249
+
+Trial 11: 91.1608
+
+Trial 12: 89.7555
+
+Trial 13: 90.2537
+
+Trial 14: 89.7153
+
+Trial 15: 90.9877
+
+Trial 16: 92.3649
+
+Trial 17: 90.2822
+
+Trial 18: 90.5838
+
+Trial 19: 90.6772
+
+MPKI=2.0500000000000003:
+Trial 0: 88.625
+
+Trial 1: 90.3281
+
+Trial 2: 87.1203
+
+Trial 3: 89.1862
+
+Trial 4: 88.7528
+
+Trial 5: 90.2761
+
+Trial 6: 88.6191
+
+Trial 7: 88.6692
+
+Trial 8: 89.8816
+
+Trial 9: 89.0284
+
+Trial 10: 89.4554
+
+Trial 11: 89.5095
+
+Trial 12: 91.083
+
+Trial 13: 90.509
+
+Trial 14: 89.7565
+
+Trial 15: 89.9048
+
+Trial 16: 89.5225
+
+Trial 17: 88.8001
+
+Trial 18: 87.2458
+
+Trial 19: 89.5776
+
+MPKI=2.1:
+Trial 0: 88.5034
+
+Trial 1: 87.6866
+
+Trial 2: 88.5034
+
+Trial 3: 87.49
+
+Trial 4: 88.1213
+
+Trial 5: 88.743
+
+Trial 6: 87.7925
+
+Trial 7: 87.7973
+
+Trial 8: 87.0161
+
+Trial 9: 87.5829
+
+Trial 10: 87.7905
+
+Trial 11: 86.2924
+
+Trial 12: 88.4154
+
+Trial 13: 86.9754
+
+Trial 14: 90.8482
+
+Trial 15: 88.476
+
+Trial 16: 88.7794
+
+Trial 17: 87.6184
+
+Trial 18: 86.1484
+
+Trial 19: 89.1305
+
+MPKI=2.15:
+Trial 0: 87.4403
+
+Trial 1: 87.2591
+
+Trial 2: 86.5735
+
+Trial 3: 87.9304
+
+Trial 4: 87.6866
+
+Trial 5: 88.6181
+
+Trial 6: 88.7558
+
+Trial 7: 86.1345
+
+Trial 8: 89.3555
+
+Trial 9: 85.6861
+
+Trial 10: 87.1507
+
+Trial 11: 87.5436
+
+Trial 12: 88.9789
+
+Trial 13: 87.4546
+
+Trial 14: 86.8904
+
+Trial 15: 88.677
+
+Trial 16: 87.6539
+
+Trial 17: 88.6446
+
+Trial 18: 86.1493
+
+Trial 19: 87.6347
+
+MPKI=2.2:
+Trial 0: 85.6797
+
+Trial 1: 86.4192
+
+Trial 2: 86.4342
+
+Trial 3: 85.4756
+
+Trial 4: 84.4657
+
+Trial 5: 86.6176
+
+Trial 6: 85.9153
+
+Trial 7: 85.9651
+
+Trial 8: 88.3207
+
+Trial 9: 86.8159
+
+Trial 10: 87.8407
+
+Trial 11: 86.192
+
+Trial 12: 87.2829
+
+Trial 13: 86.2301
+
+Trial 14: 86.4921
+
+Trial 15: 87.261
+
+Trial 16: 86.3232
+
+Trial 17: 85.5359
+
+Trial 18: 86.3782
+
+Trial 19: 85.824
+
+MPKI=2.25:
+Trial 0: 85.2733
+
+Trial 1: 85.8535
+
+Trial 2: 85.0783
+
+Trial 3: 86.6598
+
+Trial 4: 87.0114
+
+Trial 5: 85.6953
+
+Trial 6: 85.1671
+
+Trial 7: 86.8065
+
+Trial 8: 86.1466
+
+Trial 9: 86.1902
+
+Trial 10: 87.8619
+
+Trial 11: 85.5057
+
+Trial 12: 87.0635
+
+Trial 13: 85.1471
+
+Trial 14: 86.8998
+
+Trial 15: 86.0502
+
+Trial 16: 85.9623
+
+Trial 17: 85.6559
+
+Trial 18: 85.129
+
+Trial 19: 84.2008
 
 MPKI=2.3000000000000003:
-Trial 0: 101.7812
+Trial 0: 84.7799
 
-Trial 1: 101.7941
+Trial 1: 85.1517
 
-Trial 2: 145.3224
+Trial 2: 85.4035
 
-Trial 3: 152.2649
+Trial 3: 84.9952
 
-Trial 4: 150.4608
+Trial 4: 85.2333
 
-Trial 5: 152.0046
+Trial 5: 86.1002
 
-Trial 6: 148.2854
+Trial 6: 85.1843
 
-Trial 7: 155.0688
+Trial 7: 84.2708
 
-Trial 8: 156.7705
+Trial 8: 85.6265
 
-Trial 9: 155.2192
+Trial 9: 84.9663
 
-Trial 10: 96.3972
+Trial 10: 85.2143
 
-Trial 11: 153.4625
+Trial 11: 83.7477
 
-Trial 12: 153.4625
+Trial 12: 84.5755
 
-Trial 13: 156.6171
+Trial 13: 84.5112
 
-Trial 14: 152.9052
+Trial 14: 84.597
 
-Trial 15: 109.7394
+Trial 15: 85.5094
 
-Trial 16: 152.4681
+Trial 16: 86.193
 
-Trial 17: 140.2525
+Trial 17: 84.4363
 
-Trial 18: 138.7203
+Trial 18: 84.9762
 
-Trial 19: 149.5048
+Trial 19: 83.9569
 
 MPKI=2.35:
-Trial 0: 152.4971
+Trial 0: 83.7372
 
-Trial 1: 148.7542
+Trial 1: 82.9076
 
-Trial 2: 142.3994
+Trial 2: 84.4274
 
-Trial 3: 155.4606
+Trial 3: 84.16
 
-Trial 4: 157.2018
+Trial 4: 84.9708
 
-Trial 5: 152.236
+Trial 5: 84.7449
 
-Trial 6: 146.6007
+Trial 6: 84.53
 
-Trial 7: 151.1716
+Trial 7: 84.9293
 
-Trial 8: 147.4111
+Trial 8: 85.6559
 
-Trial 9: 141.5929
+Trial 9: 83.5788
 
-Trial 10: 154.2317
+Trial 10: 84.0389
 
-Trial 11: 149.9531
+Trial 11: 83.2709
 
-Trial 12: 154.202
+Trial 12: 85.4327
 
-Trial 13: 148.1756
+Trial 13: 84.9203
 
-Trial 14: 152.2649
+Trial 14: 84.8689
 
-Trial 15: 119.6351
+Trial 15: 84.2061
 
-Trial 16: 152.7592
+Trial 16: 87.0549
 
-Trial 17: 148.9758
+Trial 17: 84.6883
 
-Trial 18: 92.1659
+Trial 18: 83.7276
 
-Trial 19: 152.9052
+Trial 19: 83.3794
 
 MPKI=2.4000000000000004:
-Trial 0: 101.3685
+Trial 0: 83.0737
 
-Trial 1: 149.1981
+Trial 1: 83.6523
 
-Trial 2: 144.4304
+Trial 2: 81.6677
 
-Trial 3: 153.0515
+Trial 3: 83.774
 
-Trial 4: 154.7988
+Trial 4: 83.3316
 
-Trial 5: 152.439
+Trial 5: 84.614
 
-Trial 6: 147.1129
+Trial 6: 84.4202
 
-Trial 7: 148.616
+Trial 7: 83.949
 
-Trial 8: 148.9203
+Trial 8: 84.2398
 
-Trial 9: 150.8011
+Trial 9: 83.6042
 
-Trial 10: 131.6006
+Trial 10: 84.3953
 
-Trial 11: 149.8408
+Trial 11: 84.1016
 
-Trial 12: 149.5607
+Trial 12: 83.8372
 
-Trial 13: 154.321
+Trial 13: 83.9005
 
-Trial 14: 129.6176
+Trial 14: 83.4751
 
-Trial 15: 145.693
+Trial 15: 83.6409
 
-Trial 16: 146.4933
+Trial 16: 84.4666
 
-Trial 17: 147.547
+Trial 17: 83.0048
 
-Trial 18: 155.4303
+Trial 18: 83.8047
 
-Trial 19: 104.3025
+Trial 19: 83.3889
 
 MPKI=2.45:
-Trial 0: 131.9479
+Trial 0: 84.9293
 
-Trial 1: 139.7624
+Trial 1: 83.5885
 
-Trial 2: 95.648
+Trial 2: 83.5911
 
-Trial 3: 142.7042
+Trial 3: 84.9302
 
-Trial 4: 151.2002
+Trial 4: 83.7907
 
-Trial 5: 149.5048
+Trial 5: 83.199
 
-Trial 6: 130.6336
+Trial 6: 84.5952
 
-Trial 7: 155.7632
+Trial 7: 85.1879
 
-Trial 8: 152.73
+Trial 8: 83.654
 
-Trial 9: 155.129
+Trial 9: 85.7872
 
-Trial 10: 149.3373
+Trial 10: 84.2708
 
-Trial 11: 124.63
+Trial 11: 83.557
 
-Trial 12: 135.6622
+Trial 12: 85.9107
 
-Trial 13: 153.0808
+Trial 13: 83.919
 
-Trial 14: 148.7818
+Trial 14: 83.8741
 
-Trial 15: 153.5803
+Trial 15: 85.2016
 
-Trial 16: 147.7378
+Trial 16: 82.6728
 
-Trial 17: 84.5666
+Trial 17: 83.6995
 
-Trial 18: 150.6308
+Trial 18: 85.1417
 
-Trial 19: 148.3955
+Trial 19: 84.5201
 
 MPKI=2.5:
-Trial 0: 70.8403
+Trial 0: 84.5201
 
-Trial 1: 100.4646
+Trial 1: 85.8876
 
-Trial 2: 100.743
+Trial 2: 87.0085
 
-Trial 3: 158.4472
+Trial 3: 85.7559
 
-Trial 4: 151.3432
+Trial 4: 84.4898
 
-Trial 5: 145.4545
+Trial 5: 83.078
 
-Trial 6: 151.2002
+Trial 6: 85.4838
 
-Trial 7: 143.8849
+Trial 7: 87.0227
 
-Trial 8: 150.2065
+Trial 8: 86.1178
 
-Trial 9: 152.7009
+Trial 9: 85.3279
 
-Trial 10: 154.9487
+Trial 10: 84.8401
 
-Trial 11: 149.6446
+Trial 11: 84.3704
 
-Trial 12: 142.2728
+Trial 12: 85.2025
 
-Trial 13: 147.4654
+Trial 13: 85.732
 
-Trial 14: 149.2259
+Trial 14: 85.1952
 
-Trial 15: 154.2615
+Trial 15: 85.3534
 
-Trial 16: 145.7195
+Trial 16: 83.9692
 
-Trial 17: 150.4042
+Trial 17: 85.8259
 
-Trial 18: 131.3198
+Trial 18: 87.0796
 
-Trial 19: 90.9298
+Trial 19: 87.1232
 

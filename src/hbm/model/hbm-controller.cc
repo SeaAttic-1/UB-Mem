@@ -38,11 +38,11 @@ HBMController::Initialize(uint32_t nodeId, uint32_t numStacks)
     m_stacks.push_back(new_stack);
   }
   m_write_buffer.clear();
-  Simulator::Schedule(NanoSeconds(HBM_CONTROOLER_WRITE_BUFFER_TIMEOUT), &HBMController::FlushWriteBuffer, this);
+  Simulator::Schedule(NanoSeconds(HBM_CONTROLLER_WRITE_BUFFER_TIME_OUT), &HBMController::FlushWriteBuffer, this);
 }
 
 
-void HBMController::SendRequest(uint64_t address, uint32_t size, bool isWrite, bool isRemote, Callback<void, void*> cb, void* arg)
+bool HBMController::SendRequest(uint64_t address, uint32_t size, bool isWrite, bool isRemote, Callback<void, void*> cb, void* arg)
 {
   // 
   /*
@@ -58,12 +58,28 @@ void HBMController::SendRequest(uint64_t address, uint32_t size, bool isWrite, b
     return;
   }
   */
+  if (m_outstanding > HBM_MAX_MC_OTSD_LIMITS) {
+    Simulator::Schedule(NanoSeconds(5), &HBMController::SendRequest, this, address, size, isWrite, isRemote, cb, arg);
+    NS_LOG_INFO("MC Limit reached");
+    return false;
+  }
 
   if(isWrite) {
-    NS_LOG_INFO("Detected write request at " << address << " of size " << size);
-    if (TryCoalesce(address, size, isRemote, cb, arg)) return;
-    EnqueueWrite(address, size, isRemote, cb, arg);
+    if(isRemote)
+      NS_LOG_INFO("Detected remote write request at " << address << " of size " << size);
+    else
+      NS_LOG_INFO("Detected write request at " << address << " of size " << size);
+    if (TryCoalesce(address, size, isRemote, cb, arg)) return true;
+    if (EnqueueWrite(address, size, isRemote, cb, arg)) return true;
+
+    if(isRemote)
+      Simulator::Schedule(NanoSeconds(5), &HBMController::SendRequest, this, address, size, isWrite, isRemote, cb, arg);
+    else
+      m_notify_callbacks.push_back(cb); // For intra-node background traffic, store this cb, which will be used to resume the cu's access
+    return false;
   }
+
+  return false; 
   // Read not implemented yet, but suffice for now
 }
 
@@ -85,6 +101,7 @@ bool HBMController::TryCoalesce(uint64_t address, uint32_t size, bool isRemote, 
         if (arg != nullptr) {
           i.cbs.push_back(cb);
           i.args.push_back(arg);
+          i.end_addresses.push_back(address + size);
         }
         
         return true;
@@ -95,7 +112,7 @@ bool HBMController::TryCoalesce(uint64_t address, uint32_t size, bool isRemote, 
   return false;
 }
 
-void HBMController::EnqueueWrite(uint64_t address, uint32_t size, bool isRemote, Callback<void, void*> cb, void* arg) {
+bool HBMController::EnqueueWrite(uint64_t address, uint32_t size, bool isRemote, Callback<void, void*> cb, void* arg) {
   NS_LOG_INFO("Detected requests writing to the same row with new request at " << address);
   if (m_write_buffer.size() < HBM_CONTROLLER_WRITE_BUFFER_MAX_SIZE) {
     MemoryRequest new_request;
@@ -107,27 +124,40 @@ void HBMController::EnqueueWrite(uint64_t address, uint32_t size, bool isRemote,
     if (arg != nullptr) {
       new_request.cbs.push_back(cb);
       new_request.args.push_back(arg);
+      new_request.end_addresses.push_back(address + size);
     }
     m_write_buffer.push_back(new_request);
+    // m_outstanding ++; // only increment for directly enqueued requests; merged requests do not count
+    return true;
   }
   else {
-    for(auto& i : m_write_buffer) {
-      uint32_t stack = EXTRACT_STACK(i.address);
-      m_stacks[stack]->SendRequest(i);
+    for(auto it = m_write_buffer.begin(); it != m_write_buffer.end();) {
+      
+        uint32_t stack = EXTRACT_STACK(it->address);
+        if (m_stacks[stack]->SendRequest(*it)) {
+          it = m_write_buffer.erase(it);
+          m_outstanding ++;
+        }
+        else it ++;
     }
 
-    m_write_buffer.clear();
+    if (m_write_buffer.size() < HBM_CONTROLLER_WRITE_BUFFER_MAX_SIZE) {
 
-    MemoryRequest new_request;
-    new_request.address = address;
-    new_request.size = size;
-    new_request.isWrite = true;
+      MemoryRequest new_request;
+      new_request.address = address;
+      new_request.size = size;
+      new_request.isWrite = true;
 
-    if (arg != nullptr) {
-      new_request.cbs.push_back(cb);
-      new_request.args.push_back(arg);
+      if (arg != nullptr) {
+        new_request.cbs.push_back(cb);
+        new_request.args.push_back(arg);
+        new_request.end_addresses.push_back(address + size);
+      }
+      m_write_buffer.push_back(new_request);
+      // m_outstanding ++;
+      return true;
     }
-    m_write_buffer.push_back(new_request);
+    return false;
   }
 }
 
@@ -135,14 +165,24 @@ void HBMController::FlushWriteBuffer() {
   NS_LOG_INFO("Flush Write buffer on node " << m_nodeId);
   if (m_write_buffer.empty());
   else {
-    for(auto& i : m_write_buffer) {
+    for(auto it = m_write_buffer.begin(); it != m_write_buffer.end();) {
       
-        uint32_t stack = EXTRACT_STACK(i.address);
-        m_stacks[stack]->SendRequest(i);
+        uint32_t stack = EXTRACT_STACK(it->address);
+        if (m_stacks[stack]->SendRequest(*it)) {
+          it = m_write_buffer.erase(it);
+          m_outstanding ++;
+        }
+        else it ++;
       }
-      m_write_buffer.clear();
   }
-  Simulator::Schedule(NanoSeconds(HBM_CONTROOLER_WRITE_BUFFER_TIMEOUT), &HBMController::FlushWriteBuffer, this);
+  Simulator::Schedule(NanoSeconds(HBM_CONTROLLER_WRITE_BUFFER_TIME_OUT), &HBMController::FlushWriteBuffer, this);
+}
+
+void HBMController::NotifyComplete(void) {
+  m_outstanding --;
+  for(auto cb: m_notify_callbacks) {
+    cb(nullptr);
+  }
 }
 
 } // namespace ns3
