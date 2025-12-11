@@ -130,8 +130,8 @@ void UbSwitch::AddVoqIntoAlgroithm()
  */
 void UbSwitch::AddTpIntoAlgroithm(Ptr<UbIngressQueue> tp, uint32_t outPort, uint32_t priority)
 {
-    if ((outPort >= m_portsNum) || (priority >= m_vlNum)) {
-        NS_ASSERT_MSG(0, "Invalid indices (outPort, priority)!");
+    if ((outPort < m_io_die_id * m_portsNum) || (outPort >= (m_io_die_id + 1) * m_portsNum) || (priority >= m_vlNum)) {
+        NS_ASSERT_MSG(0, "Invalid indices (outPort, priority)!" << outPort << " " << priority << " " << m_portsNum << " " << m_vlNum << " " << m_io_die_id << " " << m_portsNum);
     }
     NS_LOG_DEBUG("[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: " << outPort
                  << "priorityIdx: " << priority << "outPort: " << outPort);
@@ -187,10 +187,16 @@ void UbSwitch::VoqInit()
  */
 void UbSwitch::AddPktToVoq(Ptr<Packet> p, uint32_t outPort, uint32_t priority, uint32_t inPort)
 {
-    if ((outPort > m_portsNum) || (priority > m_vlNum) || (inPort > m_portsNum)) { // 不合理请求
+    NS_LOG_INFO("outPort " << outPort << " prioriy " << priority << " inPort " << inPort);
+    NS_LOG_INFO("m_io_die_id " << m_io_die_id << " m_portsNum " << m_portsNum );
+
+    // Modified:
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+
+    if ((outPort % port_count_per_io_die > m_portsNum) || (priority > m_vlNum) || (inPort % port_count_per_io_die > m_portsNum)) { // 不合理请求
         NS_ASSERT_MSG(0, "Invalid VOQ indices (outPort, priority, inPort)!");
     }
-    m_voq[outPort][priority][inPort]->Push(p);
+    m_voq[outPort % port_count_per_io_die][priority][inPort % port_count_per_io_die]->Push(p);
 }
 
 UbPacketType_t UbSwitch::GetPacketType(Ptr<Packet> packet)
@@ -271,6 +277,7 @@ void UbSwitch::HandleURMADataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
  */
 void UbSwitch::HandleLdstDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
 {
+    NS_LOG_INFO("Call HandleLdstDataPacket");
     switch (GetNodeType()) {
         case UB_DEVICE:
             if (!SinkMemDataPacket(port, packet)) {
@@ -283,6 +290,7 @@ void UbSwitch::HandleLdstDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
         default:
             NS_ASSERT_MSG(0, "Invalid Node! ");
     }
+    NS_LOG_INFO("HandleLdstDataPacket returns");
 }
 
 /**
@@ -362,6 +370,7 @@ bool UbSwitch::SinkMemDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
 void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
 {
     /* 解析包头 */
+    NS_LOG_INFO("Call ForwardDataPacket");
     UbDatalinkPacketHeader m_datalinkHeader;
     packet->PeekHeader(m_datalinkHeader);
     int outPort = -1;
@@ -391,13 +400,15 @@ void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     }
     /* 缓存管理 */
     uint32_t inPort = port->GetIfIndex();
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     uint8_t priority = m_datalinkHeader.GetPacketVL();
-    if (!m_queueManager->CheckIngress(inPort, priority, packet->GetSize())) {
+    if (!m_queueManager->CheckIngress(inPort % port_count_per_io_die, priority, packet->GetSize())) {
         // Drop
         NS_LOG_WARN("Ingress memory not enough. Packet Dropped!");
         return;
     }
     SendPacket(packet, inPort, outPort, priority);
+    NS_LOG_INFO("ForwardDataPacket Return");
 }
 
 void UbSwitch::ChangePakcetRoutingPolicy(Ptr<Packet> packet, bool useShortestPath)
@@ -468,14 +479,19 @@ void UbSwitch::GetLdstRoutingKey(Ptr<Packet> packet, RoutingKey &rtKey)
  */
 void UbSwitch::SendPacket(Ptr<Packet> packet, uint32_t inPort, uint32_t outPort, uint32_t priority)
 {
+    NS_LOG_INFO("Sending out node " << m_nodeId <<", io die " << m_io_die_id << " inPort: " << inPort << " outPort: " << outPort);
     auto node = NodeList::GetNode(m_nodeId);
     Ptr<UbPort> recvPort = DynamicCast<ns3::UbPort>(node->GetDevice(inPort));
-    m_voq[outPort][priority][inPort]->Push(packet);
-    m_queueManager->PushIngress(inPort, priority, packet->GetSize());
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    m_voq[outPort % port_count_per_io_die][priority][inPort % port_count_per_io_die]->Push(packet);
+    NS_LOG_INFO("Chkpt 1");
+    m_queueManager->PushIngress(inPort % port_count_per_io_die, priority, packet->GetSize());
+    NS_LOG_INFO("Chkpt 2");
     if (IsPFCEnable()) {
         recvPort->m_flowControl->HandleReceivedPacket(packet);
     }
-    m_queueManager->PushEgress(outPort, priority, packet->GetSize());
+    m_queueManager->PushEgress(outPort % port_count_per_io_die, priority, packet->GetSize());
+    NS_LOG_INFO("Chkpt 3");
     Ptr<UbPort> sendPort = DynamicCast<ns3::UbPort>(node->GetDevice(outPort));
     sendPort->TriggerTransmit();
 }
@@ -486,14 +502,16 @@ void UbSwitch::SendPacket(Ptr<Packet> packet, uint32_t inPort, uint32_t outPort,
  */
 void UbSwitch::NotifySwitchDequeue(uint16_t inPortId, uint32_t outPort, uint32_t priority, Ptr<Packet> packet)
 {
+    NS_LOG_INFO("IO Die Id is " << m_io_die_id);
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     UbDatalinkHeader dlHeader;
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
         NS_LOG_DEBUG("[QMU] Node:" << NodeList::GetNode(m_nodeId)->GetId()
               << " port:" << outPort
-              << " egress size:" << m_queueManager->GetAllEgressUsed(outPort));
+              << " egress size:" << m_queueManager->GetAllEgressUsed(outPort % port_count_per_io_die));
         m_congestionCtrl->SwitchForwardPacket(inPortId, outPort, packet);
-        m_queueManager->PopIngress(inPortId, priority, packet->GetSize());
+        m_queueManager->PopIngress(inPortId % port_count_per_io_die, priority, packet->GetSize());
     }
 }
 
@@ -514,14 +532,17 @@ Ptr<UbQueueManager> UbSwitch::GetQueueManager()
 
 void UbSwitch::SwitchSendFinish(uint32_t portId, uint32_t pri, Ptr<Packet> packet)
 {
+    NS_LOG_INFO("Call SwitchSendFinish");
     UbDatalinkHeader dlHeader;
 
     packet->PeekHeader(dlHeader);
     if (!dlHeader.IsControlCreditHeader()) {
-        m_queueManager->PopEgress(portId, pri, packet->GetSize());
+        NS_LOG_INFO("Test");
+        uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+        m_queueManager->PopEgress(portId % port_count_per_io_die, pri, packet->GetSize());
         NS_LOG_DEBUG("[queueManager] Node:" << NodeList::GetNode(m_nodeId)->GetId()
                   << " port:" << portId
-                  << " egress size:" << m_queueManager->GetAllEgressUsed(portId));
+                  << " egress size:" << m_queueManager->GetAllEgressUsed(portId % port_count_per_io_die));
     }
 }
 

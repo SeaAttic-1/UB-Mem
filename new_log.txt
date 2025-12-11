@@ -1,18 +1,3556 @@
-[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:[m[K In member function ‘[01m[Kvoid ns3::UbLdstApi::[01;32m[KLdstProcess[m[K(ns3::Ptr<ns3::UbLdstTaskSegment>)[m[K’:
-[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:67:5:[m[K [01;31m[Kerror: [m[K‘[01m[KNS_LOG_INO[m[K’ was not declared in this scope; did you mean ‘[01m[KNS_LOG_INFO[m[K’?
-   67 |     [01;31m[KNS_LOG_INO[m[K("Invoked LdSt Process")
-      |     [01;31m[K^~~~~~~~~~[m[K
-      |     [32m[KNS_LOG_INFO[m[K
-[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:69:26:[m[K [01;31m[Kerror: [m[K‘[01m[Ksw_info[m[K’ was not declared in this scope; did you mean ‘[01m[Ksinf[m[K’?
-   69 |     uint32_t io_die_id = [01;31m[Ksw_info[m[K.io_die_id;
-      |                          [01;31m[K^~~~~~~[m[K
-      |                          [32m[Ksinf[m[K
-[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:70:42:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [24][m[K’ and ‘[01m[Kuint32_t[m[K’ {aka ‘[01m[Kunsigned int[m[K’} to binary ‘[01m[Koperator<<[m[K’
-   70 |     NS_LOG_INO([32m[K"Selected io die number "[m[K [01;31m[K<<[m[K [34m[Kio_die_id[m[K);
-      |                [32m[K~~~~~~~~~~~~~~~~~~~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~[m[K
-      |                [32m[K|[m[K                            [34m[K|[m[K
-      |                [32m[Kconst char [24][m[K              [34m[Kuint32_t {aka unsigned int}[m[K
-gmake[3]: *** [src/unified-bus/CMakeFiles/unified-bus.dir/build.make:286: src/unified-bus/CMakeFiles/unified-bus.dir/model/protocol/ub-ldst-api.cc.o] Error 1
-gmake[2]: *** [CMakeFiles/Makefile2:3660: src/unified-bus/CMakeFiles/unified-bus.dir/all] Error 2
-gmake[1]: *** [CMakeFiles/Makefile2:3982: scratch/CMakeFiles/scratch_ub-quick-example.dir/rule] Error 2
-gmake: *** [Makefile:1509: scratch_ub-quick-example] Error 2
+[19:48:40] Run case: scratch/2nodes_simple
+[19:48:40] Set component attributes
+[19:48:40] Create node.
+[19:48:40] Read A Node
+[19:48:40] Read A Node
+[19:48:40] Create Node Map
+[19:48:40] 1
+[19:48:40] 2
+[19:48:40] 3
+[19:48:40] 4
+UbController:UbController(0x63e44fe88e40)
+[19:48:40] 5
+[19:48:40] 6
+UbFunction created
+[19:48:40] 7
+[19:48:40] 8
+[19:48:40] 9
+[19:48:40] Done
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44fe9d710)
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44fe9dcb0)
+[19:48:40] Init
+[UbSwitch NodePortsFcInit] m_portsNum: 1 m_isCBFCEnable: false m_isPFCEnable: false
+[UbSwitch NodePortsFcInit] m_portsNum: 1 m_isCBFCEnable: false m_isPFCEnable: false
+[19:48:40] Inited
+[19:48:40] Init CC
+enabled: false algo:0
+enabled: false algo:0
+[19:48:40] Inited CC
+[19:48:40] Set FwdDelay
+[19:48:40] All set
+[19:48:40] 1
+[19:48:40] 2
+[19:48:40] 3
+[19:48:40] 4
+UbController:UbController(0x63e44fea90d0)
+[19:48:40] 5
+[19:48:40] 6
+UbFunction created
+[19:48:40] 7
+[19:48:40] 8
+[19:48:40] 9
+[19:48:40] Done
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feab150)
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feab8a0)
+[19:48:40] Init
+[UbSwitch NodePortsFcInit] m_portsNum: 1 m_isCBFCEnable: false m_isPFCEnable: false
+[UbSwitch NodePortsFcInit] m_portsNum: 1 m_isCBFCEnable: false m_isPFCEnable: false
+[19:48:40] Inited
+[19:48:40] Init CC
+enabled: false algo:0
+enabled: false algo:0
+[19:48:40] Inited CC
+[19:48:40] Set FwdDelay
+[19:48:40] All set
+[19:48:40] 1
+[19:48:40] 2
+[19:48:40] 3
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feb9370)
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feb9ac0)
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feba1e0)
+[19:48:40] Create Port
+UbPort:UbPort(0x63e44feba930)
+[19:48:40] Init
+[UbSwitch NodePortsFcInit] m_portsNum: 2 m_isCBFCEnable: false m_isPFCEnable: false
+[UbSwitch NodePortsFcInit] m_portsNum: 2 m_isCBFCEnable: false m_isPFCEnable: false
+[19:48:40] Inited
+[19:48:40] Init CC
+enabled: false algo:0
+enabled: false algo:0
+[19:48:40] Inited CC
+[19:48:40] Set FwdDelay
+[19:48:40] All set
+[19:48:40] Create Topology
+port set data rate
+port set data rate
+UbLink:UbLink()
+UbPort:Attach(0x63e44fe9d710, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fd064d0, 0x63e44fe9d710)
+UbPort:NotifyLinkUp(0x63e44fe9d710)
+UbPort:Attach(0x63e44feb9370, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fd064d0, 0x63e44feb9370)
+UbPort:NotifyLinkUp(0x63e44feb9370)
+port set data rate
+port set data rate
+UbLink:UbLink()
+UbPort:Attach(0x63e44fe9dcb0, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fcea1e0, 0x63e44fe9dcb0)
+UbPort:NotifyLinkUp(0x63e44fe9dcb0)
+UbPort:Attach(0x63e44feba1e0, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fcea1e0, 0x63e44feba1e0)
+UbPort:NotifyLinkUp(0x63e44feba1e0)
+port set data rate
+port set data rate
+UbLink:UbLink()
+UbPort:Attach(0x63e44feab150, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fce9f40, 0x63e44feab150)
+UbPort:NotifyLinkUp(0x63e44feab150)
+UbPort:Attach(0x63e44feb9ac0, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fce9f40, 0x63e44feb9ac0)
+UbPort:NotifyLinkUp(0x63e44feb9ac0)
+port set data rate
+port set data rate
+UbLink:UbLink()
+UbPort:Attach(0x63e44feab8a0, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fed8860, 0x63e44feab8a0)
+UbPort:NotifyLinkUp(0x63e44feab8a0)
+UbPort:Attach(0x63e44feba930, 0x7ffd2362faa8)
+UbLink:Attach(0x63e44fed8860, 0x63e44feba930)
+UbPort:NotifyLinkUp(0x63e44feba930)
+enabled: false algo:0
+enabled: false algo:0
+UbController:CreateTp(0x63e44fe88e40, 0, 1, 0, 0, 7, 0)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 0priorityIdx: 7outPort: 0
+Created transport channel success
+UbController:CreateTp(0x63e44fea90d0, 1, 0, 0, 0, 7, 0)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 0priorityIdx: 7outPort: 0
+Created transport channel success
+enabled: false algo:0
+enabled: false algo:0
+UbController:CreateTp(0x63e44fe88e40, 0, 1, 0, 0, 8, 1)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 0priorityIdx: 8outPort: 0
+Created transport channel success
+UbController:CreateTp(0x63e44fea90d0, 1, 0, 0, 0, 8, 1)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 0priorityIdx: 8outPort: 0
+Created transport channel success
+enabled: false algo:0
+enabled: false algo:0
+UbController:CreateTp(0x63e44fe88e40, 0, 1, 1, 1, 7, 2)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 1priorityIdx: 7outPort: 1
+Created transport channel success
+UbController:CreateTp(0x63e44fea90d0, 1, 0, 1, 1, 7, 2)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 1priorityIdx: 7outPort: 1
+Created transport channel success
+enabled: false algo:0
+enabled: false algo:0
+UbController:CreateTp(0x63e44fe88e40, 0, 1, 1, 1, 8, 3)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 1priorityIdx: 8outPort: 1
+Created transport channel success
+UbController:CreateTp(0x63e44fea90d0, 1, 0, 1, 1, 8, 3)
+[UbSwitch AddTpIntoAlgroithm] TP: outPortIdx: 1priorityIdx: 8outPort: 1
+Created transport channel success
+[19:48:40] Start Client.
+[19:48:40] Read one record
+Added task 0 with 0 dependencies
+Scheduled task 0
+[19:48:40] Done
+MEM Task Starts, taskId: 0
+[UbLdstThread PushTaskSegment] m_waitingAckNum[0]: 8
+[UbLdstThread PushTaskSegment] m_waitingAckNum[1]: 8
+[UbLdstThread HandleStoreTask]
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 0 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 1 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 2 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 3 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 4 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 5 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 6 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 7 payload size:52
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+[UbLdstThread HandleStoreTask]
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 8 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 9 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 10 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 11 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 12 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 13 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 0
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 14 payload size:64
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+Sent packet
+Invoked ldst process function call
+Selected io die number 1
+UbHeader:UbCompactMAExtTah(0x7ffd236300a8)
+UbHeader:Serialize(0x7ffd236300a8, 0x7ffd2362ff50)
+[UbLdstApi GenDataPacket] packetUid: 15 payload size:52
+UbHeader:~UbCompactMAExtTah(0x7ffd236300a8)
+Generated data packet
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.0 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772416
+Destip: 167772416
+Destip: 167772416
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+Sent packet
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 0
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee11d0, 0x63e44fe9d710)
+UID is 0)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+0
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 1
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fedb2e0, 0x63e44fe9dcb0)
+UID is 1)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 0
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 1
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551524
+TEST 2
+TEST 3
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 2
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 2
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 1
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 2
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fedb370, 0x63e44fe9d710)
+UID is 2)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 1
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551524
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 3
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fedb450, 0x63e44fe9dcb0)
+UID is 3)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 2
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 3
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551432
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 4
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fedb530, 0x63e44fe9d710)
+UID is 4)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551432
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 5
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee6bf0, 0x63e44fe9dcb0)
+UID is 5)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 4
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 5
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551340
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 6
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee6c60, 0x63e44fe9d710)
+UID is 6)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551340
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 7
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee6cd0, 0x63e44fe9dcb0)
+UID is 7)
+[UbFc DequeueAndTransmit] will send pkt size: 80
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 6
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 7
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551260
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 8
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee6e10, 0x63e44fe9d710)
+UID is 8)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551260
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 9
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee6f40, 0x63e44fe9dcb0)
+UID is 9)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 8
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 9
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551168
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 10
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee7130, 0x63e44fe9d710)
+UID is 10)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551168
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 11
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee7320, 0x63e44fe9dcb0)
+UID is 11)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 10
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 11
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551076
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 12
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee7510, 0x63e44fe9d710)
+UID is 12)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709551076
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 13
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee7700, 0x63e44fe9dcb0)
+UID is 13)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44fe26570)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 0 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44fe9dfa0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 12
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 13
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709550984
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe26570)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 0 send to: NodeId: 2 PortId: 0 PacketUid: 14
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee78f0, 0x63e44fe9d710)
+UID is 14)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44fe9dfa0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709550984
+[UbPort send] nodetype: HOST NodeId: 0 PortId: 1 send to: NodeId: 2 PortId: 2 PacketUid: 15
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee7ae0, 0x63e44fe9dcb0)
+UID is 15)
+[UbFc DequeueAndTransmit] will send pkt size: 80
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 0 PortId: 0 PacketUid: 14
+UbPort:TransmitComplete(0x63e44fe9d710)
+TEST 1
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 0 IODieId: 1 PortId: 1 PacketUid: 15
+UbPort:TransmitComplete(0x63e44fe9dcb0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:0 port:1 egress size:m_egressBuf Size 1
+18446744073709550904
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 0 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 0 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 0 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 0
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 1 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 1
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 3 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 0
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee11d0, 0x63e44feb9ac0)
+UID is 0)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 1
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fedb2e0, 0x63e44feba930)
+UID is 1)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 2
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 3
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 0
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 1
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 2
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fedb370, 0x63e44feb9ac0)
+UID is 2)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 3
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fedb450, 0x63e44feba930)
+UID is 3)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 4
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 5
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 2
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 3
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 4
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fedb530, 0x63e44feb9ac0)
+UID is 4)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 5
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee6bf0, 0x63e44feba930)
+UID is 5)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 6
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 7
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 4
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 5
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+80
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 6
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee6c60, 0x63e44feb9ac0)
+UID is 6)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+80
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 7
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee6cd0, 0x63e44feba930)
+UID is 7)
+[UbFc DequeueAndTransmit] will send pkt size: 80
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 8
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 9
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 6
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 7
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 8
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee6e10, 0x63e44feb9ac0)
+UID is 8)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 9
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee6f40, 0x63e44feba930)
+UID is 9)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 10
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 11
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 8
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 9
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 10
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee7130, 0x63e44feb9ac0)
+UID is 10)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 11
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee7320, 0x63e44feba930)
+UID is 11)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 12
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 13
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 10
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 11
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 12
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee7510, 0x63e44feb9ac0)
+UID is 12)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 13
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee7700, 0x63e44feba930)
+UID is 13)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 0 recv from: NodeId: 0 PortId: 0 PacketUid: 14
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 0 inPort: 0 outPort: 1
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 2 recv from: NodeId: 0 PortId: 1 PacketUid: 15
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.0.0 dip: 10.0.1.1 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Destip: 167772417
+Lookup success
+Sending out node 2, io die 1 inPort: 2 outPort: 3
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] SendState::BUSY
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feb9db0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 3 qidx: 0
+UbPort:DoEnqueue(0x63e44febac20)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 12
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 13
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+80
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+UbPort:DoDequeue(0x63e44feb9db0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:1 egress size:m_egressBuf Size 2
+92
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 1 send to: NodeId: 1 PortId: 0 PacketUid: 14
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee78f0, 0x63e44feb9ac0)
+UID is 14)
+[UbFc DequeueAndTransmit] will send pkt size: 92
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+UbPort:DoDequeue(0x63e44febac20)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 3 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:3 egress size:m_egressBuf Size 2
+80
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 3 send to: NodeId: 1 PortId: 1 PacketUid: 15
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee7ae0, 0x63e44feba930)
+UID is 15)
+[UbFc DequeueAndTransmit] will send pkt size: 80
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 1 PacketUid: 14
+UbPort:TransmitComplete(0x63e44feb9ac0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:1 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 3 PacketUid: 15
+UbPort:TransmitComplete(0x63e44feba930)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:3 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 1 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 3 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 3 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 3
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 3
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 0
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 0
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fef8f80)
+UbHeader:UbCompactMAExtTah(0x63e44fef8fc0)
+UbHeader:~UbCompactMAExtTah(0x63e44fef8fc0)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fef8f80)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 16 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 1
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 1
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fef9080)
+UbHeader:UbCompactMAExtTah(0x63e44fef90c0)
+UbHeader:~UbCompactMAExtTah(0x63e44fef90c0)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fef9080)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 17 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 16
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee8210, 0x63e44feab150)
+UID is 16)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+0
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 17
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee11d0, 0x63e44feab8a0)
+UID is 17)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 16
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 17
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551600
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 2
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 2
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fedc8c0)
+UbHeader:UbCompactMAExtTah(0x63e44fedc900)
+UbHeader:~UbCompactMAExtTah(0x63e44fedc900)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fedc8c0)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 18 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 3
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 3
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fedc9e0)
+UbHeader:UbCompactMAExtTah(0x63e44fedca20)
+UbHeader:~UbCompactMAExtTah(0x63e44fedca20)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fedc9e0)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 19 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 18
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fedb2e0, 0x63e44feab150)
+UID is 18)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551600
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 19
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fedb370, 0x63e44feab8a0)
+UID is 19)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 18
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 19
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551584
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 4
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 4
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fedc950)
+UbHeader:UbCompactMAExtTah(0x63e44fedc990)
+UbHeader:~UbCompactMAExtTah(0x63e44fedc990)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fedc950)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 20 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 5
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 5
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fedca70)
+UbHeader:UbCompactMAExtTah(0x63e44fedcab0)
+UbHeader:~UbCompactMAExtTah(0x63e44fedcab0)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fedca70)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 21 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 20
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fedb450, 0x63e44feab150)
+UID is 20)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551584
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 21
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fedb530, 0x63e44feab8a0)
+UID is 21)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 20
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 21
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551568
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 6
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 6
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 22 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 7
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 7
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 52 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 23 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 22
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee6bf0, 0x63e44feab150)
+UID is 22)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551568
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 23
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee6c60, 0x63e44feab8a0)
+UID is 23)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 22
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 23
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551552
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 8
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 8
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 24 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 9
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 9
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 25 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 24
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee6cd0, 0x63e44feab150)
+UID is 24)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551552
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 25
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee6e10, 0x63e44feab8a0)
+UID is 25)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 24
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 25
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551536
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 10
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 10
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 26 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 11
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 11
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 27 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 26
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee6f40, 0x63e44feab150)
+UID is 26)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551536
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 27
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee7130, 0x63e44feab8a0)
+UID is 27)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 26
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 27
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551520
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 12
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 12
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 28 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 13
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 13
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 29 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 28
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee7320, 0x63e44feab150)
+UID is 28)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551520
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 29
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee7510, 0x63e44feab8a0)
+UID is 29)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 28
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 29
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551504
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 0 recv from: NodeId: 2 PortId: 1 PacketUid: 14
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 14
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 64 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 0 prioriy 8 inPort 0
+m_io_die_id 0 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 30 packetSize: 16 destPort: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 1 PortId: 1 recv from: NodeId: 2 PortId: 3 PacketUid: 15
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvDataPacket] nodeId: 1 packetUid: 15
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fda8)
+UbHeader:UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc80)
+UbHeader:Deserialize(0x7ffd2362fe18, 0x7ffd2362fc70)
+Received 52 bytes to store
+UbHeader:UbCompactAckTransactionHeader(0x63e44fee1330)
+UbHeader:UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactMAExtTah(0x63e44fee1370)
+UbHeader:~UbCompactAckTransactionHeader(0x63e44fee1330)
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.0 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772160
+Destip: 167772160
+Destip: 167772160
+Lookup success
+outPort 1 prioriy 8 inPort 1
+m_io_die_id 1 m_portsNum 1
+[UbLdstApi RecvDataPacket] Send Ack. NodeId: 1 PacketUid: 31 packetSize: 16 destPort: 1
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fcd8)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fc58)
+UbHeader:~UbCompactMAExtTah(0x7ffd2362fe18)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fda8)
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 0 qidx: 0
+UbPort:DoEnqueue(0x63e44feab440)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbSwitchAllocator DispatchPacket]  NodeId: 1 PortId: 1 qidx: 0
+UbPort:DoEnqueue(0x63e44feabb90)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+UbPort:DoDequeue(0x63e44feab440)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 0 m_portId 0 priority: 8
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 0 send to: NodeId: 2 PortId: 1 PacketUid: 30
+UbLink:TransmitStart(0x63e44fce9f40, 0x63e44fee7700, 0x63e44feab150)
+UID is 30)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feabb90)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 0 m_portId 1 priority: 8
+IO Die Id is 1
+[QMU] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551504
+[UbPort send] nodetype: HOST NodeId: 1 PortId: 1 send to: NodeId: 2 PortId: 3 PacketUid: 31
+UbLink:TransmitStart(0x63e44fed8860, 0x63e44fee78f0, 0x63e44feab8a0)
+UID is 31)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 0 PortId: 0 PacketUid: 30
+UbPort:TransmitComplete(0x63e44feab150)
+TEST 1
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 1 IODieId: 1 PortId: 1 PacketUid: 31
+UbPort:TransmitComplete(0x63e44feab8a0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:1 port:1 egress size:m_egressBuf Size 1
+18446744073709551488
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 1 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 1 portId: 1 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 1 portId: 1 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 1
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 16
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 17
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 1 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 18
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 19
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 2 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+32
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 16
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee8210, 0x63e44feb9370)
+UID is 16)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+32
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 17
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee11d0, 0x63e44feba1e0)
+UID is 17)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 16
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 17
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 18
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fedb2e0, 0x63e44feb9370)
+UID is 18)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 19
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fedb370, 0x63e44feba1e0)
+UID is 19)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 18
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 19
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 20
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 21
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 3 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 20
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fedb450, 0x63e44feb9370)
+UID is 20)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 21
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fedb530, 0x63e44feba1e0)
+UID is 21)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 20
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 21
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 22
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 23
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 4 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 22
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee6bf0, 0x63e44feb9370)
+UID is 22)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 23
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee6c60, 0x63e44feba1e0)
+UID is 23)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 22
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 23
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 24
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 25
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 5 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 24
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee6cd0, 0x63e44feb9370)
+UID is 24)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 25
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee6e10, 0x63e44feba1e0)
+UID is 25)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 24
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 25
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 26
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 27
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 6 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 26
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee6f40, 0x63e44feb9370)
+UID is 26)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 27
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee7130, 0x63e44feba1e0)
+UID is 27)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 26
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 27
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 28
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 29
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 7 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 28
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee7320, 0x63e44feb9370)
+UID is 28)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 29
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee7510, 0x63e44feba1e0)
+UID is 29)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 28
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 29
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 1 recv from: NodeId: 1 PortId: 0 PacketUid: 30
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 0 inPort: 1 outPort: 0
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: SWITCH NodeId: 2 PortId: 3 recv from: NodeId: 1 PortId: 1 PacketUid: 31
+Call HandleLdstDataPacket
+Call ForwardDataPacket
+[UbRoutingProcess GetOutPort]: sip: 10.0.1.0 dip: 10.0.0.1 sport: 8 dport: 0 priority: 8 useShortestPath: true usePacketSpray: true
+Trying to find 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Destip: 167772161
+Lookup success
+Sending out node 2, io die 1 inPort: 3 outPort: 2
+Chkpt 1
+Chkpt 2
+Chkpt 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+ForwardDataPacket Return
+HandleLdstDataPacket returns
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 0 qidx: 1
+UbPort:DoEnqueue(0x63e44feb9660)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbSwitchAllocator DispatchPacket]  NodeId: 2 PortId: 2 qidx: 1
+UbPort:DoEnqueue(0x63e44feba4d0)
+[UbEgressQueue DoEnqueue] Egress Queue size: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+UbPort:DoDequeue(0x63e44feb9660)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 0
+Sending: inPort: 1 m_portId 0 priority: 8
+IO Die Id is 0
+[QMU] Node:2 port:0 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 0 send to: NodeId: 0 PortId: 0 PacketUid: 30
+UbLink:TransmitStart(0x63e44fd064d0, 0x63e44fee7700, 0x63e44feb9370)
+UID is 30)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+UbPort:DoDequeue(0x63e44feba4d0)
+[UbEgressQueue DoDequeue] Egress Queue size: 0
+m_io_die_id 1
+Sending: inPort: 1 m_portId 2 priority: 8
+IO Die Id is 1
+[QMU] Node:2 port:2 egress size:m_egressBuf Size 2
+16
+[UbPort send] nodetype: SWITCH NodeId: 2 PortId: 2 send to: NodeId: 0 PortId: 1 PacketUid: 31
+UbLink:TransmitStart(0x63e44fcea1e0, 0x63e44fee78f0, 0x63e44feba1e0)
+UID is 31)
+[UbFc DequeueAndTransmit] will send pkt size: 16
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 0 PortId: 0 PacketUid: 30
+UbPort:TransmitComplete(0x63e44feb9370)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:0 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbPort TransmitComplete] complete at:  NodeId: 2 IODieId: 1 PortId: 2 PacketUid: 31
+UbPort:TransmitComplete(0x63e44feba1e0)
+TEST 1
+Call SwitchSendFinish
+Test
+[queueManager] Node:2 port:2 egress size:m_egressBuf Size 2
+0
+TEST 2
+TEST 3
+[UbPort TriggerTransmit] nodeId: 2 portId: 0 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 0 io die id: 0
+[UbPort TriggerTransmit] nodeId: 2 portId: 2 TriggerTransmit...
+[UbPort TriggerTransmit] trigger Allocator[UbPort TriggerTransmit] nodeId: 2 portId: 2 io die id: 1
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator TriggerAllocator] Allocator is running, will retrigger.
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] ReTriggerAllocator portId: 2
+[UbRoundRobinAllocator TriggerAllocator] portId: 0
+[UbRoundRobinAllocator TriggerAllocator] portId: 2
+[UbRoundRobinAllocator AllocateNextPacket] portId: 0
+[UbRoundRobinAllocator AllocateNextPacket] portId: 2
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 16
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 16
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 17
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 17
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[0]7
+[UbLdstThread UpdateTask] m_waitingAckNum[0]6
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 18
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 18
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 19
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 19
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[0]5
+[UbLdstThread UpdateTask] m_waitingAckNum[0]4
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 20
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 20
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 21
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 21
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[0]3
+[UbLdstThread UpdateTask] m_waitingAckNum[0]2
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 22
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 22
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 23
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 23
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[0]1
+[UbLdstThread UpdateTask] m_waitingAckNum[0]0
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 24
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 24
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 25
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 25
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[1]7
+[UbLdstThread UpdateTask] m_waitingAckNum[1]6
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 26
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 26
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 27
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 27
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[1]5
+[UbLdstThread UpdateTask] m_waitingAckNum[1]4
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 28
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 28
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 29
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 29
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[1]3
+[UbLdstThread UpdateTask] m_waitingAckNum[1]2
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 0 recv from: NodeId: 2 PortId: 0 PacketUid: 30
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 30
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbPort recv] nodetype: HOST NodeId: 0 PortId: 1 recv from: NodeId: 2 PortId: 2 PacketUid: 31
+Call HandleLdstDataPacket
+[UbPort recv] ub mem frame
+[UbLdstApi RecvResponse] packetUid: 31
+UbHeader:UbCompactAckTransactionHeader(0x7ffd2362fde0)
+UbHeader:~UbCompactAckTransactionHeader(0x7ffd2362fde0)
+mem packet is ack!
+HandleLdstDataPacket returns
+[UbLdstThread UpdateTask] m_waitingAckNum[1]1
+[UbLdstThread UpdateTask] m_waitingAckNum[1]0
+UbApp:OnMemTaskCompleted(0x63e44fe8ff90, 0)
+MEM Task Completes, taskId: 0
+[APPLICATION INFO] taskId: 0,finish time:110ns
+Task 0 completed
+[APPLICATION INFO] All tasks completed
+[UbLdstThread HandleStoreTask]
+[UbLdstThread HandleStoreTask]
+UbPort:DoDispose(0x63e44fe9d710)
+UbPort:DoDispose(0x63e44fe9dcb0)
+UbPort:DoDispose(0x63e44feab150)
+UbPort:DoDispose(0x63e44feab8a0)
+UbPort:DoDispose(0x63e44feb9370)
+UbPort:DoDispose(0x63e44feb9ac0)
+UbPort:DoDispose(0x63e44feba1e0)
+UbPort:DoDispose(0x63e44feba930)
+UbPort:~UbPort(0x63e44feb9370)
+UbPort:~UbPort(0x63e44fe9d710)
+UbPort:~UbPort(0x63e44feba1e0)
+UbPort:~UbPort(0x63e44fe9dcb0)
+UbController:~UbController(0x63e44fe88e40)
+UbTransaction:DoDispose(0x63e44fce5ad0)
+UbFunction:DoDispose(0x63e44fd517f0)
+UbCaqm:DoDispose(0x63e44fe0bf50)
+UbCaqm:~UbSwitchCaqm(0x63e44fe0bf50)
+UbTransportChannel:DoDispose(0x63e44fed9840)
+UbCaqm:DoDispose(0x63e44fed9460)
+UbCaqm:~UbHostCaqm(0x63e44fed9460)
+UbTransportChannel:~UbTransportChannel(0x63e44fed9840)
+UbTransportChannel:DoDispose(0x63e44feda740)
+UbCaqm:DoDispose(0x63e44feda360)
+UbCaqm:~UbHostCaqm(0x63e44feda360)
+UbTransportChannel:~UbTransportChannel(0x63e44feda740)
+UbCaqm:DoDispose(0x63e44fdcb190)
+UbCaqm:~UbSwitchCaqm(0x63e44fdcb190)
+UbTransportChannel:DoDispose(0x63e44fedba90)
+UbCaqm:DoDispose(0x63e44fedb650)
+UbCaqm:~UbHostCaqm(0x63e44fedb650)
+UbTransportChannel:~UbTransportChannel(0x63e44fedba90)
+UbTransportChannel:DoDispose(0x63e44fedcf20)
+UbCaqm:DoDispose(0x63e44fedcae0)
+UbCaqm:~UbHostCaqm(0x63e44fedcae0)
+UbTransportChannel:~UbTransportChannel(0x63e44fedcf20)
+UbPort:~UbPort(0x63e44feb9ac0)
+UbPort:~UbPort(0x63e44feab150)
+UbPort:~UbPort(0x63e44feba930)
+UbCaqm:DoDispose(0x63e44fed6630)
+UbCaqm:~UbSwitchCaqm(0x63e44fed6630)
+UbCaqm:DoDispose(0x63e44fed6740)
+UbCaqm:~UbSwitchCaqm(0x63e44fed6740)
+UbPort:~UbPort(0x63e44feab8a0)
+UbCaqm:DoDispose(0x63e44fdcb3b0)
+UbCaqm:~UbSwitchCaqm(0x63e44fdcb3b0)
+UbCaqm:DoDispose(0x63e44feb3d00)
+UbCaqm:~UbSwitchCaqm(0x63e44feb3d00)
+UbController:~UbController(0x63e44fea90d0)
+UbTransaction:DoDispose(0x63e44fea9430)
+UbTransportChannel:DoDispose(0x63e44fedd5d0)
+UbCaqm:DoDispose(0x63e44fedcd10)
+UbCaqm:~UbHostCaqm(0x63e44fedcd10)
+UbTransportChannel:~UbTransportChannel(0x63e44fedd5d0)
+UbTransportChannel:DoDispose(0x63e44fedc190)
+UbCaqm:DoDispose(0x63e44fedb880)
+UbCaqm:~UbHostCaqm(0x63e44fedb880)
+UbTransportChannel:~UbTransportChannel(0x63e44fedc190)
+UbTransportChannel:DoDispose(0x63e44fedacd0)
+UbCaqm:DoDispose(0x63e44feda550)
+UbCaqm:~UbHostCaqm(0x63e44feda550)
+UbTransportChannel:~UbTransportChannel(0x63e44fedacd0)
+UbTransportChannel:DoDispose(0x63e44fed9dd0)
+UbCaqm:DoDispose(0x63e44fed9650)
+UbCaqm:~UbHostCaqm(0x63e44fed9650)
+UbTransportChannel:~UbTransportChannel(0x63e44fed9dd0)
+UbFunction:DoDispose(0x63e44fea92d0)
+[19:48:40] Simulator finished!
+[19:48:40] Start Parse Trace File.
+[19:48:41] Program finished.
+[19:48:41] Wall-clock (config phase): 0.023221 s
+[19:48:41] Wall-clock (run phase): 0.033768 s
+[19:48:41] Wall-clock (trace phase): 0.604527 s
+[19:48:41] Wall-clock (total): 0.662822 s

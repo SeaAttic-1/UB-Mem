@@ -73,7 +73,16 @@ void UbRoutingProcess::AddOtherRoute(const uint32_t destIP, const std::vector<ui
 const std::vector<uint16_t>& UbRoutingProcess::GetShortestOutPorts(const uint32_t destIP)
 {
     static const std::vector<uint16_t> empty; // 返回空集的引用
+
     auto it = m_rtShortest.find(destIP);
+
+    NS_LOG_INFO("Trying to find " << destIP);
+    if (m_rtShortest.empty())
+        NS_LOG_INFO("Routing table empty");
+    for(auto i : m_rtShortest)
+        NS_LOG_INFO("Destip: " << destIP);
+
+
     return it != m_rtShortest.end() ? *(it->second) : empty;
 }
 
@@ -214,6 +223,7 @@ int UbRoutingProcess::GetOutPort(RoutingKey &rtKey, uint16_t inPort)
         // 3. 如果还是找不到，报ASSERT
         NS_ASSERT_MSG(outPortId != -1, "No available output port found");
     }
+    NS_LOG_INFO("Lookup success");
     return outPortId;
 }
 } // namespace ns3

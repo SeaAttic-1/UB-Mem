@@ -61,7 +61,6 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
                             uint32_t dstTpn, Ptr<UbCongestionControl> congestionCtrl)
 {
     NS_LOG_FUNCTION(this << src << dest << sport << dport  << priority << srcTpn);
-
     // 检查是否已存在
     if (m_numToTp.find(srcTpn) != m_numToTp.end()) {
         NS_LOG_ERROR("Transport channel  already exists");
@@ -91,9 +90,9 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     // currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
     
     uint32_t port_per_io_die = currentNode->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
-    uint32_t io_die_id = sport % port_per_io_die;
+    uint32_t io_die_id = sport / port_per_io_die;
+    std::cout << "io_die_id is " << io_die_id << "\n";
     currentNode->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id)->AddTpIntoAlgroithm(tp, sport, priority);
-
     NS_LOG_DEBUG("Created transport channel success");
     return true;
 }

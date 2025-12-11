@@ -583,6 +583,8 @@ void UbUtils::CreateNode(const string &filename)
         for (uint32_t i = 0; i < portNum * io_die_count; i++) {
             PrintTimestamp("Create Port");
             Ptr<UbPort> port = CreateObject<UbPort>();
+            // Modified: set io die id for each port
+            port->SetIODieId(i / portNum);
             port->SetAddress(Mac48Address::Allocate());
             node->AddDevice(port);
         }
@@ -646,6 +648,7 @@ void UbUtils::AddRoutingTable(const string &filename)
         std::stringstream sOutports(cell);
         outports.clear();
         while (sOutports >> outport) {
+            std::cout << "Outport is " << outport << "\n";
             outports.push_back(outport);
         }
         std::getline(ss, cell, ',');
@@ -668,16 +671,25 @@ void UbUtils::AddRoutingTable(const string &filename)
     for (auto &nodert : rtTable) {
         // Modified:
         // auto rt = NodeList::GetNode(nodert.first)->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
+        
+       
+
         Ptr<Node> node_ptr = NodeList::GetNode(nodert.first);
         Ptr<IO_Die_Manager> manager_ptr = node_ptr->GetObject<IO_Die_Manager>();
 
+        std::cout << "Node Id: " << nodert.first << " Port Count per IO Die: " << manager_ptr->GetPortCountPerIODie() << "\n";
+
         for (auto &destiprow : nodert.second) {
             auto ip = destiprow.first;
-            int i = 0;
+            std::vector<uint32_t> i(manager_ptr->GetIODieCount(), 0);
             for (auto &metricrow : destiprow.second) {
                 for (auto &outports : metricrow.second) {
-                    auto rt = manager_ptr->GetIODieById(outports / manager_ptr->GetPortCountPerIODie())->GetRoutingProcess();
-                    if (i == 0) {
+                    auto io_die_id = outports / manager_ptr->GetPortCountPerIODie();
+                    auto rt = manager_ptr->GetIODieById(io_die_id)->GetRoutingProcess();
+                    
+                    std::cout << "Add rt table entry, outports: " << outports << " ip: " << ip  << manager_ptr->GetPortCountPerIODie() << " " <<outports / manager_ptr->GetPortCountPerIODie() << "\n";
+                    
+                    if (i[io_die_id] == 0) {
                         std::vector<uint16_t> temp_vector;
                         temp_vector.push_back(outports);
                         rt->AddShortestRoute(ip, temp_vector);
@@ -686,7 +698,7 @@ void UbUtils::AddRoutingTable(const string &filename)
                         temp_vector.push_back(outports);
                         rt->AddOtherRoute(ip, temp_vector);
                     }
-                        i++;
+                        i[io_die_id]++;
                 }
             }
         }

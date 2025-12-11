@@ -45,7 +45,8 @@ void UbSwitchAllocator::Init()
 }
 void UbSwitchAllocator::RegisterUbIngressQueue(Ptr<UbIngressQueue> ingressQueue, uint32_t outPort, uint32_t priority)
 {
-    m_igsrc[outPort][priority].push_back(ingressQueue);
+    uint32_t portsNum = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    m_igsrc[outPort % portsNum][priority].push_back(ingressQueue);
 }
 
 void UbSwitchAllocator::RegisterEgressStauts(uint32_t portsNum)
@@ -98,7 +99,8 @@ void UbRoundRobinAllocator::Init()
 void UbRoundRobinAllocator::TriggerAllocator(Ptr<UbPort> outPort)
 {
     NS_LOG_DEBUG("[UbRoundRobinAllocator TriggerAllocator] portId: " << outPort->GetIfIndex());
-    auto outPortId = outPort->GetIfIndex();
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    auto outPortId = outPort->GetIfIndex() % port_count_per_io_die;
     if (m_isRunning[outPortId]) {
         // one more round flag
         // 为了避免running过程中新生成的包：
@@ -116,7 +118,8 @@ void UbRoundRobinAllocator::AllocateNextPacket(Ptr<UbPort> outPort)
 {
     // 轮询调度
     NS_LOG_DEBUG("[UbRoundRobinAllocator AllocateNextPacket] portId: " << outPort->GetIfIndex());
-    auto outPortId = outPort->GetIfIndex();
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    auto outPortId = outPort->GetIfIndex() % port_count_per_io_die;
     auto ingressQueue = SelectNextIngressQueue(outPort);
     // 调度得到的ingressqueue加入egressqueue
     if (ingressQueue != nullptr) {
@@ -142,6 +145,7 @@ Ptr<UbIngressQueue> UbRoundRobinAllocator::SelectNextIngressQueue(Ptr<UbPort> ou
 {
     uint32_t idx;
     uint32_t pi;
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     uint32_t outPortId = outPort->GetIfIndex();
     auto node = NodeList::GetNode(m_nodeId);
 
@@ -150,15 +154,15 @@ Ptr<UbIngressQueue> UbRoundRobinAllocator::SelectNextIngressQueue(Ptr<UbPort> ou
     auto vlNum = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetVLNum();
 
     for (pi = 0 ; pi < vlNum; pi++) {
-        size_t qSize = m_igsrc[outPortId][pi].size();
+        size_t qSize = m_igsrc[outPortId % port_count_per_io_die][pi].size();
         for (idx = 0; idx < qSize; idx++) {
-            auto qidx = (idx + m_rrIdx[outPortId][pi]) % qSize;
-            if (!m_igsrc[outPortId][pi][qidx]->IsEmpty() &&
-                !outPort->GetFlowControl()->IsFcLimited(m_igsrc[outPortId][pi][qidx])) {
-                m_rrIdx[outPortId][pi] = (qidx + 1) % qSize;
+            auto qidx = (idx + m_rrIdx[outPortId % port_count_per_io_die][pi]) % qSize;
+            if (!m_igsrc[outPortId % port_count_per_io_die][pi][qidx]->IsEmpty() &&
+                !outPort->GetFlowControl()->IsFcLimited(m_igsrc[outPortId % port_count_per_io_die][pi][qidx])) {
+                m_rrIdx[outPortId % port_count_per_io_die][pi] = (qidx + 1) % qSize;
                 NS_LOG_DEBUG("[UbSwitchAllocator DispatchPacket] " << " NodeId: " << node->GetId()
                 << " PortId: " << outPortId <<" qidx: "<< qidx);
-                return m_igsrc[outPortId][pi][qidx];
+                return m_igsrc[outPortId % port_count_per_io_die][pi][qidx];
             }
         }
     }

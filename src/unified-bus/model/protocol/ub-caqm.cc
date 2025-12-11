@@ -434,7 +434,7 @@ void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die
     if (m_congestionCtrlEnabled) {
         // Modified uint32_t ndevice = node->GetNDevices();
         // uint32_t ndevice = sw->GetIfIndex();
-        uint32_t ndevice = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+        uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
         for (uint32_t i = 0; i < ndevice; i++) {
             m_txSize.push_back(0);
             m_cc.push_back(0);
@@ -454,7 +454,7 @@ void UbSwitchCaqm::ResetLocalCc()
         // auto sw = node->GetObject<UbSwitch>();
         auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
         // uint32_t ndevice = node->GetNDevices(); Origin line for getting port count
-        uint32_t ndevice = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+        uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
         for (uint32_t portId = 0; portId < ndevice; portId++) {
             uint64_t cc = uint64_t(m_lambda *
                                 (m_ccUpdatePeriod.GetSeconds()
@@ -481,6 +481,7 @@ void UbSwitchCaqm::SetDataRate(uint32_t portId, DataRate bps)
 
 void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Packet> p)
 {
+    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     if (m_congestionCtrlEnabled) {
         UbDatalinkHeader dlHeader;
         p->PeekHeader(dlHeader);
@@ -492,7 +493,7 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
                       << " This is not ipv4 packet.");
             return;
         }
-        m_txSize[outPort] += p->GetSize();
+        m_txSize[outPort % port_count_per_io_die] += p->GetSize();
         // auto sw = NodeList::GetNode(m_nodeId)->GetObject<UbSwitch>();
         auto sw = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
         NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
@@ -502,7 +503,7 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
                   << " Inport:" << inPort
                   << " OutPort:" << outPort
                   << " Egress queue size:" << sw->GetQueueManager()->GetAllEgressUsed(outPort)
-                  << " Txsize:" << m_txSize[outPort]);
+                  << " Txsize:" << m_txSize[outPort % port_count_per_io_die]);
         UbDatalinkPacketHeader dlPktHeader;
         UbNetworkHeader netHeader;
         p->RemoveHeader(dlPktHeader);
@@ -516,21 +517,21 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
                       << "[Debug]"
                       << "[" << __FUNCTION__ << "]"
                       << " Already congestion. Only record.");
-            m_cc[outPort] += m_beta * UB_MTU_BYTE;
-            m_creditAllocated[outPort] -= m_beta * UB_MTU_BYTE;
-        } else if (m_cc[outPort] >= hint * i) { // cc足够，允许增窗
+            m_cc[outPort % port_count_per_io_die] += m_beta * UB_MTU_BYTE;
+            m_creditAllocated[outPort % port_count_per_io_die] -= m_beta * UB_MTU_BYTE;
+        } else if (m_cc[outPort % port_count_per_io_die] >= hint * i) { // cc足够，允许增窗
             NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                       << "[Debug]"
                       << "[" << __FUNCTION__ << "]"
                       << " CC enough."
                       << " Hint * i:" << hint * i
-                      << " CC:" << m_cc[outPort]
-                      << "->" << m_cc[outPort] - hint * i
-                      << " CreditAllocated:" << m_creditAllocated[outPort]
-                      << "->" << m_creditAllocated[outPort] + hint * i);
-            m_cc[outPort] -= hint * i;
-            m_creditAllocated[outPort] += hint * i;
-        } else if (m_cc[outPort] >= 0) {
+                      << " CC:" << m_cc[outPort % port_count_per_io_die ]
+                      << "->" << m_cc[outPort % port_count_per_io_die] - hint * i
+                      << " CreditAllocated:" << m_creditAllocated[outPort % port_count_per_io_die]
+                      << "->" << m_creditAllocated[outPort % port_count_per_io_die] + hint * i);
+            m_cc[outPort % port_count_per_io_die] -= hint * i;
+            m_creditAllocated[outPort % port_count_per_io_die] += hint * i;
+        } else if (m_cc[outPort % port_count_per_io_die] >= 0) {
             // cc不足，随机给流减窗，生成一个0~1范围的数字，小于p即可以认为触发了概率事件
             double res = m_random->GetValue();
             if (res < m_markProbability) {
@@ -538,19 +539,19 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
                           << "[Debug]"
                           << "[" << __FUNCTION__ << "]"
                           << " CC not enough. Random result:" << res
-                          << " MK. DC:" << m_DC[outPort]
-                          << "->" << m_DC[outPort] + m_beta * UB_MTU_BYTE);
+                          << " MK. DC:" << m_DC[outPort % port_count_per_io_die]
+                          << "->" << m_DC[outPort % port_count_per_io_die] + m_beta * UB_MTU_BYTE);
                 netHeader.SetC(1);
                 netHeader.SetI(0);
-                m_DC[outPort] += m_beta * UB_MTU_BYTE;
-            } else if (res >= m_markProbability && m_DC[outPort] >= hint * i) {
+                m_DC[outPort % port_count_per_io_die] += m_beta * UB_MTU_BYTE;
+            } else if (res >= m_markProbability && m_DC[outPort % port_count_per_io_die] >= hint * i) {
                 NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                           << "[Debug]"
                           << "[" << __FUNCTION__ << "]"
                           << " CC not enough. Random result:" << res
-                          << " Not MK. DC >= hint * i, DC from:" << m_DC[outPort]
-                          << "->" << m_DC[outPort] - hint * i);
-                m_DC[outPort] -= hint * i;
+                          << " Not MK. DC >= hint * i, DC from:" << m_DC[outPort % port_count_per_io_die]
+                          << "->" << m_DC[outPort % port_count_per_io_die] - hint * i);
+                m_DC[outPort % port_count_per_io_die] -= hint * i;
             } else {
                 NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                           << "[Debug]"
@@ -563,11 +564,11 @@ void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Pa
             NS_LOG_DEBUG("[" << GetTypeId().GetName() << "]"
                       << "[Debug]"
                       << "[" << __FUNCTION__ << "]"
-                      << " Congestion. CC from:" << m_cc[outPort]
-                      << "->" << m_cc[outPort] + m_beta * UB_MTU_BYTE);
+                      << " Congestion. CC from:" << m_cc[outPort % port_count_per_io_die]
+                      << "->" << m_cc[outPort % port_count_per_io_die] + m_beta * UB_MTU_BYTE);
             netHeader.SetC(1);
             netHeader.SetI(0);
-            m_cc[outPort] += m_beta * UB_MTU_BYTE;
+            m_cc[outPort % port_count_per_io_die] += m_beta * UB_MTU_BYTE;
         }
         p->AddHeader(netHeader);
         p->AddHeader(dlPktHeader);

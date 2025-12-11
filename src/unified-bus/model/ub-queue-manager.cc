@@ -148,6 +148,7 @@ uint64_t UbQueueManager::GetEgressUsed(uint32_t port, uint32_t priority)
 
 uint64_t UbQueueManager::GetAllEgressUsed(uint32_t port)
 {
+    NS_LOG_INFO("m_egressBuf Size " << m_egressBuf.size());
     uint64_t sum = 0;
     for (uint32_t i = 0; i < m_vlNum; i++) {
         sum += m_egressBuf[port][i];

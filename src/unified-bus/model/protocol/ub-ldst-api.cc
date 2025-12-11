@@ -116,7 +116,6 @@ void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packe
 Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_t io_die_id)
 {
     // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
-    NS_LOG_INFO("1");
     UbCompactMAExtTah cMAETah;
     UbCompactTransactionHeader cTaHeader;
     UbCna16NetworkHeader memHeader;
@@ -132,25 +131,19 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_
         payloadSize = taskSegment->GetPacketSize();
     }
 
-    NS_LOG_INFO("2");
     uint32_t& m_lbHashSalt = m_lbHashSalts[io_die_id];
-    NS_LOG_INFO("Salt size: " << m_lbHashSalts.size() << " " << io_die_id);
-    NS_LOG_INFO("3");
     if (m_usePacketSpray) {
-        NS_LOG_INFO("4");
         if (m_lbHashSalt == MAX_LB) {
-            NS_LOG_INFO("5");
             m_lbHashSalt = MIN_LB;
         } else {
-            NS_LOG_INFO("5");
             m_lbHashSalt++;
         }
     }
-    NS_LOG_INFO("4");
+
+    std::cout << "Use salt " << m_lbHashSalt << "\n";
+
     Ptr<Packet> packet = Create<Packet>(payloadSize);
-    NS_LOG_INFO("5");
     taskSegment->UpdateSentBytes(dataSize);
-    NS_LOG_INFO("3");
     // Gen Headers
     cMAETah.SetLength((uint8_t)length);
     cTaHeader.SetIniTaSsn(taskSegment->GetTaskSegmentId()); // taskid
@@ -160,12 +153,10 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_
     memHeader.SetDcna(dcna);
     memHeader.SetLb(m_lbHashSalt);
     memHeader.SetServiceLevel(taskSegment->GetPriority());
-    NS_LOG_INFO("4");
 
     packet->AddHeader(cMAETah);
     packet->AddHeader(cTaHeader);
     packet->AddHeader(memHeader);
-    NS_LOG_INFO("5");
     // add dl header
     UbDataLink::GenPacketHeader(packet, false, false, taskSegment->GetPriority(), taskSegment->GetPriority(),
                                 m_usePacketSpray, m_useShortestPaths, UbDatalinkHeaderConfig::PACKET_UB_MEM);

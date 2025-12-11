@@ -106,28 +106,28 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbApp", LOG_PREFIX_TIME);
 
     // 激活日志
-    // LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbTrafficGen", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbController", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbLink", LOG_LEVEL_ALL);
+    LogComponentEnable("UbSwitchAllocator", LOG_LEVEL_ALL);
+    LogComponentEnable("UbQueueManager", LOG_LEVEL_ALL);
+    LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
+    LogComponentEnable("UbTrafficGen", LOG_LEVEL_ALL);
+    LogComponentEnable("UbApp", LOG_LEVEL_ALL);
+    LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
+    LogComponentEnable("UbController", LOG_LEVEL_ALL);
+    LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);
+    LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
+    LogComponentEnable("UbHeader", LOG_LEVEL_ALL);
+    LogComponentEnable("UbLink", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
-    // LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
-    // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbSwitch", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbFunction", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbTransportChannel", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbFault", LOG_LEVEL_ALL);
-    // LogComponentEnable("UbTransaction", LOG_LEVEL_ALL);
+    LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
+    LogComponentEnable("UbPort", LOG_LEVEL_ALL);
+    LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);
+    LogComponentEnable("UbSwitch", LOG_LEVEL_ALL);
+    LogComponentEnable("UbFunction", LOG_LEVEL_ALL);
+    LogComponentEnable("UbTransportChannel", LOG_LEVEL_ALL);
+    LogComponentEnable("UbFault", LOG_LEVEL_ALL);
+    LogComponentEnable("UbTransaction", LOG_LEVEL_ALL);
 
     // 配置文件路径
     string configPath = "scratch/2nodes_single-tp";

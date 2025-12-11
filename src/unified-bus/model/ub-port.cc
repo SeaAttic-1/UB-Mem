@@ -251,6 +251,7 @@ void UbPort::TransmitComplete()
 {
     NS_LOG_DEBUG("[UbPort TransmitComplete] complete at: "
         << " NodeId: " << GetNode()->GetId()
+        << " IODieId: " << m_io_die_id
         << " PortId: " << GetIfIndex()
         << " PacketUid: " << m_currentPkt->GetUid());
     NS_LOG_FUNCTION(this);
@@ -258,6 +259,8 @@ void UbPort::TransmitComplete()
     m_ubSendState = SendState::READY;
     NS_ASSERT_MSG(
         m_currentPkt != nullptr, "UbPort::TransmitComplete(): m_currentPkt zero");
+    
+    NS_LOG_INFO("TEST 1");
 
     // 转发时通知switch发送完成
     if (m_currentInPortId != m_portId) {
@@ -266,11 +269,13 @@ void UbPort::TransmitComplete()
         GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)
         ->SwitchSendFinish(m_portId, m_currentPriority, m_currentPkt);
     }
+    NS_LOG_INFO("TEST 2");
     m_flowControl->HandleReleaseOccupiedFlowControl(m_currentPkt, m_currentInPortId, m_portId);
 
     m_currentPkt = nullptr;
     m_currentInPortId = 0;
     m_currentPriority = 0;
+    NS_LOG_INFO("TEST 3");
     Simulator::ScheduleNow(&UbPort::TriggerTransmit, this);
 }
 
@@ -293,11 +298,16 @@ void UbPort::DequeuePacket(void)
     m_currentPkt = packet;
     m_currentInPortId = inPortId;
     m_currentPriority = priority;
+
+    NS_LOG_INFO("m_io_die_id " << m_io_die_id);
+
     if (m_ubEQ->IsEmpty()) {
         // Switch allocation when port sendding packet.
         auto allocator = GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
     }
+
+    NS_LOG_INFO("Sending: inPort: " << inPortId << " m_portId " << m_portId << " priority: " << priority);
 
     // switch节点, 通知switch发送了packet
     if (inPortId != m_portId) { // 转发的报文
@@ -454,7 +464,8 @@ void UbPort::TriggerTransmit()
         return; // Quit if channel busy
     }
     if (m_ubEQ->IsEmpty()) {
-        NS_LOG_DEBUG("[UbPort TriggerTransmit] trigger Allocator");
+        NS_LOG_DEBUG("[UbPort TriggerTransmit] trigger Allocator" << "[UbPort TriggerTransmit] nodeId: " << GetNode()->GetId()
+        << " portId: " << GetIfIndex() <<" io die id: " << m_io_die_id);
         auto allocator = GetNode()->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetAllocator();
         Simulator::ScheduleNow(&UbSwitchAllocator::TriggerAllocator, allocator, this);
         return;
