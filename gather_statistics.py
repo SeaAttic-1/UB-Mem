@@ -16,6 +16,7 @@ end_mpki = 50
 step = 0.05
 trials = 20
 total_bytes = 1000000
+end_store_length = 7
 
 traffic_file_content = '''taskId,sourceNode,destNode,dataSize(Byte),opType,priority,delay,phaseId,dependOnPhases
 0,0,1,{},MEM_STORE,7,10ns,0,
@@ -134,11 +135,72 @@ def measure_throughput_nit_with_different_packet_size():
     ax.set_ylabel("Throughput in Gbps")
     plt.show()
     
+def make_grouped_bar_chart_for_throughput_data():
+    # data from https://allisonhorst.github.io/palmerpenguins/
+
+    import numpy as np
+    packet_length = ('64', '128', '256', '512', '1024', '2048', '4096', '8192')
+
+    ub_data_line = None
+    hbm_data_line = None
+    hbm_with_overhead_data_line = None
+
+    with open("throughput_original_ub.txt", 'r') as ub_data_hd:
+        ub_data_line = ub_data_hd.readline()
+    with open("throughput_nit_0ns.txt", 'r') as hbm_data_hd:
+        hbm_data_line = hbm_data_hd.readline()
+    with open("throughput_nit_100ns.txt", 'r') as hbm_with_overehead_data_hd:
+        hbm_with_overhead_data_line = hbm_with_overehead_data_hd.readline()
+    
+    ub_data_line = ub_data_line[1:-2]
+    ub_data_line = ub_data_line.split(',')
+    ub_data_line = list(map(lambda x: x[11:], ub_data_line))
+    ub_data_line = list(map(lambda x: float(''.join(list(filter(lambda y: y.isdigit() or y == '.', x)))), ub_data_line))
+
+    hbm_data_line = hbm_data_line[1:-2]
+    hbm_data_line = hbm_data_line.split(',')
+    hbm_data_line = list(map(lambda x: x[11:], hbm_data_line))
+    hbm_data_line = list(map(lambda x: float(''.join(list(filter(lambda y: y.isdigit() or y == '.', x)))), hbm_data_line))
+
+    hbm_with_overhead_data_line = hbm_with_overhead_data_line[1:-2]
+    hbm_with_overhead_data_line = hbm_with_overhead_data_line.split(',')
+    hbm_with_overhead_data_line = list(map(lambda x: x[11:], hbm_with_overhead_data_line))
+    hbm_with_overhead_data_line = list(map(lambda x: float(''.join(list(filter(lambda y: y.isdigit() or y == '.', x)))), hbm_with_overhead_data_line))
+
+    grouped_data = {'Original UB': ub_data_line, 'HBM latency only': hbm_data_line,'HBM latency + 100ns overhead': hbm_with_overhead_data_line,}
+
+    print(grouped_data)
+
+    x = np.arange(len(packet_length))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    for idx, (attribute, measurement) in enumerate(grouped_data.items()):
+        print(attribute)
+        offset = width * multiplier
+        if(idx == 0):
+            rects = ax.bar(x + offset, measurement, width, label=attribute, color='#2066a8')
+        elif(idx == 1):
+            rects = ax.bar(x + offset, measurement, width, label=attribute, color='#3594cc')
+        else:
+            rects = ax.bar(x + offset, measurement, width, label=attribute, color='#8cc5e3')
+        # ax.bar_label(rects, padding=3)
+        multiplier += 1
+
+# Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel("Throughput (Gbps)")
+    ax.set_xlabel("Packet Size (bytes)")
+    ax.set_xticks(x + width, packet_length)
+    ax.legend(loc='upper left', ncols=3)
+    ax.set_ylim(100, 450)
+
+    plt.show()
 
 def generate_throughput_vs_packet_size_curve():
     import numpy as np
 
-    end_store_length = 7
     overhead_enabled = False
     output_data_name = "throughput_nit_0ns.txt"
     if overhead_enabled:
@@ -319,10 +381,11 @@ def urgent_calculation():
 if __name__ == "__main__":
     # measure_throughput_no_internal_traffic() 
     # calculate_real_throughput()
+    make_grouped_bar_chart_for_throughput_data()
     # measure_throughput_nit_with_different_packet_size()
     # generate_throughput_vs_packet_size_curve()
     # measure_throughput_with_internal_traffic()
     # measure_baseline_throughput()
-    make_output_graph()
+    # make_output_graph()
     #urgent_calculation()
     pass
