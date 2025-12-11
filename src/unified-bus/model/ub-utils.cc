@@ -392,6 +392,7 @@ inline void UbUtils::SwitchLastPacketTraversesNotify(uint32_t nodeId, UbTranspor
 // 读取拓扑文件
 void UbUtils::CreateTopo(const string &filename)
 {
+    PrintTimestamp("Create Topology");
     ifstream file(filename);
     if (!file.is_open())
         NS_ASSERT_MSG(0, "Can not open File: " << filename);
@@ -512,11 +513,14 @@ void UbUtils::CreateNode(const string &filename)
         // Modified:
         nodeEle.IODieCountStr = IODieCount;
 
+        PrintTimestamp("Read A Node");
+
         // 解析节点ID（范围 or 单个节点）
         ParseNodeRange(nodeIdStr, nodeEle);
     }
     file.close();
     // 创建节点
+    PrintTimestamp("Create Node Map");
     for (auto it: nodeEle_map) {
         string nodeIdStr = it.second.nodeIdStr;
         string nodeTypeStr = it.second.nodeTypeStr;
@@ -528,14 +532,16 @@ void UbUtils::CreateNode(const string &filename)
         uint32_t io_die_count = IO_DIE_PER_NODE; 
         if (!IODieCountStr.empty())
             io_die_count = static_cast<uint32_t>(stoi(IODieCountStr));
-
+        PrintTimestamp("1");
         int portNum = stoi(portNumStr);
         Ptr<Node> node = CreateObject<Node>();
         Ptr<IO_Die_Manager> manager = CreateObject<IO_Die_Manager>();
-
+        PrintTimestamp("2");
         manager->SetIODieCount(io_die_count);
+        manager->SetPortCountPerIODie(portNum);
+        manager->DoInitialize();
         // Ptr<UbSwitch> sw = CreateObject<UbSwitch>();
-
+        PrintTimestamp("3");
         // node->AggregateObject(sw);
         node->AggregateObject(manager);
         manager->SetNodeId();
@@ -543,18 +549,24 @@ void UbUtils::CreateNode(const string &filename)
         node->AggregateObject(ldst);
         ldst->Init(node->GetId());
         if (nodeTypeStr == "DEVICE") {
+            PrintTimestamp("4");
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
+            PrintTimestamp("5");
             node->AggregateObject(ubCtrl);
+            PrintTimestamp("6");
             ubCtrl->CreateUbFunction();
+            PrintTimestamp("7");
             ubCtrl->CreateUbTransaction();
+            PrintTimestamp("8");
             // sw->SetNodeType(UB_DEVICE);
             manager->SetNodeType(UB_DEVICE);
+            PrintTimestamp("9");
 
             Ptr<HBMController> hbm = HBMHelper().Create(8);
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
             node->AggregateObject(hbm);
-            
+            PrintTimestamp("Done");
         } else if (nodeTypeStr == "SWITCH") {
             // sw->SetNodeType(UB_SWITCH);
             manager->SetNodeType(UB_SWITCH);
@@ -568,22 +580,29 @@ void UbUtils::CreateNode(const string &filename)
         // The port id is simply for differentiating purpose, port 8 is in fact port 0 of IO die 1
         // This, of course, assume that IO dies have the same number of ports
 
-        for (int i = 0; i < portNum * io_die_count; i++) {
+        for (uint32_t i = 0; i < portNum * io_die_count; i++) {
+            PrintTimestamp("Create Port");
             Ptr<UbPort> port = CreateObject<UbPort>();
             port->SetAddress(Mac48Address::Allocate());
             node->AddDevice(port);
         }
+        PrintTimestamp("Init");
         manager->Init();
+        PrintTimestamp("Inited");
         // auto cc = UbCongestionControl::Create(UB_SWITCH);
         // cc->SwitchInit(sw);
+        PrintTimestamp("Init CC");
         manager->CongestionControlInit();
+        PrintTimestamp("Inited CC");
         /*
         if (!forwardDelay.empty()) {
             auto allocator = sw->GetAllocator();
             allocator->SetAttribute("AllocationTime", StringValue(forwardDelay));
         }
         */
+        PrintTimestamp("Set FwdDelay");
         manager->SetForwardDelay(forwardDelay);
+        PrintTimestamp("All set");
     }
 }
 
@@ -645,23 +664,34 @@ void UbUtils::AddRoutingTable(const string &filename)
             rtTable[node_id][ip_nodePort.Get()][metrics[i]].push_back(outports[i]);
         }
     }
-    /*
+
     for (auto &nodert : rtTable) {
-        auto rt = NodeList::GetNode(nodert.first)->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
+        // Modified:
+        // auto rt = NodeList::GetNode(nodert.first)->GetObject<ns3::UbSwitch>()->GetRoutingProcess();
+        Ptr<Node> node_ptr = NodeList::GetNode(nodert.first);
+        Ptr<IO_Die_Manager> manager_ptr = node_ptr->GetObject<IO_Die_Manager>();
+
         for (auto &destiprow : nodert.second) {
             auto ip = destiprow.first;
             int i = 0;
             for (auto &metricrow : destiprow.second) {
-                if (i == 0) {
-                    rt->AddShortestRoute(ip, metricrow.second);
-                } else {
-                    rt->AddOtherRoute(ip, metricrow.second);
+                for (auto &outports : metricrow.second) {
+                    auto rt = manager_ptr->GetIODieById(outports / manager_ptr->GetPortCountPerIODie())->GetRoutingProcess();
+                    if (i == 0) {
+                        std::vector<uint16_t> temp_vector;
+                        temp_vector.push_back(outports);
+                        rt->AddShortestRoute(ip, temp_vector);
+                    } else {
+                        std::vector<uint16_t> temp_vector;
+                        temp_vector.push_back(outports);
+                        rt->AddOtherRoute(ip, temp_vector);
+                    }
+                        i++;
                 }
-                i++;
             }
         }
     }
-    */
+
     file.close();
 }
 
@@ -985,7 +1015,7 @@ void UbUtils::InitFaultMoudle(const string &FaultConfigFile)
         Ptr<Node> node = *it;
         // Modified:
         // uint16_t portNum = node->GetNDevices() / IO_DIE_PER_NODE;
-        uint16_t portNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+        uint16_t portNum = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
         for (int i = 0; i < portNum; i++) {
             Ptr<UbPort> port = DynamicCast<ns3::UbPort>(node->GetDevice(i));
             port->SetFaultCallBack(MakeCallback(&UbFault::FaultCallback, ubFault));

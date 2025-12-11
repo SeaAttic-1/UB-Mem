@@ -51,14 +51,20 @@ void UbSwitch::Init()
     auto node = NodeList::GetNode(m_nodeId);
     
     // Modified GetObject<Node>() -> NodeList::GetNode(m_nodeId);
-    m_portsNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+    m_portsNum = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     // alg init
+    std::cout << "Test\n";
     m_allocator = CreateObject<UbRoundRobinAllocator>();
     m_allocator->SetNodeId(node->GetId());
+    std::cout << "m_io_die_id: " << m_io_die_id << "\n";
     m_allocator->SetIODieId(m_io_die_id);
+    std::cout << "Test 2\n";
     m_allocator->Init();
+    std::cout << "Test 3\n";
     VoqInit();
+    std::cout << "Test 4\n";
     AddVoqIntoAlgroithm();
+    std::cout << "Test 5\n";
 
     // queueManager init
     m_queueManager = CreateObject<UbQueueManager>();
@@ -66,7 +72,10 @@ void UbSwitch::Init()
     m_queueManager->SetPortsNum(m_portsNum);
     m_queueManager->Init();
 
+    std::cout << "Test 6\n";
+
     NodePortsFcInit();
+    std::cout << "Test 7\n";
     m_routingProcess = CreateObject<UbRoutingProcess>();
     m_Ipv4Addr = utils::NodeIdToIp(node->GetId());
 }
@@ -88,7 +97,8 @@ void UbSwitch::NodePortsFcInit()
     NS_LOG_DEBUG("[UbSwitch NodePortsFcInit] m_portsNum: " << m_portsNum << " m_isCBFCEnable: " << m_isCBFCEnable
                 << " m_isPFCEnable: " << m_isPFCEnable);
 
-    for (uint32_t pidx = m_io_die_id * m_portsNum; pidx < m_portsNum * (m_portsNum + 1); pidx++) {
+    for (uint32_t pidx = m_io_die_id * m_portsNum; pidx < (m_io_die_id + 1) * m_portsNum; pidx++) {
+        std::cout << "pidx: " << pidx << '\n';
         Ptr<UbPort> port = DynamicCast<ns3::UbPort>(NodeList::GetNode(m_nodeId)->GetDevice(pidx));
         if (m_isCBFCEnable) {
             port->CreateAndInitFc("CBFC");

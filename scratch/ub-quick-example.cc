@@ -71,6 +71,9 @@ void RunCase(const string& configPath)
     // 遍历Traffic数据，并启动client
     UbUtils::Get()->PrintTimestamp ("Start Client.");
     for (auto& record : trafficData) {
+        
+        UbUtils::Get()->PrintTimestamp ("Read one record");
+
         auto node = NodeList::GetNode (record.sourceNode);
         if (node->GetNApplications()==0) {
             Ptr<UbApp> client = CreateObject<UbApp>();
@@ -83,6 +86,7 @@ void RunCase(const string& configPath)
     }
     UbTrafficGen::Get()->ScheduleNextTasks();
     CheckExampleProcess();
+    UbUtils::Get()->PrintTimestamp ("Done");
 }
 
 // 根据配置文件路径执行用例
@@ -107,7 +111,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbCaqm", LOG_LEVEL_ALL);
     // LogComponentEnable("UbTrafficGen", LOG_LEVEL_ALL);
     // LogComponentEnable("UbApp", LOG_LEVEL_ALL);
-    //LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
+    // LogComponentEnable("UbCongestionControl", LOG_LEVEL_ALL);
     // LogComponentEnable("UbController", LOG_LEVEL_ALL);
     // LogComponentEnable("UbDataLink", LOG_LEVEL_ALL);
     // LogComponentEnable("UbFlowControl", LOG_LEVEL_ALL);
@@ -116,7 +120,7 @@ int main(int argc, char* argv[])
     LogComponentEnable("UbLdstInstance", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstThread", LOG_LEVEL_ALL);
     LogComponentEnable("UbLdstApi", LOG_LEVEL_ALL);
-    LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
+    // LogComponentEnable("HBMBank", LOG_LEVEL_INFO);
     // LogComponentEnable("UbPort", LOG_LEVEL_ALL);
     // LogComponentEnable("UbRoutingProcess", LOG_LEVEL_ALL);
     // LogComponentEnable("UbSwitch", LOG_LEVEL_ALL);

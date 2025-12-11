@@ -90,7 +90,7 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     // Modified:
     // currentNode->GetObject<UbSwitch>()->AddTpIntoAlgroithm(tp, sport, priority);  // 把tp添加到算法
     
-    uint32_t port_per_io_die = currentNode->GetNDevices() / currentNode->GetObject<IO_Die_Manager>()->GetIODieCount();
+    uint32_t port_per_io_die = currentNode->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     uint32_t io_die_id = sport % port_per_io_die;
     currentNode->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id)->AddTpIntoAlgroithm(tp, sport, priority);
 

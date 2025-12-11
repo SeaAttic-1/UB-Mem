@@ -74,13 +74,15 @@ TypeId UbRoundRobinAllocator::GetTypeId(void)
 
 void UbRoundRobinAllocator::Init()
 {
+    std::cout << "test \n";
     auto node = NodeList::GetNode(m_nodeId);
     // Modified:
     // uint32_t portsNum = node->GetNDevices();
     // auto vlNum = node->GetObject<UbSwitch>()->GetVLNum();
-    uint32_t portsNum = node->GetNDevices() / node->GetObject<IO_Die_Manager>()->GetIODieCount();
+    uint32_t portsNum = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    std::cout << m_io_die_id << " test 2\n";
     auto vlNum = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id)->GetVLNum();
-
+    std::cout << "test 3\n";
     m_rrIdx.resize(portsNum);
     for (auto &v: m_rrIdx) {
         v.resize(vlNum, 0);

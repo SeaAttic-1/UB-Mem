@@ -1,0 +1,18 @@
+[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:[m[K In member function ‘[01m[Kvoid ns3::UbLdstApi::[01;32m[KLdstProcess[m[K(ns3::Ptr<ns3::UbLdstTaskSegment>)[m[K’:
+[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:67:5:[m[K [01;31m[Kerror: [m[K‘[01m[KNS_LOG_INO[m[K’ was not declared in this scope; did you mean ‘[01m[KNS_LOG_INFO[m[K’?
+   67 |     [01;31m[KNS_LOG_INO[m[K("Invoked LdSt Process")
+      |     [01;31m[K^~~~~~~~~~[m[K
+      |     [32m[KNS_LOG_INFO[m[K
+[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:69:26:[m[K [01;31m[Kerror: [m[K‘[01m[Ksw_info[m[K’ was not declared in this scope; did you mean ‘[01m[Ksinf[m[K’?
+   69 |     uint32_t io_die_id = [01;31m[Ksw_info[m[K.io_die_id;
+      |                          [01;31m[K^~~~~~~[m[K
+      |                          [32m[Ksinf[m[K
+[01m[K/home/seaattic/Project/ub-mem/ub-mem/src/unified-bus/model/protocol/ub-ldst-api.cc:70:42:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [24][m[K’ and ‘[01m[Kuint32_t[m[K’ {aka ‘[01m[Kunsigned int[m[K’} to binary ‘[01m[Koperator<<[m[K’
+   70 |     NS_LOG_INO([32m[K"Selected io die number "[m[K [01;31m[K<<[m[K [34m[Kio_die_id[m[K);
+      |                [32m[K~~~~~~~~~~~~~~~~~~~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~[m[K
+      |                [32m[K|[m[K                            [34m[K|[m[K
+      |                [32m[Kconst char [24][m[K              [34m[Kuint32_t {aka unsigned int}[m[K
+gmake[3]: *** [src/unified-bus/CMakeFiles/unified-bus.dir/build.make:286: src/unified-bus/CMakeFiles/unified-bus.dir/model/protocol/ub-ldst-api.cc.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:3660: src/unified-bus/CMakeFiles/unified-bus.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:3982: scratch/CMakeFiles/scratch_ub-quick-example.dir/rule] Error 2
+gmake: *** [Makefile:1509: scratch_ub-quick-example] Error 2

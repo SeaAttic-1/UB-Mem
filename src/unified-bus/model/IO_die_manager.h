@@ -44,6 +44,8 @@ namespace ns3 {
             uint32_t GetNodeId(void);
             void SetIODieCount(uint32_t io_die_count);
             uint32_t GetIODieCount(void);
+            void SetPortCountPerIODie(uint32_t port_count_per_io_die);
+            uint32_t GetPortCountPerIODie(void);
             void SetForwardDelay(string forwardDelay);
             void Init(void);
             void CongestionControlInit(void);
@@ -51,6 +53,7 @@ namespace ns3 {
 
         private:
             std::vector<Ptr<UbSwitch>> m_dies;
+            uint32_t m_port_count_per_die = 0;
             uint32_t m_die_count = IO_DIE_PER_NODE;
             uint32_t m_die_salt = 0;
             uint32_t m_nodeId;

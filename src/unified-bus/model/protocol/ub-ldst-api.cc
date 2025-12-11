@@ -56,20 +56,24 @@ void UbLdstApi::SetNodeId(uint32_t nodeId)
     m_nodeId = nodeId;
 }
 
-void UbLdstApi::InitializeLbSalts(uint32_t die_count) {
-    m_lbHashSalts.resize(die_count);
+void UbLdstApi::InitializeLbSalts(void) {
+    m_lbHashSalts.resize(NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetIODieCount());
     // This should work since default value for uint32_t is 0
 }
 
 void UbLdstApi::LdstProcess(Ptr<UbLdstTaskSegment> taskSegment)
 {
     // Select an IO Die for sending this task segment
+    NS_LOG_INFO("Invoked ldst process function call");
     auto sw_info = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetIODie();
     uint32_t io_die_id = sw_info.io_die_id;
+    NS_LOG_INFO("Selected io die number " << io_die_id);
     // genpacket
     auto packet = GenDataPacket(taskSegment, io_die_id);
+    NS_LOG_INFO("Generated data packet");
     // sendpacket
     SendPacket(taskSegment, packet, io_die_id);
+    NS_LOG_INFO("Sent packet");
 }
 
 void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet, uint32_t io_die_id)
@@ -112,6 +116,7 @@ void UbLdstApi::SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packe
 Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_t io_die_id)
 {
     // Store/load request: DLH cNTH cTAH(0x03/0x06) [cMAETAH] Payload
+    NS_LOG_INFO("1");
     UbCompactMAExtTah cMAETah;
     UbCompactTransactionHeader cTaHeader;
     UbCna16NetworkHeader memHeader;
@@ -127,16 +132,25 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_
         payloadSize = taskSegment->GetPacketSize();
     }
 
+    NS_LOG_INFO("2");
     uint32_t& m_lbHashSalt = m_lbHashSalts[io_die_id];
+    NS_LOG_INFO("Salt size: " << m_lbHashSalts.size() << " " << io_die_id);
+    NS_LOG_INFO("3");
     if (m_usePacketSpray) {
+        NS_LOG_INFO("4");
         if (m_lbHashSalt == MAX_LB) {
+            NS_LOG_INFO("5");
             m_lbHashSalt = MIN_LB;
         } else {
+            NS_LOG_INFO("5");
             m_lbHashSalt++;
         }
     }
+    NS_LOG_INFO("4");
     Ptr<Packet> packet = Create<Packet>(payloadSize);
+    NS_LOG_INFO("5");
     taskSegment->UpdateSentBytes(dataSize);
+    NS_LOG_INFO("3");
     // Gen Headers
     cMAETah.SetLength((uint8_t)length);
     cTaHeader.SetIniTaSsn(taskSegment->GetTaskSegmentId()); // taskid
@@ -146,11 +160,12 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_
     memHeader.SetDcna(dcna);
     memHeader.SetLb(m_lbHashSalt);
     memHeader.SetServiceLevel(taskSegment->GetPriority());
+    NS_LOG_INFO("4");
 
     packet->AddHeader(cMAETah);
     packet->AddHeader(cTaHeader);
     packet->AddHeader(memHeader);
-
+    NS_LOG_INFO("5");
     // add dl header
     UbDataLink::GenPacketHeader(packet, false, false, taskSegment->GetPriority(), taskSegment->GetPriority(),
                                 m_usePacketSpray, m_useShortestPaths, UbDatalinkHeaderConfig::PACKET_UB_MEM);
@@ -288,10 +303,8 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
         NS_LOG_DEBUG("[UbLdstApi RecvDataPacket] Load payloadSize: " << payloadSize);
         // ackp = Create<Packet>(payloadSize);
     }
-
-    uint32_t num_of_atomics = payloadSize / HBM_BANK_ATOMIC_SIZE;
-    if (num_of_atomics == 0) num_of_atomics  = 1;
-    if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog it too long.
+    
+    
     
     UbLdstApi::PacketContext* temp_ptr = new UbLdstApi::PacketContext();
     temp_ptr->linkPacketHeader = linkPacketHeader;
@@ -301,18 +314,29 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     temp_ptr->cMAETah = cMAETah;
     void* context_ptr = static_cast<void*>(temp_ptr);
 
-    auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
-    auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<HBMController>();
-    auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
-    auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
+    #ifdef SIM_HBM
+        uint32_t num_of_atomics = payloadSize / HBM_BANK_ATOMIC_SIZE;
+        if (num_of_atomics == 0) num_of_atomics  = 1;
+        if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog it too long.
 
-    for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
-    {
-        hbm_controller->SendRequest(iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
-    } // For all the previous tasks, do nothing.
+        auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
+        auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<HBMController>();
+        auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
+        auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
 
-    hbm_controller->SendRequest(num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
-    // Only when processing the final segments, pass in real callback func as well as arg ptr;
+        for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
+        {
+            hbm_controller->SendRequest(iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
+        } // For all the previous tasks, do nothing.
+
+        hbm_controller->SendRequest(num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+    
+    #else
+
+        OnHBMComplete(context_ptr);
+
+    #endif
+        // Only when processing the final segments, pass in real callback func as well as arg ptr;
     /*
     uint16_t tassn = cTaHeader.GetIniTaSsn();
     caTaHeader.SetIniTaSsn(tassn);

@@ -25,6 +25,7 @@ UbFunction::UbFunction()
 {
     NS_LOG_DEBUG("UbFunction created");
     m_ldstApi = CreateObject<UbLdstApi>();
+    m_ldstApi->InitializeLbSalts();
 }
 
 UbFunction::~UbFunction()

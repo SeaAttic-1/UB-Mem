@@ -44,7 +44,7 @@ public:
     void RecvDataPacket(Ptr<Packet> packet);
     void LdstProcess(Ptr<UbLdstTaskSegment> taskSegment);
     void OnHBMComplete(void* arg);
-    void InitializeLbSalts(uint32_t die_count);
+    void InitializeLbSalts(void);
 
 private:
     void SendPacket(Ptr<UbLdstTaskSegment> taskSegment, Ptr<Packet> packet, uint32_t io_die_id);

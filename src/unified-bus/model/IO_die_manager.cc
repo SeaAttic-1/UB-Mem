@@ -22,7 +22,9 @@ namespace ns3 {
     void IO_Die_Manager::DoInitialize(void) {
         this->m_dies.reserve(m_die_count);
         for(uint32_t i = 0; i < m_die_count; i++)
-            this->m_dies.push_back(CreateObject<UbSwitch>());
+            m_dies.push_back(CreateObject<UbSwitch>());
+        for(uint32_t i = 0; i < m_die_count; i++)
+            m_dies[i]->SetIODieId(i);
     }
 
     void IO_Die_Manager::SetNodeType(UbNodeType_t nodeType) {
@@ -31,7 +33,10 @@ namespace ns3 {
     }
 
     void IO_Die_Manager::SetNodeId(void) {
-        m_nodeId = GetObject<Node>()->GetId();
+        uint32_t nodeId = GetObject<Node>()->GetId();
+        m_nodeId = nodeId;
+        for(uint32_t i = 0; i < m_die_count; i++)
+            m_dies[i]->SetNodeId(nodeId);
     }
 
     void IO_Die_Manager::SetNodeId(uint32_t nodeId) {
@@ -67,6 +72,13 @@ namespace ns3 {
 
     uint32_t IO_Die_Manager::GetIODieCount(void) {
         return m_die_count;
+    }
+
+    void IO_Die_Manager::SetPortCountPerIODie(uint32_t port_count_per_io_die) {
+        m_port_count_per_die = port_count_per_io_die;
+    }
+    uint32_t IO_Die_Manager::GetPortCountPerIODie(void) {
+        return m_port_count_per_die;
     }
 
     void IO_Die_Manager::StartCongestionControl(void) {
