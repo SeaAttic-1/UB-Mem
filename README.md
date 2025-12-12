@@ -44,12 +44,16 @@ Test files largely follow the same formats as those of the original UB simulator
 
 It is expected that with **IODieCount** set to 1, the current simulator should behave exactly the same as the original UB simulator. Multiple tests (`2nodes_simple, 2nodes_single-tp, 2nodes_multiple-tp`) have been performed and this was indeed verified.
 
-### New testcase
+### New Testcases
 
 A new test case called `2nodes_multiple-io` has been provided. It features 2 nodes, each bearing 3 IO dies and each IO die bearing 3 ports. The two nodes are interconnected by 3 parallel switches. 
 
 Interestingly, when compared with the setting where each node has only 1 IO die but 9 ports (so the total port number is the same), the total throughput lags by about less tha 10Gbps. It is possible this performance drop is caused by three IO die having their own CC instance running, and applying stricter control. 
 
-### Remarks
+### Writing Your Testcases
 
-More testings, if required, will be performed. You may also clone this repo and implement your custom logic. This branch will be merged with the main branch if required.
+You may refer to the provided test case when making your own test cases. Making test cases where **IODieCount** and **portsNum** are more realistic (8, 16, 32...) could require a decement amount of effort, as composing `routing_table.csv`, `topology.csv` and `transport_channel.csv` require lots more lines.
+
+## Remarks
+
+More testing, if required, will be performed. You may also clone this repo and implement your custom logic. This branch will be merged with the main branch if required.
