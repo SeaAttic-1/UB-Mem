@@ -549,24 +549,16 @@ void UbUtils::CreateNode(const string &filename)
         node->AggregateObject(ldst);
         ldst->Init(node->GetId());
         if (nodeTypeStr == "DEVICE") {
-            PrintTimestamp("4");
             Ptr<UbController> ubCtrl = CreateObject<UbController>();
-            PrintTimestamp("5");
             node->AggregateObject(ubCtrl);
-            PrintTimestamp("6");
             ubCtrl->CreateUbFunction();
-            PrintTimestamp("7");
             ubCtrl->CreateUbTransaction();
-            PrintTimestamp("8");
             // sw->SetNodeType(UB_DEVICE);
             manager->SetNodeType(UB_DEVICE);
-            PrintTimestamp("9");
-
             Ptr<HBMController> hbm = HBMHelper().Create(8);
             Ptr<UniformRandomVariable> rng = CreateObject<UniformRandomVariable>();
             node->AggregateObject(rng);
             node->AggregateObject(hbm);
-            PrintTimestamp("Done");
         } else if (nodeTypeStr == "SWITCH") {
             // sw->SetNodeType(UB_SWITCH);
             manager->SetNodeType(UB_SWITCH);
@@ -681,25 +673,35 @@ void UbUtils::AddRoutingTable(const string &filename)
 
         for (auto &destiprow : nodert.second) {
             auto ip = destiprow.first;
-            std::vector<uint32_t> i(manager_ptr->GetIODieCount(), 0);
+            uint32_t i = 0;
             for (auto &metricrow : destiprow.second) {
+                std::vector<std::vector<uint16_t>> vec(manager_ptr->GetIODieCount(), std::vector<uint16_t>{});
                 for (auto &outports : metricrow.second) {
+
                     auto io_die_id = outports / manager_ptr->GetPortCountPerIODie();
-                    auto rt = manager_ptr->GetIODieById(io_die_id)->GetRoutingProcess();
-                    
-                    std::cout << "Add rt table entry, outports: " << outports << " ip: " << ip  << manager_ptr->GetPortCountPerIODie() << " " <<outports / manager_ptr->GetPortCountPerIODie() << "\n";
-                    
-                    if (i[io_die_id] == 0) {
-                        std::vector<uint16_t> temp_vector;
-                        temp_vector.push_back(outports);
-                        rt->AddShortestRoute(ip, temp_vector);
-                    } else {
-                        std::vector<uint16_t> temp_vector;
-                        temp_vector.push_back(outports);
-                        rt->AddOtherRoute(ip, temp_vector);
-                    }
-                        i[io_die_id]++;
+                    vec[io_die_id].push_back(outports);
                 }
+
+                if (i == 0) {
+                    for(uint32_t j = 0; j < vec.size(); j++) {
+                        std::cout << "Add shortest rt table entry to io die " << j << '\n';
+
+                        auto rt = manager_ptr->GetIODieById(j)->GetRoutingProcess();
+                        
+                        if(!vec[j].empty())
+                            rt->AddShortestRoute(ip, vec[j]);
+                    }
+                } else {
+                    for(uint32_t j = 0; j < vec.size(); j++) {
+                    std::cout << "Add other rt table entry to io die " << j << '\n';
+                    auto rt = manager_ptr->GetIODieById(j)->GetRoutingProcess();
+                    
+                    if(!vec[j].empty())
+                        rt->AddOtherRoute(ip, vec[j]);
+                    }
+                }
+
+                i ++;
             }
         }
     }

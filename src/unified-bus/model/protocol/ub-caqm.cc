@@ -432,10 +432,12 @@ void UbSwitchCaqm::SwitchInit(Ptr<UbSwitch> sw, uint32_t nodeId, uint32_t io_die
     m_nodeId = nodeId;
     m_io_die_id = io_die_id;
     if (m_congestionCtrlEnabled) {
-        // Modified uint32_t ndevice = node->GetNDevices();
+        // Modified 
+        uint32_t ndevice = node->GetNDevices();
         // uint32_t ndevice = sw->GetIfIndex();
-        uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+        // uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
         for (uint32_t i = 0; i < ndevice; i++) {
+            uint32_t real_port_id = io_die_id * ndevice + i;
             m_txSize.push_back(0);
             m_cc.push_back(0);
             m_DC.push_back(0);
@@ -453,8 +455,9 @@ void UbSwitchCaqm::ResetLocalCc()
         // Modified:
         // auto sw = node->GetObject<UbSwitch>();
         auto sw = node->GetObject<IO_Die_Manager>()->GetIODieById(m_io_die_id);
-        // uint32_t ndevice = node->GetNDevices(); Origin line for getting port count
-        uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+        uint32_t ndevice = node->GetNDevices(); 
+        // Origin line for getting port count
+        // uint32_t ndevice = node->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
         for (uint32_t portId = 0; portId < ndevice; portId++) {
             uint64_t cc = uint64_t(m_lambda *
                                 (m_ccUpdatePeriod.GetSeconds()
@@ -481,7 +484,10 @@ void UbSwitchCaqm::SetDataRate(uint32_t portId, DataRate bps)
 
 void UbSwitchCaqm::SwitchForwardPacket(uint32_t inPort, uint32_t outPort, Ptr<Packet> p)
 {
-    uint32_t port_count_per_io_die = NodeList::GetNode(m_nodeId)->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
+    uint32_t port_count_per_io_die = 10000; // Temp
+    
+    NS_LOG_INFO("port_count_per_io_die: " << port_count_per_io_die << " outPort: " << outPort << " inPort " << inPort);
+    
     if (m_congestionCtrlEnabled) {
         UbDatalinkHeader dlHeader;
         p->PeekHeader(dlHeader);

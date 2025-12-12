@@ -574,6 +574,7 @@ void UbPort::IncreaseRcvQueueSize(Ptr<Packet> p, Ptr<UbPort> port)
 
 void UbPort::DecreaseRcvQueueSize(Ptr<Packet> p, uint32_t portId)
 {
+    NS_LOG_INFO("DecreaseRcvQueueSize portId: " << portId);
     Ptr<UbPort> port = DynamicCast<UbPort>(GetNode()->GetDevice(portId));
     uint32_t pktSize = p->GetSize();
     NS_LOG_DEBUG("[UbFc DecreaseRcvQueueSize] pktSize: " << pktSize << " PortId: " << port->GetIfIndex());

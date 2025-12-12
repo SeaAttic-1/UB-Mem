@@ -140,8 +140,6 @@ Ptr<Packet> UbLdstApi::GenDataPacket(Ptr<UbLdstTaskSegment> taskSegment, uint32_
         }
     }
 
-    std::cout << "Use salt " << m_lbHashSalt << "\n";
-
     Ptr<Packet> packet = Create<Packet>(payloadSize);
     taskSegment->UpdateSentBytes(dataSize);
     // Gen Headers

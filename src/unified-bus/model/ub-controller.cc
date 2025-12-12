@@ -91,7 +91,7 @@ bool UbController::CreateTp(uint32_t src, uint32_t dest, uint8_t sport,
     
     uint32_t port_per_io_die = currentNode->GetObject<IO_Die_Manager>()->GetPortCountPerIODie();
     uint32_t io_die_id = sport / port_per_io_die;
-    std::cout << "io_die_id is " << io_die_id << "\n";
+    NS_LOG_DEBUG("io_die_id is " << io_die_id);
     currentNode->GetObject<IO_Die_Manager>()->GetIODieById(io_die_id)->AddTpIntoAlgroithm(tp, sport, priority);
     NS_LOG_DEBUG("Created transport channel success");
     return true;

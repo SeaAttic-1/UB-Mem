@@ -217,6 +217,7 @@ UbPacketType_t UbSwitch::GetPacketType(Ptr<Packet> packet)
  */
 void UbSwitch::SwitchHandlePacket(Ptr<UbPort> port, Ptr<Packet> packet)
 {
+    NS_LOG_INFO("Called SwitchHandlePacket");
     // 帧类型判断
     auto packetType = GetPacketType(packet);
     switch (packetType) {
@@ -285,6 +286,7 @@ void UbSwitch::HandleLdstDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
             }
             break;
         case UB_SWITCH:
+            NS_LOG_INFO("Switch Forwarding Packet");
             ForwardDataPacket(port, packet);
             break;
         default:
@@ -298,7 +300,7 @@ void UbSwitch::HandleLdstDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
  */
 bool UbSwitch::SinkTpDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
 {
-    NS_LOG_DEBUG("[UbPort recv] Psn: " << m_ubTpHeader.GetPsn());
+    NS_LOG_DEBUG("[UbPort recv] Psn: " << m_ubTpHeader.GetPsn() << " port: " << port);
     Ipv4Mask mask("255.255.255.0");
 
     // Forward
@@ -308,12 +310,22 @@ bool UbSwitch::SinkTpDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     // Sink
     NS_LOG_DEBUG("[UbPort recv] Pkt tb is local");
     if (IsCBFCEnable()) {
+        NS_LOG_INFO("CBFC Enabled, Call HandleReceivedPacket");
         port->m_flowControl->HandleReceivedPacket(packet);
     }
 
+    NS_LOG_INFO("Test");
+
     uint32_t dstTpn = m_ubTpHeader.GetDestTpn();
-    auto targetTp = GetObject<UbController>()->GetTpByTpn(dstTpn);
+    NS_LOG_INFO("Test 2");
+    // Modified:
+    //auto targetTp = GetObject<UbController>()->GetTpByTpn(dstTpn);
+    
+    auto targetTp = NodeList::GetNode(m_nodeId)->GetObject<UbController>()->GetTpByTpn(dstTpn);
+    
+    NS_LOG_INFO("Test 3");
     NS_ASSERT_MSG(targetTp != nullptr, "Port Cannot Get TP By Tpn!");
+    NS_LOG_INFO("Test 3");
     if (m_ubTpHeader.GetTPOpcode() == static_cast<uint8_t>(TpOpcode::TP_OPCODE_ACK_WITH_CETPH)
         || m_ubTpHeader.GetTPOpcode() == static_cast<uint8_t>(TpOpcode::TP_OPCODE_ACK_WITHOUT_CETPH)) {
         NS_LOG_DEBUG("[UbPort recv] is ACK");
@@ -323,9 +335,12 @@ bool UbSwitch::SinkTpDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
         packet->RemoveHeader(m_udpHeader);
         targetTp->RecvTpAck(packet);
     } else {
+        NS_LOG_INFO("Test 3");
         targetTp->RecvDataPacket(packet);
     }
+    NS_LOG_INFO("SinkTpDataPacket Returned");
     return true;
+    
 }
 
 /**
@@ -389,6 +404,7 @@ void UbSwitch::ForwardDataPacket(Ptr<UbPort> port, Ptr<Packet> packet)
     }
     /* 路由 */
     outPort = m_routingProcess->GetOutPort(rtKey, port->GetIfIndex());
+    NS_LOG_INFO("Select outPort = " << outPort);
     if (outPort < 0) {
         // Route failed
         NS_LOG_WARN("The route cannot be found. Packet Dropped!");

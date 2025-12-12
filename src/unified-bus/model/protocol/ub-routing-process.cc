@@ -27,10 +27,29 @@ void UbRoutingProcess::AddShortestRoute(const uint32_t destIP, const std::vector
     // 标准化端口集合（排序去重）
     std::vector<uint16_t> target;
     auto itRt = m_rtShortest.find(destIP);
+
+    /*
+    std::cout << "-------------------------------\n";
+
+    for(auto i : m_rtShortest) {
+        std::cout << i.first << ": ";
+        for (auto j : *(i.second)) {
+            std::cout << j << " ";
+        }
+        std::cout << "\n";
+    }
+
+
+    std::cout << "-------------------------------\n";
+    */
+    
+
     if (itRt != m_rtShortest.end()) {
         target.insert(target.end(), (*(itRt->second)).begin(), (*(itRt->second)).end());
     }
     target.insert(target.end(), outPorts.begin(), outPorts.end());
+
+
     std::vector<uint16_t> normalized = normalizePorts(outPorts);
     
     // 查找或创建共享端口集合
@@ -44,6 +63,7 @@ void UbRoutingProcess::AddShortestRoute(const uint32_t destIP, const std::vector
         m_portSetPool[normalized] = sharedPorts;
         m_rtShortest[destIP] = sharedPorts;
     }
+
 }
 
 void UbRoutingProcess::AddOtherRoute(const uint32_t destIP, const std::vector<uint16_t>& outPorts)
@@ -73,15 +93,31 @@ void UbRoutingProcess::AddOtherRoute(const uint32_t destIP, const std::vector<ui
 const std::vector<uint16_t>& UbRoutingProcess::GetShortestOutPorts(const uint32_t destIP)
 {
     static const std::vector<uint16_t> empty; // 返回空集的引用
+    NS_LOG_INFO("Trying to find " << destIP);
+    NS_LOG_INFO("Iterating over rt table...");
+    for(auto i : m_rtShortest) {
+        std::vector<uint16_t>& vec = *(i.second);
+        for(auto j : vec)
+        {
+            NS_LOG_INFO("port: " << static_cast<uint32_t>(j));
+        }
+        NS_LOG_INFO("-----");
+    }
+        NS_LOG_INFO("Destip: " << destIP);
 
     auto it = m_rtShortest.find(destIP);
 
     NS_LOG_INFO("Trying to find " << destIP);
     if (m_rtShortest.empty())
         NS_LOG_INFO("Routing table empty");
-    for(auto i : m_rtShortest)
-        NS_LOG_INFO("Destip: " << destIP);
-
+    if (it != m_rtShortest.end()) {
+        std::vector<uint16_t>& vec = *(it->second);
+        for(auto i : vec)
+        {
+            NS_LOG_INFO("port: " << static_cast<uint32_t>(i));
+        }
+            
+    }
 
     return it != m_rtShortest.end() ? *(it->second) : empty;
 }
@@ -161,12 +197,16 @@ int UbRoutingProcess::SelectOutPort(uint32_t sip, uint32_t dip, uint16_t sport, 
     }
 
     if (useShortestPath) {
+        NS_LOG_INFO("Use shortest path enabled");
         auto outPorts = GetShortestOutPorts(dip);
         std::vector<uint16_t> validPorts;
         for (uint16_t port : outPorts) {
-            if (port != inPortId)
+            if (port != inPortId) {
                 validPorts.push_back(port);
+                NS_LOG_INFO("Found one valid port: " << port);
+            }
         }
+                
         if (validPorts.size() == 0)
             return -1;
         idx = hash64 % validPorts.size();
@@ -216,6 +256,7 @@ int UbRoutingProcess::GetOutPort(RoutingKey &rtKey, uint16_t inPort)
     // 1. 首先基于目的节点的port地址进行选择
     int outPortId = SelectOutPort(sip, dip, sport, dport, priority, useShortestPath, usePacketSpray, inPort);
     if (outPortId == -1) {
+        NS_LOG_INFO("Finding outport using dest port failed");
         // 2. 如果找不到，掩盖port地址，使用主机的primary地址进行寻址
         Ipv4Mask mask("255.255.255.0");
         dip = Ipv4Address(dip).CombineMask(mask).Get();
@@ -223,7 +264,7 @@ int UbRoutingProcess::GetOutPort(RoutingKey &rtKey, uint16_t inPort)
         // 3. 如果还是找不到，报ASSERT
         NS_ASSERT_MSG(outPortId != -1, "No available output port found");
     }
-    NS_LOG_INFO("Lookup success");
+    NS_LOG_INFO("Lookup success, outPortId is " << outPortId);
     return outPortId;
 }
 } // namespace ns3
