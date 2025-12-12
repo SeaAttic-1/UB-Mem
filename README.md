@@ -38,7 +38,7 @@ Test files largely follow the same formats as those of the original UB simulator
 
 - Addition of an extra column at the end: **IODieCount**. This specifies how many IO dies a node has. Omit it to use the default value **IO_DIE_PER_NODE** defined in `IO_Die_Manager.h`, which is set to 2.
 
-- Change of meaning of the **portsNum** column. This specify how many ports a single IO die has. So the total number pof ports on a node can be calculated as **IODieCount \* portsNum**.
+- Change of meaning of the **portsNum** column. This specify how many ports a single IO die has. So the total number of ports on a node can be calculated as **IODieCount \* portsNum**.
 
 ### Functional Correctness
 
