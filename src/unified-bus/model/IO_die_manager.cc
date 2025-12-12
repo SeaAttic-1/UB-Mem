@@ -75,10 +75,10 @@ namespace ns3 {
     }
 
     void IO_Die_Manager::SetPortCountPerIODie(uint32_t port_count_per_io_die) {
-        m_port_count_per_die = port_count_per_io_die;
+        m_port_count_per_io_die = port_count_per_io_die;
     }
     uint32_t IO_Die_Manager::GetPortCountPerIODie(void) {
-        return m_port_count_per_die;
+        return m_port_count_per_io_die;
     }
 
     void IO_Die_Manager::StartCongestionControl(void) {
