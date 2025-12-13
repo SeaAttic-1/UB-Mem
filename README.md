@@ -4,7 +4,7 @@ This branch holds the code for modeling multiple IO dies on a single host. Each 
 
 ## Implementation
 
-The implementation revolves around the existing **UbSwitch** class. This class models a minimal switch and maintains its own set of ports and virtual output queues. The original UB code base has each node maintain exactly one instance of UbSwitch, although technically speaking the UB specification allows more than 1 UbSwitch per node. Adding more UbSwitch instances to each node serve as an efficient way of modeling multiple IO dies. 
+The implementation revolves around the existing **UbSwitch** class. This class models a minimal switch and maintains its own set of ports and virtual output queues. The original UB code base has each node maintain exactly one instance of UbSwitch, although technically speaking the UB specification allows more than 1 UbSwitch per node. Adding more UbSwitch instances to each node serves as an efficient way of modeling multiple IO dies. 
 
 ## Changes
 
@@ -48,7 +48,7 @@ It is expected that with **IODieCount** set to 1, the current simulator behaves 
 
 A new test case called `2nodes_multiple-io` has been provided. It features 2 nodes, each bearing 3 IO dies and each IO die bearing 3 ports. The two nodes are interconnected by 3 switches. 
 
-Interestingly, when compared with the setting where each node has only 1 IO die but 9 ports (so the total port number is the same), the total throughput lags by about less tha 10Gbps. It is possible this performance drop is caused by three IO die having their own CC instance running, and applying stricter control. 
+Interestingly, when compared with the setting where each node has only 1 IO die but 9 ports (so the total port number is the same), the total throughput lags by about less than 10Gbps. It is possible this performance drop is caused by three IO die having their own CC instance running, and applying stricter control. 
 
 ### Writing Your Testcases
 
