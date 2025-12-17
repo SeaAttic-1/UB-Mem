@@ -11,7 +11,7 @@ traffic_file_path = os.path.join(test_case_path, "traffic.csv")
 output_throughput_path = os.path.join(test_case_path, "output/task_statistics.csv")
 output_path = "statistics.txt"
 
-length = 100
+length = 50
 end_mpki = 50
 step = 0.05
 trials = 20
@@ -279,6 +279,41 @@ def measure_throughput_with_internal_traffic():
     debug_log_hd.close()
 
 
+def measure_throughput_with_simple_hbm():
+    intensity_macro_path = "src/unified-bus/model/traffic-simple.h"
+    traffic_simple_content = '''#define BACKGROUND_INTENSITY {}
+    '''
+
+    try_set = (0.0, 1.0, 2.0, 4.0, 8.0, 16.0)
+    measurement_set = []
+
+    for traffic_intensity in try_set:
+        with open(intensity_macro_path, 'w') as intensity_file_hd:
+            intensity_file_hd.write(traffic_simple_content.format(traffic_intensity))
+        
+        measure_throughput_no_internal_traffic(show_graph=False)
+        measurement_set.append(calculate_real_throughput())
+
+
+    baseline_throughput = measurement_set[0]
+
+    y_axis_2 = list(map(lambda x: baseline_throughput / x, measurement_set))
+    y_axis_2 = list(map(lambda x: 100 * (x-1), y_axis_2))
+    
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+
+    print(y_axis_2)
+
+    ax1.set_xlabel('Relative background traffic intensity')
+    ax1.set_ylabel('Throughput (Gbps)')
+    ax2.set_ylabel('Latency increase (%)')
+    line1 = ax1.plot(try_set, measurement_set, 'y-', label='Throughput')
+    line2 = ax2.plot(try_set, y_axis_2, 'r-', label='Latency increase')
+    lines = line1 + line2
+
+    plt.legend(lines, ["Throughput", "Latency increase"])
+    plt.show()
 
 
 
@@ -381,11 +416,12 @@ def urgent_calculation():
 if __name__ == "__main__":
     # measure_throughput_no_internal_traffic() 
     # calculate_real_throughput()
-    make_grouped_bar_chart_for_throughput_data()
+    # make_grouped_bar_chart_for_throughput_data()
     # measure_throughput_nit_with_different_packet_size()
     # generate_throughput_vs_packet_size_curve()
     # measure_throughput_with_internal_traffic()
     # measure_baseline_throughput()
     # make_output_graph()
-    #urgent_calculation()
+    # urgent_calculation()
+    measure_throughput_with_simple_hbm()
     pass

@@ -3,6 +3,7 @@
 
 #include "ns3/object.h"
 #include "ns3/ptr.h"
+#include "../model/hbm-controller-simple.h"
 
 namespace ns3 {
 
@@ -13,10 +14,7 @@ class SimpleHBMHelper
 public:
   SimpleHBMHelper();
 
-  Ptr<SimpleHBMController> Create(uint32_t nodeId, uint32_t numBanks);
-
-private:
-  uint32_t m_defaultBanks;
+  Ptr<SimpleHBMController> Create(uint32_t nodeId);
 };
 
 } // namespace ns3

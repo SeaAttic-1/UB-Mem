@@ -4,6 +4,7 @@
 #include "ns3/hbm-helper-simple.h"
 #include "ns3/random-variable-stream.h"
 #include "control-macro.h"
+#include "traffic-simple.h"
 
 namespace utils {
 
@@ -531,7 +532,8 @@ void UbUtils::CreateNode(const string &filename)
                 node->AggregateObject(hbm);
             #endif
             #ifdef USE_SIMPLE_HBM
-                Ptr<SimpleHBMController> hbm = SimpleHBMHelper().Create(node->GetId(), 8);
+                Ptr<SimpleHBMController> hbm = CreateObject<SimpleHBMController>();
+                hbm->SetBackgroundIntensity(BACKGROUND_INTENSITY);
                 node->AggregateObject(hbm);
             #endif
 

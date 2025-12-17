@@ -1,7 +1,13 @@
 #include "hbm-controller-simple.h"
-#include "hbm-bank-simple.h"
 #include "ns3/log.h"
 #include "ns3/node.h"
+#include "ns3/simulator.h"
+#include "ns3/uinteger.h"
+#include "ns3/core-module.h"
+#include "ns3/singleton.h"
+#include "ns3/node.h"
+#include "ns3/node-list.h"
+#include "ns3/callback.h"
 
 namespace ns3 {
 
@@ -28,41 +34,46 @@ SimpleHBMController::~SimpleHBMController()
   NS_LOG_FUNCTION(this);
 }
 
-void
-SimpleHBMController::InitializeBanks(uint32_t nodeId, uint32_t numBanks)
+void SimpleHBMController::SendRequest(uint32_t size, Callback<void, void*> cb, void* arg)
 {
-  NS_LOG_FUNCTION(this << numBanks);
 
-  m_banks.clear();
-  for (uint32_t i = 0; i < numBanks; i++)
-    {
-      auto bank = CreateObject<SimpleHBMBank>();
-      bank->SetNodeId(nodeId);
-      m_banks.push_back(bank);
-    }
-}
-
-void SimpleHBMController::SendRequest(uint32_t cuid, uint32_t requestId, uint64_t address, uint32_t size, uint32_t bankId, bool isWrite, Callback<void, void*> cb, void* arg)
-{
-  NS_LOG_FUNCTION(this << requestId);
-
-  if (m_banks.empty())
-    {
-      NS_LOG_ERROR("HBMController has no banks initialized!");
-      return;
-    }
-  if (bankId >= m_banks.size()) {
-      NS_LOG_ERROR("Attempt to access bank" << bankId << "but HBM has only" << m_banks.size() << "banks" );
-      return;
+  if (!m_busy) {
+    m_busy = true;
+    float delay = size / m_bandwidth * 8000.0;
+    Simulator::Schedule(PicoSeconds(delay), &SimpleHBMController::DoCallBack, this, cb, arg);
   }
-  SimpleMemoryRequest request = {cuid, address, size, bankId, isWrite, requestId, cb, arg};
-  m_banks[request.bankId]->ReceiveRequest(request);
+
+  else {
+    m_requests.push({size, cb, arg});
+  }
+
 }
 
-void SimpleHBMController::SetBackgroundIntensity(uint32_t bg_intensity) {
-  for (auto i : m_banks) {
-    i->SetBackgroundIntensity(bg_intensity);
+void SimpleHBMController::SetBackgroundIntensity(float bg_intensity) {
+
+  for(auto& i : m_lut) {
+    if(i.first == bg_intensity) {
+      m_bandwidth = m_nominal_bandwidth * i.second;
+      NS_LOG_INFO("bandwidth is " << m_bandwidth);
+      NS_LOG_INFO("delay is " << 128.0 * 8.0 / m_bandwidth);
+    }
   }
 }
 
-} // namespace ns3
+void SimpleHBMController::DoCallBack(Callback<void, void*> cb, void* arg) {
+  cb(arg);
+  m_busy = false;
+
+  if(!m_requests.empty()) {
+    m_busy = true;
+    MemoryRequest new_request = m_requests.front();
+    m_requests.pop();
+
+    float delay = new_request.size / m_bandwidth * 8000.0;
+    Simulator::Schedule(PicoSeconds(delay), &SimpleHBMController::DoCallBack, this, new_request.cb, new_request.arg);
+  }
+
+}
+
+}
+ // namespace ns3

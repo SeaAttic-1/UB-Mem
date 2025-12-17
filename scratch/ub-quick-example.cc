@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         return 0;
     // 开始计时
     auto start = std::chrono::high_resolution_clock::now();
-    Time::SetResolution(Time::NS);
+    Time::SetResolution(Time::PS);
 
     // 日志中添加时间前缀
     //ns3::LogComponentEnableAll(LOG_PREFIX_TIME);
@@ -127,6 +127,7 @@ int main(int argc, char* argv[])
     // LogComponentEnable("UbTransportChannel", LOG_LEVEL_ALL);
     // LogComponentEnable("UbFault", LOG_LEVEL_ALL);
     // LogComponentEnable("UbTransaction", LOG_LEVEL_ALL);
+    LogComponentEnable("SimpleHBMController", LOG_LEVEL_ALL);
 
     // 配置文件路径
     string configPath = "scratch/2nodes_single-tp";

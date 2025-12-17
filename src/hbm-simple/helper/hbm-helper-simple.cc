@@ -6,17 +6,10 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE("SimpleHBMHelper");
 
-SimpleHBMHelper::SimpleHBMHelper()
-  : m_defaultBanks(8)
-{
-}
-
 Ptr<SimpleHBMController>
-SimpleHBMHelper::Create(uint32_t nodeId, uint32_t numBanks)
+SimpleHBMHelper::Create(uint32_t nodeId)
 {
   Ptr<SimpleHBMController> ctrl = CreateObject<SimpleHBMController>();
-  ctrl->InitializeBanks(nodeId, numBanks);
   return ctrl;
 }
-
 } // namespace ns3

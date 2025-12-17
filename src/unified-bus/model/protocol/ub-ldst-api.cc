@@ -6,7 +6,6 @@
 #include "ns3/ub-controller.h"
 #include "ns3/ub-ldst-api.h"
 #include "ns3/hbm-bank.h"
-#include "ns3/hbm-bank-simple.h"
 #include "ns3/hbm-controller-simple.h"
 #include "ns3/hbm-controller.h"
 #include "../control-macro.h"
@@ -301,24 +300,10 @@ void UbLdstApi::RecvDataPacket(Ptr<Packet> packet)
     void* context_ptr = static_cast<void*>(temp_ptr);
 
     auto ldstInst = NodeList::GetNode(m_nodeId)->GetObject<UbLdstInstance>();
+    
     #ifdef USE_SIMPLE_HBM
-        uint32_t num_of_atomics = payloadSize / (HBM_ATOMIC_SIZE);
-        NS_LOG_INFO("HBM_ATOMIC_SIZE is " << HBM_ATOMIC_SIZE);
-        NS_LOG_INFO("payloadSize is " << payloadSize);
-        NS_LOG_INFO("Making " << payloadSize / (HBM_ATOMIC_SIZE) << " writes");
-        if (num_of_atomics == 0) num_of_atomics  = 1;
-        if (num_of_atomics > 32) num_of_atomics = 32; // This just ensures it doesn't hog for too long.
-
         auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<SimpleHBMController>();
-        auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();
-        auto random_bank = rng->GetInteger(0, HBM_BANK_PER_DIE-1);
-
-        for(uint32_t iter = 0; iter < num_of_atomics-1; iter++)
-        {
-            hbm_controller->SendRequest(12345, iter, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, [](void* p){}, nullptr);
-        } // For all the previous tasks, do nothing.
-
-        hbm_controller->SendRequest(12345, num_of_atomics, 0x1000, HBM_BANK_ATOMIC_SIZE, random_bank, isWrite, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
+        hbm_controller->SendRequest(payloadSize, MakeCallback(&UbLdstApi::OnHBMComplete, this), context_ptr);
     #else
         auto hbm_controller = NodeList::GetNode(m_nodeId)->GetObject<HBMController>();
         auto rng = NodeList::GetNode(m_nodeId)->GetObject<UniformRandomVariable>();

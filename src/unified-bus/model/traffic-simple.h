@@ -1,0 +1,2 @@
+#define BACKGROUND_INTENSITY 16.0
+    
